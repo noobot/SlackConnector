@@ -279,11 +279,11 @@ namespace SlackConnector
         }
 
         public event MessageReceivedEventHandler MessageReceived;
-        private async Task RaiseMessageReceived(ResponseContext debugText)
+        private async Task RaiseMessageReceived(ResponseContext responseContext)
         {
             if (MessageReceived != null)
             {
-                await MessageReceived(debugText);
+                await MessageReceived(responseContext);
             }
         }
     }
