@@ -21,14 +21,26 @@ namespace SlackConnector
         private readonly Dictionary<string, string> _userNameCache;
         private WebSocket _webSocket;
 
-        public string[] Aliases { get; private set; }
-        public SlackChatHub[] ConnectedDMs { get; private set; }
-        public SlackChatHub[] ConnectedChannels { get; private set; }
-        public SlackChatHub[] ConnectedGroups { get; private set; }
+        public string[] Aliases { get; set; }
+
+        public SlackChatHub[] ConnectedDMs
+        {
+            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.DM).ToArray(); }
+        }
+
+        public SlackChatHub[] ConnectedChannels
+        {
+            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Channel).ToArray(); }
+        }
+
+        public SlackChatHub[] ConnectedGroups
+        {
+            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Group).ToArray(); }
+        }
+
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; private set; }
-        public bool IsConnected { get; private set; }
+        public bool IsConnected => ConnectedSince != null;
         public DateTime? ConnectedSince { get; private set; }
-        public Dictionary<string, object> ResponseContext { get; private set; }
         public string SlackKey { get; private set; }
         public string TeamId { get; private set; }
         public string TeamName { get; private set; }
@@ -37,7 +49,9 @@ namespace SlackConnector
 
         public SlackConnector()
         {
+            Aliases = new string[0];
             _userNameCache = new Dictionary<string, string>();
+            ConnectedHubs = new Dictionary<string, SlackChatHub>();
         }
 
         public async Task Connect(string slackKey)
@@ -46,8 +60,7 @@ namespace SlackConnector
 
             // disconnect in case we're already connected like a crazy person
             Disconnect();
-
-
+            
             NoobWebClient client = new NoobWebClient();
             string json = await client.GetResponse(SLACK_API_START_URL, RequestMethod.Post, "token", this.SlackKey);
             JObject jData = JObject.Parse(json);
@@ -127,7 +140,6 @@ namespace SlackConnector
             {
                 // set connection-related properties
                 ConnectedSince = DateTime.Now;
-                IsConnected = true;
                 RaiseConnectionStatusChanged();
             };
 
@@ -144,7 +156,6 @@ namespace SlackConnector
                 TeamName = null;
                 UserId = null;
                 UserName = null;
-                IsConnected = false;
                 RaiseConnectionStatusChanged();
             };
             _webSocket.Connect();
@@ -192,15 +203,6 @@ namespace SlackConnector
                     TeamId = TeamId,
                     UserNameCache = new ReadOnlyDictionary<string, string>(_userNameCache)
                 };
-
-                // if the end dev has added any static entries to the ResponseContext collection of Bot, add them to the context being passed to the responders.
-                if (ResponseContext != null)
-                {
-                    foreach (string key in ResponseContext.Keys)
-                    {
-                        context.Set(key, ResponseContext[key]);
-                    }
-                }
 
                 // margie can never respond to herself and requires that the message have text and be from an actual person
                 if (message.User != null && message.User.Id != UserId && message.Text != null)

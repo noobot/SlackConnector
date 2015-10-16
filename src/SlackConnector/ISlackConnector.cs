@@ -10,14 +10,13 @@ namespace SlackConnector
     {
         #region Properties
 
-        string[] Aliases { get; }
+        string[] Aliases { get; set; }
         SlackChatHub[] ConnectedDMs { get; }
         SlackChatHub[] ConnectedChannels { get; }
         SlackChatHub[] ConnectedGroups { get; }
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
         bool IsConnected { get; }
         DateTime? ConnectedSince { get; }
-        Dictionary<string, object> ResponseContext { get; }
         string SlackKey { get; }
         string TeamId { get; }
         string TeamName { get; }
