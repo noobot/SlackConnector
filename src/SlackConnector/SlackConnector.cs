@@ -127,6 +127,7 @@ namespace SlackConnector
             {
                 // set connection-related properties
                 ConnectedSince = DateTime.Now;
+                IsConnected = true;
                 RaiseConnectionStatusChanged();
             };
 
@@ -143,6 +144,7 @@ namespace SlackConnector
                 TeamName = null;
                 UserId = null;
                 UserName = null;
+                IsConnected = false;
                 RaiseConnectionStatusChanged();
             };
             _webSocket.Connect();
@@ -154,7 +156,7 @@ namespace SlackConnector
             if (jObject["type"].Value<string>() == "message")
             {
                 string channelId = jObject["channel"].Value<string>();
-                SlackChatHub hub = null;
+                SlackChatHub hub;
 
                 if (ConnectedHubs.ContainsKey(channelId))
                 {
@@ -174,20 +176,20 @@ namespace SlackConnector
                 var message = new SlackMessage
                 {
                     ChatHub = hub,
-                    MentionsBot = (messageText != null && Regex.IsMatch(messageText, BotNameRegex(), RegexOptions.IgnoreCase)),
+                    MentionsBot = BotMentioned(messageText),
                     RawData = json,
                     // some messages may not have text or a user (like unfurled data from URLs)
                     Text = messageText,
-                    User = (jObject["user"] != null ? new SlackUser() { ID = jObject["user"].Value<string>() } : null)
+                    User = (jObject["user"] != null ? new SlackUser { Id = jObject["user"].Value<string>() } : null)
                 };
 
-                var context = new ResponseContext()
+                var context = new ResponseContext
                 {
                     BotHasResponded = false,
                     BotUserID = UserId,
                     BotUserName = UserName,
                     Message = message,
-                    TeamID = this.TeamId,
+                    TeamId = TeamId,
                     UserNameCache = new ReadOnlyDictionary<string, string>(_userNameCache)
                 };
 
@@ -201,7 +203,7 @@ namespace SlackConnector
                 }
 
                 // margie can never respond to herself and requires that the message have text and be from an actual person
-                if (message.User != null && message.User.ID != UserId && message.Text != null)
+                if (message.User != null && message.User.Id != UserId && message.Text != null)
                 {
                     await RaiseMessageReceived(context);
                 }
@@ -250,15 +252,19 @@ namespace SlackConnector
                 throw new ArgumentException("When calling the Say() method, the message parameter must have its ChatHub property set.");
             }
         }
-        private string BotNameRegex()
+
+        private bool BotMentioned(string messageText)
         {
-            // only build the regex if we're connected - if we're not connected we won't know our bot's name or user ID
+            bool mentioned = false;
+
+            // only build the regex if we're connected - if we're not connected we won't know our bot's name or user Id
             if (IsConnected)
             {
-                return new BotNameRegexComposer().ComposeFor(UserName, UserId, Aliases);
+                string regex = new BotNameRegexComposer().ComposeFor(UserName, UserId, Aliases);
+                mentioned = (messageText != null && Regex.IsMatch(messageText, regex, RegexOptions.IgnoreCase));
             }
 
-            return string.Empty;
+            return mentioned;
         }
 
         public event ConnectionStatusChangedEventHandler ConnectionStatusChanged;

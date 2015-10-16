@@ -2,15 +2,15 @@
 {
     public class SlackUser
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
 
-        public string FormattedUserID
+        public string FormattedUserId
         {
             get
             {
-                if (!string.IsNullOrEmpty(ID))
+                if (!string.IsNullOrEmpty(Id))
                 {
-                    return "<@" + ID + ">";
+                    return "<@" + Id + ">";
                 }
                 return string.Empty;
             }
@@ -18,7 +18,7 @@
 
         public bool IsSlackbot
         {
-            get { return ID == "USLACKBOT"; }
+            get { return Id == "USLACKBOT"; }
         }
     }
 }

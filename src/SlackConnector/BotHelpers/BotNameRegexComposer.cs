@@ -11,10 +11,11 @@ namespace SlackConnector.BotHelpers
             builder.Append(@"(<@" + botUserId + @">|");
             builder.Append(@"\b" + botName + @"\b");
 
-            foreach (string alias in aliases)
+            foreach (string alias in (aliases ?? new string[0]))
             {
                 builder.Append(@"|\b" + alias + @"\b");
             }
+
             builder.Append(@")");
             return builder.ToString();
         }

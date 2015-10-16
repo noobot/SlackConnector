@@ -12,7 +12,7 @@ namespace SlackConnector.Models
         public string BotUserID { get; set; }
         public string BotUserName { get; set; }
         public SlackMessage Message { get; set; }
-        public string TeamID { get; set; }
+        public string TeamId { get; set; }
         public IReadOnlyDictionary<string, string> UserNameCache { get; set; }
 
         #endregion
