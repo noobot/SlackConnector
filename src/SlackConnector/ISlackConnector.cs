@@ -30,7 +30,7 @@ namespace SlackConnector
         void Disconnect();
         Task Say(BotMessage message);
 
-        event ConnectionStatusChangedEventHandler ConnectionStatusChanged;
-        event MessageReceivedEventHandler MessageReceived;
+        event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
+        event MessageReceivedEventHandler OnMessageReceived;
     }
 }

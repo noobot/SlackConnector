@@ -18,9 +18,9 @@ namespace SlackConnector.Tests.Integration
             
             // when
             ISlackConnector slackConnector = new SlackConnector();
-            slackConnector.ConnectionStatusChanged += SlackConnector_ConnectionStatusChanged;
+            slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
 
-            slackConnector.MessageReceived+= SlackConnectorOnMessageReceived;
+            slackConnector.OnMessageReceived+= SlackConnectorOnOnMessageReceived;
 
             slackConnector.Connect(config.Slack.ApiToken);
 
@@ -28,12 +28,12 @@ namespace SlackConnector.Tests.Integration
             Thread.Sleep(TimeSpan.FromSeconds(30));
         }
 
-        private void SlackConnector_ConnectionStatusChanged(bool isConnected)
+        private void SlackConnectorOnConnectionStatusChanged(bool isConnected)
         {
 
         }
 
-        private Task SlackConnectorOnMessageReceived(ResponseContext message)
+        private Task SlackConnectorOnOnMessageReceived(ResponseContext message)
         {
             return new Task(() => { });
         }

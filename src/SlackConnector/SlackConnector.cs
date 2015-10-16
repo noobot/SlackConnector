@@ -269,21 +269,21 @@ namespace SlackConnector
             return mentioned;
         }
 
-        public event ConnectionStatusChangedEventHandler ConnectionStatusChanged;
+        public event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
         private void RaiseConnectionStatusChanged()
         {
-            if (ConnectionStatusChanged != null)
+            if (OnConnectionStatusChanged != null)
             {
-                ConnectionStatusChanged(IsConnected);
+                OnConnectionStatusChanged(IsConnected);
             }
         }
 
-        public event MessageReceivedEventHandler MessageReceived;
+        public event MessageReceivedEventHandler OnMessageReceived;
         private async Task RaiseMessageReceived(ResponseContext responseContext)
         {
-            if (MessageReceived != null)
+            if (OnMessageReceived != null)
             {
-                await MessageReceived(responseContext);
+                await OnMessageReceived(responseContext);
             }
         }
     }
