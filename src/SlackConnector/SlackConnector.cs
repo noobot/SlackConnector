@@ -16,19 +16,10 @@ namespace SlackConnector
 {
     public class SlackConnector : ISlackConnector
     {
-        private string _botNameRegex
-        {
-            get
-            {
-                // only build the regex if we're connected - if we're not connected we won't know our bot's name or user ID
-                if (IsConnected)
-                {
-                    return new BotNameRegexComposer().ComposeFor(UserName, UserId, Aliases);
-                }
-
-                return string.Empty;
-            }
-        }
+        private const string SLACK_API_START_URL = "https://slack.com/api/rtm.start";
+        private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
+        private readonly Dictionary<string, string> _userNameCache;
+        private WebSocket _webSocket;
 
         public string[] Aliases { get; set; }
         public SlackChatHub[] ConnectedDMs { get; set; }
@@ -44,9 +35,6 @@ namespace SlackConnector
         public string UserId { get; set; }
         public string UserName { get; set; }
 
-        private Dictionary<string, string> _userNameCache { get; set; }
-        private WebSocket _webSocket { get; set; }
-
         public SlackConnector()
         {
             _userNameCache = new Dictionary<string, string>();
@@ -61,7 +49,7 @@ namespace SlackConnector
 
 
             NoobWebClient client = new NoobWebClient();
-            string json = await client.GetResponse("https://slack.com/api/rtm.start", RequestMethod.Post, "token", this.SlackKey);
+            string json = await client.GetResponse(SLACK_API_START_URL, RequestMethod.Post, "token", this.SlackKey);
             JObject jData = JObject.Parse(json);
 
             TeamId = jData["team"]["id"].Value<string>();
@@ -135,17 +123,20 @@ namespace SlackConnector
             // set up the websocket and connect
             _webSocket = new WebSocket(webSocketUrl);
 
-            _webSocket.OnOpen += (object sender, EventArgs e) => {
+            _webSocket.OnOpen += (object sender, EventArgs e) =>
+            {
                 // set connection-related properties
                 ConnectedSince = DateTime.Now;
                 RaiseConnectionStatusChanged();
             };
 
-            _webSocket.OnMessage += async (object sender, MessageEventArgs args) => {
+            _webSocket.OnMessage += async (object sender, MessageEventArgs args) =>
+            {
                 await ListenTo(args.Data);
             };
 
-            _webSocket.OnClose += (object sender, CloseEventArgs e) => {
+            _webSocket.OnClose += (object sender, CloseEventArgs e) =>
+            {
                 // set connection-related properties
                 ConnectedSince = null;
                 TeamId = null;
@@ -162,16 +153,16 @@ namespace SlackConnector
             JObject jObject = JObject.Parse(json);
             if (jObject["type"].Value<string>() == "message")
             {
-                string channelID = jObject["channel"].Value<string>();
+                string channelId = jObject["channel"].Value<string>();
                 SlackChatHub hub = null;
 
-                if (ConnectedHubs.ContainsKey(channelID))
+                if (ConnectedHubs.ContainsKey(channelId))
                 {
-                    hub = ConnectedHubs[channelID];
+                    hub = ConnectedHubs[channelId];
                 }
                 else
                 {
-                    hub = SlackChatHub.FromID(channelID);
+                    hub = SlackChatHub.FromID(channelId);
                     List<SlackChatHub> hubs = new List<SlackChatHub>();
                     hubs.AddRange(ConnectedHubs.Values);
                     hubs.Add(hub);
@@ -180,10 +171,10 @@ namespace SlackConnector
                 string messageText = (jObject["text"] != null ? jObject["text"].Value<string>() : null);
 
                 // check to see if bot has been mentioned
-                var message = new SlackMessage()
+                var message = new SlackMessage
                 {
                     ChatHub = hub,
-                    MentionsBot = (messageText != null && Regex.IsMatch(messageText, _botNameRegex, RegexOptions.IgnoreCase)),
+                    MentionsBot = (messageText != null && Regex.IsMatch(messageText, BotNameRegex(), RegexOptions.IgnoreCase)),
                     RawData = json,
                     // some messages may not have text or a user (like unfurled data from URLs)
                     Text = messageText,
@@ -252,16 +243,22 @@ namespace SlackConnector
                     values.Add(JsonConvert.SerializeObject(message.Attachments));
                 }
 
-                await client.GetResponse(
-                    "https://slack.com/api/chat.postMessage",
-                    RequestMethod.Post,
-                    values.ToArray()
-                );
+                await client.GetResponse(SLACK_API_SEND_MESSAGE_URL, RequestMethod.Post, values.ToArray());
             }
             else
             {
                 throw new ArgumentException("When calling the Say() method, the message parameter must have its ChatHub property set.");
             }
+        }
+        private string BotNameRegex()
+        {
+            // only build the regex if we're connected - if we're not connected we won't know our bot's name or user ID
+            if (IsConnected)
+            {
+                return new BotNameRegexComposer().ComposeFor(UserName, UserId, Aliases);
+            }
+
+            return string.Empty;
         }
 
         public event ConnectionStatusChangedEventHandler ConnectionStatusChanged;
