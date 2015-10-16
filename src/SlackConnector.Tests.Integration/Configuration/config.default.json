@@ -1,5 +1,6 @@
 ﻿{
-  "Slack": {
-    "ApiToken": ""
+  "slack": {
+    "apiToken": "",
+    "testUserId":  ""
   }
 }

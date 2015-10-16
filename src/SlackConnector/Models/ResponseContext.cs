@@ -9,7 +9,7 @@ namespace SlackConnector.Models
         #region General "fixed" properties
 
         public bool BotHasResponded { get; set; }
-        public string BotUserID { get; set; }
+        public string BotUserId { get; set; }
         public string BotUserName { get; set; }
         public SlackMessage Message { get; set; }
         public string TeamId { get; set; }

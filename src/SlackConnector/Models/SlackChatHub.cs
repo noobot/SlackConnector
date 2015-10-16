@@ -9,13 +9,13 @@
         public string Name { get; set; }
         public SlackChatHubType Type { get; set; }
 
-        public static SlackChatHub FromID(string hubID)
+        public static SlackChatHub FromId(string hubId)
         {
-            if (!string.IsNullOrEmpty(hubID))
+            if (!string.IsNullOrEmpty(hubId))
             {
                 SlackChatHubType? hubType = null;
 
-                switch (hubID.ToCharArray()[0])
+                switch (hubId.ToCharArray()[0])
                 {
                     case 'C':
                         hubType = SlackChatHubType.Channel;
@@ -32,8 +32,8 @@
                 {
                     return new SlackChatHub()
                     {
-                        Id = hubID,
-                        Name = hubID,
+                        Id = hubId,
+                        Name = hubId,
                         Type = hubType.Value
                     };
                 }

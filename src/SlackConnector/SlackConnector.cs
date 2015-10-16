@@ -18,6 +18,7 @@ namespace SlackConnector
     {
         private const string SLACK_API_START_URL = "https://slack.com/api/rtm.start";
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
+        private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
         private WebSocket _webSocket;
 
         public string[] Aliases { get; set; }
@@ -63,7 +64,7 @@ namespace SlackConnector
 
             // disconnect in case we're already connected like a crazy person
             Disconnect();
-            
+
             NoobWebClient client = new NoobWebClient();
             string json = await client.GetResponse(SLACK_API_START_URL, RequestMethod.Post, "token", this.SlackKey);
             JObject jData = JObject.Parse(json);
@@ -178,8 +179,9 @@ namespace SlackConnector
                 }
                 else
                 {
-                    hub = SlackChatHub.FromID(channelId);
-                    List<SlackChatHub> hubs = new List<SlackChatHub>();
+                    // TODO: What have I broken?
+                    hub = SlackChatHub.FromId(channelId);
+                    var hubs = new List<SlackChatHub>();
                     hubs.AddRange(ConnectedHubs.Values);
                     hubs.Add(hub);
                 }
@@ -199,15 +201,13 @@ namespace SlackConnector
 
                 var context = new ResponseContext
                 {
-                    BotHasResponded = false,
-                    BotUserID = UserId,
+                    BotUserId = UserId,
                     BotUserName = UserName,
                     Message = message,
                     TeamId = TeamId,
                     UserNameCache = new ReadOnlyDictionary<string, string>(_userNameCache)
                 };
 
-                // margie can never respond to herself and requires that the message have text and be from an actual person
                 if (message.User != null && message.User.Id != UserId && message.Text != null)
                 {
                     await RaiseMessageReceived(context);
@@ -232,10 +232,8 @@ namespace SlackConnector
                 chatHubId = message.ChatHub.Id;
             }
 
-            if (chatHubId != null)
+            if (!string.IsNullOrEmpty(chatHubId))
             {
-                var client = new NoobWebClient();
-
                 var values = new List<string>
                 {
                     "token", this.SlackKey,
@@ -250,12 +248,39 @@ namespace SlackConnector
                     values.Add(JsonConvert.SerializeObject(message.Attachments));
                 }
 
+                var client = new NoobWebClient();
                 await client.GetResponse(SLACK_API_SEND_MESSAGE_URL, RequestMethod.Post, values.ToArray());
             }
             else
             {
                 throw new ArgumentException("When calling the Say() method, the message parameter must have its ChatHub property set.");
             }
+        }
+
+        public async Task<SlackChatHub> JoinDirectMessageChannel(string user)
+        {
+            SlackChatHub chatHub = null;
+
+            var values = new[]
+            {
+                "token", this.SlackKey,
+                "user", user
+            };
+
+            var client = new NoobWebClient();
+            string json = await client.GetResponse(SLACK_API_JOIN_DM_URL, RequestMethod.Post, values);
+            JObject jData = JObject.Parse(json);
+
+            if (jData["ok"] != null && jData["ok"].Value<bool>())
+            {
+                chatHub = new SlackChatHub
+                {
+                    Id = jData["channel"]["id"].Value<string>(),
+                    Type = SlackChatHubType.DM
+                };
+            }
+
+            return chatHub;
         }
 
         private bool BotMentioned(string messageText)

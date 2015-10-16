@@ -30,6 +30,7 @@ namespace SlackConnector
         Task Connect(string slackKey);
         void Disconnect();
         Task Say(BotMessage message);
+        Task<SlackChatHub> JoinDirectMessageChannel(string user);
 
         event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
         event MessageReceivedEventHandler OnMessageReceived;
