@@ -18,7 +18,6 @@ namespace SlackConnector
     {
         private const string SLACK_API_START_URL = "https://slack.com/api/rtm.start";
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
-        private readonly Dictionary<string, string> _userNameCache;
         private WebSocket _webSocket;
 
         public string[] Aliases { get; set; }
@@ -39,6 +38,10 @@ namespace SlackConnector
         }
 
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; private set; }
+
+        private readonly Dictionary<string, string> _userNameCache;
+        public IReadOnlyDictionary<string, string> UserNameCache => _userNameCache;
+
         public bool IsConnected => ConnectedSince != null;
         public DateTime? ConnectedSince { get; private set; }
         public string SlackKey { get; private set; }

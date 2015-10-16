@@ -15,6 +15,7 @@ namespace SlackConnector
         SlackChatHub[] ConnectedChannels { get; }
         SlackChatHub[] ConnectedGroups { get; }
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
+        IReadOnlyDictionary<string, string> UserNameCache { get; }
         bool IsConnected { get; }
         DateTime? ConnectedSince { get; }
         string SlackKey { get; }
