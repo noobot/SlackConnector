@@ -21,19 +21,19 @@ namespace SlackConnector
         private readonly Dictionary<string, string> _userNameCache;
         private WebSocket _webSocket;
 
-        public string[] Aliases { get; set; }
-        public SlackChatHub[] ConnectedDMs { get; set; }
-        public SlackChatHub[] ConnectedChannels { get; set; }
-        public SlackChatHub[] ConnectedGroups { get; set; }
-        public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; set; }
-        public bool IsConnected { get; set; }
-        public DateTime? ConnectedSince { get; set; }
-        public Dictionary<string, object> ResponseContext { get; set; }
-        public string SlackKey { get; set; }
-        public string TeamId { get; set; }
-        public string TeamName { get; set; }
-        public string UserId { get; set; }
-        public string UserName { get; set; }
+        public string[] Aliases { get; private set; }
+        public SlackChatHub[] ConnectedDMs { get; private set; }
+        public SlackChatHub[] ConnectedChannels { get; private set; }
+        public SlackChatHub[] ConnectedGroups { get; private set; }
+        public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; private set; }
+        public bool IsConnected { get; private set; }
+        public DateTime? ConnectedSince { get; private set; }
+        public Dictionary<string, object> ResponseContext { get; private set; }
+        public string SlackKey { get; private set; }
+        public string TeamId { get; private set; }
+        public string TeamName { get; private set; }
+        public string UserId { get; private set; }
+        public string UserName { get; private set; }
 
         public SlackConnector()
         {
