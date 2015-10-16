@@ -5,7 +5,7 @@
     /// </summary>
     public class SlackChatHub
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public SlackChatHubType Type { get; set; }
 
@@ -32,7 +32,7 @@
                 {
                     return new SlackChatHub()
                     {
-                        ID = hubID,
+                        Id = hubID,
                         Name = hubID,
                         Type = hubType.Value
                     };

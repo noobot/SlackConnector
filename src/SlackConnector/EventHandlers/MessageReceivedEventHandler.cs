@@ -1,6 +1,7 @@
-﻿using SlackConnector.Models;
+﻿using System.Threading.Tasks;
+using SlackConnector.Models;
 
 namespace SlackConnector.EventHandlers
 {
-    public delegate void MessageReceivedEventHandler(ResponseContext message);
+    public delegate Task MessageReceivedEventHandler(ResponseContext message);
 }

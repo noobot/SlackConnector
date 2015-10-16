@@ -47,8 +47,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp-with-proxy-support, Version=1.0.2.28248, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\websocket-sharp-with-proxy-support.1.9.1\lib\net35-client\websocket-sharp-with-proxy-support.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventHandlers\ConnectionStatusChangedEventHandler.cs" />
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnector.cs" />
