@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SlackConnector.BotHelpers
 {
-    public class BotNameRegexComposer
+    internal class BotNameRegexComposer
     {
         public string ComposeFor(string botName, string botUserId, IEnumerable<string> aliases)
         {
