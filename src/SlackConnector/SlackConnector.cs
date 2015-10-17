@@ -38,7 +38,8 @@ namespace SlackConnector
             get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Group).ToArray(); }
         }
 
-        public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; private set; }
+        internal readonly Dictionary<string, SlackChatHub> _connectedHubs;
+        public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
         private readonly Dictionary<string, string> _userNameCache;
         public IReadOnlyDictionary<string, string> UserNameCache => _userNameCache;
@@ -55,7 +56,7 @@ namespace SlackConnector
         {
             Aliases = new string[0];
             _userNameCache = new Dictionary<string, string>();
-            ConnectedHubs = new Dictionary<string, SlackChatHub>();
+            _connectedHubs = new Dictionary<string, SlackChatHub>();
         }
 
         public async Task Connect(string slackKey)
@@ -80,11 +81,7 @@ namespace SlackConnector
             {
                 _userNameCache.Add(userObject["id"].Value<string>(), userObject["name"].Value<string>());
             }
-
-            // load the channels, groups, and DMs that margie's in
-            Dictionary<string, SlackChatHub> hubs = new Dictionary<string, SlackChatHub>();
-            ConnectedHubs = hubs;
-
+            
             // channelz
             if (jData["channels"] != null)
             {
@@ -98,7 +95,7 @@ namespace SlackConnector
                             Name = "#" + channelData["name"].Value<string>(),
                             Type = SlackChatHubType.Channel
                         };
-                        hubs.Add(channel.Id, channel);
+                        _connectedHubs.Add(channel.Id, channel);
                     }
                 }
             }
@@ -116,7 +113,7 @@ namespace SlackConnector
                             Name = groupData["name"].Value<string>(),
                             Type = SlackChatHubType.Group
                         };
-                        hubs.Add(group.Id, group);
+                        _connectedHubs.Add(group.Id, group);
                     }
                 }
             }
@@ -133,7 +130,7 @@ namespace SlackConnector
                         Name = "@" + (_userNameCache.ContainsKey(userID) ? _userNameCache[userID] : userID),
                         Type = SlackChatHubType.DM
                     };
-                    hubs.Add(dm.Id, dm);
+                    _connectedHubs.Add(dm.Id, dm);
                 }
             }
 
@@ -179,14 +176,14 @@ namespace SlackConnector
                 }
                 else
                 {
-                    // TODO: What have I broken?
                     hub = SlackChatHub.FromId(channelId);
-                    var hubs = new List<SlackChatHub>();
-                    hubs.AddRange(ConnectedHubs.Values);
-                    hubs.Add(hub);
+                    if (!_connectedHubs.ContainsKey(channelId))
+                    {
+                        _connectedHubs.Add(channelId, hub);
+                    }
                 }
 
-                string messageText = (jObject["text"] != null ? jObject["text"].Value<string>() : null);
+                string messageText = jObject["text"]?.Value<string>();
 
                 // check to see if bot has been mentioned
                 var message = new SlackMessage
@@ -300,10 +297,7 @@ namespace SlackConnector
         public event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
         private void RaiseConnectionStatusChanged()
         {
-            if (OnConnectionStatusChanged != null)
-            {
-                OnConnectionStatusChanged(IsConnected);
-            }
+            OnConnectionStatusChanged?.Invoke(IsConnected);
         }
 
         public event MessageReceivedEventHandler OnMessageReceived;
