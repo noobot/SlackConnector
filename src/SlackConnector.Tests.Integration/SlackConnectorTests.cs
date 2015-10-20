@@ -15,12 +15,12 @@ namespace SlackConnector.Tests.Integration
         {
             // given
             var config = new ConfigReader().GetConfig();
-            
+
             // when
             ISlackConnector slackConnector = new SlackConnector();
             slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
 
-            slackConnector.OnMessageReceived+= SlackConnectorOnOnMessageReceived;
+            slackConnector.OnMessageReceived += SlackConnectorOnOnMessageReceived;
 
             slackConnector.Connect(config.Slack.ApiToken);
 

@@ -67,6 +67,10 @@
     <Compile Include="SlackConnector.cs" />
     <Compile Include="Models\SlackMessage.cs" />
     <Compile Include="Models\SlackUser.cs" />
+    <Compile Include="Sockets\IWebSocket.cs" />
+    <Compile Include="Sockets\IWebSocketFactory.cs" />
+    <Compile Include="Sockets\WebSocket.cs" />
+    <Compile Include="Sockets\WebSocketFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

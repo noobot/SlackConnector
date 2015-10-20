@@ -10,16 +10,19 @@ using Newtonsoft.Json.Linq;
 using SlackConnector.BotHelpers;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
+using SlackConnector.Sockets;
 using WebSocketSharp;
 
 namespace SlackConnector
 {
     public class SlackConnector : ISlackConnector
     {
+        private readonly IWebSocketFactory _socketFactory;
+        private IWebSocket _webSocket;
+
         private const string SLACK_API_START_URL = "https://slack.com/api/rtm.start";
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
         private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
-        private WebSocket _webSocket;
 
         public string[] Aliases { get; set; }
 
@@ -38,7 +41,7 @@ namespace SlackConnector
             get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Group).ToArray(); }
         }
 
-        internal readonly Dictionary<string, SlackChatHub> _connectedHubs;
+        private readonly Dictionary<string, SlackChatHub> _connectedHubs;
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
         private readonly Dictionary<string, string> _userNameCache;
@@ -52,8 +55,13 @@ namespace SlackConnector
         public string UserId { get; private set; }
         public string UserName { get; private set; }
 
-        public SlackConnector()
+        public SlackConnector() : this(new WebSocketFactory())
+        { }
+
+        internal SlackConnector(IWebSocketFactory socketFactory)
         {
+            _socketFactory = socketFactory;
+
             Aliases = new string[0];
             _userNameCache = new Dictionary<string, string>();
             _connectedHubs = new Dictionary<string, SlackChatHub>();
@@ -135,7 +143,7 @@ namespace SlackConnector
             }
 
             // set up the websocket and connect
-            _webSocket = new WebSocket(webSocketUrl);
+            _webSocket = _socketFactory.Create(webSocketUrl);
 
             _webSocket.OnOpen += (object sender, EventArgs e) =>
             {
@@ -159,6 +167,7 @@ namespace SlackConnector
                 UserName = null;
                 RaiseConnectionStatusChanged();
             };
+
             _webSocket.Connect();
         }
 
