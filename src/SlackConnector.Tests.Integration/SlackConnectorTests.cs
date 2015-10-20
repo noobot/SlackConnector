@@ -29,6 +29,7 @@ namespace SlackConnector.Tests.Integration
                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
             }
 
+            Thread.Sleep(TimeSpan.FromMinutes(1));
             Assert.That(slackConnector.IsConnected, Is.True);
         }
 
