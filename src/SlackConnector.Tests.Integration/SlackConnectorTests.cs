@@ -26,7 +26,7 @@ namespace SlackConnector.Tests.Integration
             DateTime startTime = DateTime.Now;
             while (!slackConnector.IsConnected && (DateTime.Now - startTime) < TimeSpan.FromSeconds(30))
             {
-                Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                Thread.Sleep(TimeSpan.FromSeconds(0.1));
             }
 
             Assert.That(slackConnector.IsConnected, Is.True);
