@@ -145,19 +145,16 @@ namespace SlackConnector
             // set up the websocket and connect
             _webSocket = _socketFactory.Create(webSocketUrl);
 
-            _webSocket.OnOpen += (object sender, EventArgs e) =>
+            _webSocket.OnOpen += (sender, e) =>
             {
                 // set connection-related properties
                 ConnectedSince = DateTime.Now;
                 RaiseConnectionStatusChanged();
             };
 
-            _webSocket.OnMessage += async (object sender, MessageEventArgs args) =>
-            {
-                await ListenTo(args.Data);
-            };
+            _webSocket.OnMessage += async (sender, message) => await ListenTo(message);
 
-            _webSocket.OnClose += (object sender, CloseEventArgs e) =>
+            _webSocket.OnClose += (sender, e) =>
             {
                 // set connection-related properties
                 ConnectedSince = null;
@@ -171,12 +168,11 @@ namespace SlackConnector
             _webSocket.Connect();
         }
 
-        private async Task ListenTo(string json)
+        private async Task ListenTo(JObject message)
         {
-            JObject jObject = JObject.Parse(json);
-            if (jObject["type"].Value<string>() == "message")
+            if (message != null && message["type"].Value<string>() == "message")
             {
-                string channelId = jObject["channel"].Value<string>();
+                string channelId = message["channel"].Value<string>();
                 SlackChatHub hub;
 
                 if (ConnectedHubs.ContainsKey(channelId))
@@ -192,29 +188,29 @@ namespace SlackConnector
                     }
                 }
 
-                string messageText = jObject["text"]?.Value<string>();
+                string messageText = message["text"]?.Value<string>();
 
                 // check to see if bot has been mentioned
-                var message = new SlackMessage
+                var slackMessage = new SlackMessage
                 {
                     ChatHub = hub,
                     MentionsBot = BotMentioned(messageText),
-                    RawData = json,
+                    RawData = message.ToString(),
                     // some messages may not have text or a user (like unfurled data from URLs)
                     Text = messageText,
-                    User = (jObject["user"] != null ? new SlackUser { Id = jObject["user"].Value<string>() } : null)
+                    User = (message["user"] != null ? new SlackUser { Id = message["user"].Value<string>() } : null)
                 };
 
                 var context = new ResponseContext
                 {
                     BotUserId = UserId,
                     BotUserName = UserName,
-                    Message = message,
+                    Message = slackMessage,
                     TeamId = TeamId,
                     UserNameCache = new ReadOnlyDictionary<string, string>(_userNameCache)
                 };
 
-                if (message.User != null && message.User.Id != UserId && message.Text != null)
+                if (slackMessage.User != null && slackMessage.User.Id != UserId && slackMessage.Text != null)
                 {
                     await RaiseMessageReceived(context);
                 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
 using WebSocketSharp;
 
 namespace SlackConnector.Sockets
@@ -11,15 +12,15 @@ namespace SlackConnector.Sockets
         {
             _webSocket = new WebSocketSharp.WebSocket(url);
             _webSocket.OnOpen += (sender, args) => OnOpen?.Invoke(sender, args);
-            _webSocket.OnMessage += (sender, args) => OnMessage?.Invoke(sender, args);
+            _webSocket.OnMessage += (sender, args) => OnMessage?.Invoke(sender, JObject.Parse(args?.Data ?? ""));
             _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
         }
 
         public bool IsAlive => _webSocket.IsAlive;
 
         public event EventHandler OnOpen;
-        public event EventHandler<MessageEventArgs> OnMessage;
-        public event EventHandler<CloseEventArgs> OnClose;
+        public event EventHandler<JObject> OnMessage;
+        public event EventHandler OnClose;
 
         public void Connect()
         {

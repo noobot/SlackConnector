@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
 using WebSocketSharp;
 
 namespace SlackConnector.Sockets
@@ -8,8 +9,8 @@ namespace SlackConnector.Sockets
         bool IsAlive { get; }
 
         event EventHandler OnOpen;
-        event EventHandler<MessageEventArgs> OnMessage;
-        event EventHandler<CloseEventArgs> OnClose;
+        event EventHandler<JObject> OnMessage;
+        event EventHandler OnClose;
 
         void Connect();
         void Close();

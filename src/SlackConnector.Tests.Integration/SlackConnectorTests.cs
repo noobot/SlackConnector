@@ -19,13 +19,17 @@ namespace SlackConnector.Tests.Integration
             // when
             ISlackConnector slackConnector = new SlackConnector();
             slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
-
             slackConnector.OnMessageReceived += SlackConnectorOnOnMessageReceived;
-
             slackConnector.Connect(config.Slack.ApiToken);
 
             // then
-            Thread.Sleep(TimeSpan.FromSeconds(30));
+            DateTime startTime = DateTime.Now;
+            while (!slackConnector.IsConnected && (DateTime.Now - startTime) < TimeSpan.FromSeconds(30))
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(0.5));
+            }
+
+            Assert.That(slackConnector.IsConnected, Is.True);
         }
 
         private void SlackConnectorOnConnectionStatusChanged(bool isConnected)
