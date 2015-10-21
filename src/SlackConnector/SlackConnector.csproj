@@ -72,6 +72,7 @@
     <Compile Include="Sockets\Messages\IMessageInterpreter.cs" />
     <Compile Include="Sockets\Messages\InboundMessage.cs" />
     <Compile Include="Sockets\Messages\MessageInterpreter.cs" />
+    <Compile Include="Sockets\Messages\MessageSubType.cs" />
     <Compile Include="Sockets\Messages\MessageType.cs" />
     <Compile Include="Sockets\WebSocket.cs" />
     <Compile Include="Sockets\WebSocketFactory.cs" />

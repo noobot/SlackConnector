@@ -1,10 +1,12 @@
-﻿namespace SlackConnector.Sockets.Messages
+﻿using Newtonsoft.Json;
+
+namespace SlackConnector.Sockets.Messages
 {
     internal class MessageInterpreter : IMessageInterpreter
     {
         public InboundMessage InterpretMessage(string json)
         {
-            throw new System.NotImplementedException();
+            return JsonConvert.DeserializeObject<InboundMessage>(json);
         }
     }
 }
