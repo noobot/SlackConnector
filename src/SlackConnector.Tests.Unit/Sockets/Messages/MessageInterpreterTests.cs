@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Net;
+using NUnit.Framework;
 using SlackConnector.Sockets.Messages;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
@@ -15,11 +16,11 @@ namespace SlackConnector.Tests.Unit.Sockets.Messages
             Json = @"
                 {
                   'type': 'message',
-                  'channel': 'myChannel',
-                  'user': 'myUser',
-                  'text': 'hi',
+                  'channel': '&lt;myChannel&gt;',
+                  'user': '&lt;myUser&gt;',
+                  'text': 'hi, my name is &lt;noobot&gt;',
                   'ts': '1445366603.000002',
-                  'team': 'myTeam'
+                  'team': '&lt;myTeam&gt;'
                 }
             ";
         }
@@ -35,10 +36,10 @@ namespace SlackConnector.Tests.Unit.Sockets.Messages
             var expected = new InboundMessage
             {
                 MessageType = MessageType.Message,
-                Channel = "myChannel",
-                User = "myUser",
-                Text = "hi",
-                Team = "myTeam"
+                Channel = "<myChannel>",
+                User = "<myUser>",
+                Text = "hi, my name is <noobot>",
+                Team = "<myTeam>"
             };
 
             Result.ShouldLookLike(expected);
