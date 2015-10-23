@@ -11,6 +11,7 @@ using SlackConnector.BotHelpers;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 using SlackConnector.Sockets;
+using SlackConnector.Sockets.Messages;
 using WebSocketSharp;
 
 namespace SlackConnector
@@ -55,7 +56,7 @@ namespace SlackConnector
         public string UserId { get; private set; }
         public string UserName { get; private set; }
 
-        public SlackConnector() : this(new WebSocketFactory())
+        public SlackConnector() : this(new WebSocketFactory(new MessageInterpreter()))
         { }
 
         internal SlackConnector(IWebSocketFactory socketFactory)
@@ -152,7 +153,13 @@ namespace SlackConnector
                 RaiseConnectionStatusChanged();
             };
 
-            _webSocket.OnMessage += async (sender, message) => await ListenTo(message);
+
+            //TODO DODODODODODO
+            _webSocket.OnMessage += (sender, message) =>
+            {
+                
+            };
+            //_webSocket.OnMessage += async (sender, message) => await ListenTo(message);
 
             _webSocket.OnClose += (sender, e) =>
             {

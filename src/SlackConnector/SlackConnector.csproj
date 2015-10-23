@@ -64,6 +64,7 @@
     <Compile Include="Models\SlackAttachmentField.cs" />
     <Compile Include="Models\SlackChatHub.cs" />
     <Compile Include="Models\SlackChatHubType.cs" />
+    <Compile Include="Serialising\EnumConverter.cs" />
     <Compile Include="SlackConnector.cs" />
     <Compile Include="Models\SlackMessage.cs" />
     <Compile Include="Models\SlackUser.cs" />

@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
-using WebSocketSharp;
+using SlackConnector.Sockets.Messages;
 
 namespace SlackConnector.Sockets
 {
@@ -8,18 +8,18 @@ namespace SlackConnector.Sockets
     {
         private readonly WebSocketSharp.WebSocket _webSocket;
 
-        public WebSocket(string url)
+        public WebSocket(IMessageInterpreter interpreter, string url)
         {
             _webSocket = new WebSocketSharp.WebSocket(url);
             _webSocket.OnOpen += (sender, args) => OnOpen?.Invoke(sender, args);
-            _webSocket.OnMessage += (sender, args) => OnMessage?.Invoke(sender, JObject.Parse(args?.Data ?? ""));
+            _webSocket.OnMessage += (sender, args) => OnMessage?.Invoke(sender, interpreter.InterpretMessage(args?.Data ?? ""));
             _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
         }
 
         public bool IsAlive => _webSocket.IsAlive;
 
         public event EventHandler OnOpen;
-        public event EventHandler<JObject> OnMessage;
+        public event EventHandler<InboundMessage> OnMessage;
         public event EventHandler OnClose;
 
         public void Connect()
