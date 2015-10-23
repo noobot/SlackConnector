@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 using Bazam.NoobWebClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 using SlackConnector.BotHelpers;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 using SlackConnector.Sockets;
-using SlackConnector.Sockets.Messages;
-using WebSocketSharp;
 
 namespace SlackConnector
 {
     public class SlackConnector : ISlackConnector
     {
         private readonly IWebSocketFactory _socketFactory;
+        private readonly IRestClient _restClient;
         private IWebSocket _webSocket;
 
         private const string SLACK_API_START_URL = "https://slack.com/api/rtm.start";
@@ -56,12 +56,13 @@ namespace SlackConnector
         public string UserId { get; private set; }
         public string UserName { get; private set; }
 
-        public SlackConnector() : this(new WebSocketFactory(new MessageInterpreter()))
+        public SlackConnector() : this(new WebSocketFactory(), new RestClient())
         { }
 
-        internal SlackConnector(IWebSocketFactory socketFactory)
+        internal SlackConnector(IWebSocketFactory socketFactory, IRestClient restClient)
         {
             _socketFactory = socketFactory;
+            _restClient = restClient;
 
             Aliases = new string[0];
             _userNameCache = new Dictionary<string, string>();
