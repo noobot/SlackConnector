@@ -4,7 +4,7 @@ using SlackConnector.Connections.Sockets.Messages;
 
 namespace SlackConnector.Tests.Unit.Stubs
 {
-    internal class WebSocketStub : IWebSocket
+    internal class WebSocketClientStub : IWebSocketClient
     {
         public bool IsAlive { get; }
         public event EventHandler OnOpen;

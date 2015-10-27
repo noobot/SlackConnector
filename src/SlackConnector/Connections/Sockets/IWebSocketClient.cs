@@ -3,7 +3,7 @@ using SlackConnector.Connections.Sockets.Messages;
 
 namespace SlackConnector.Connections.Sockets
 {
-    internal interface IWebSocket
+    internal interface IWebSocketClient
     {
         bool IsAlive { get; }
 

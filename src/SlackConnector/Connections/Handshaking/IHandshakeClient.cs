@@ -3,7 +3,7 @@ using SlackConnector.Connections.Handshaking.Models;
 
 namespace SlackConnector.Connections.Handshaking
 {
-    internal interface IHandshaker
+    internal interface IHandshakeClient
     {
         /// <summary>
         /// No one likes a limp shake - AMIRITE?

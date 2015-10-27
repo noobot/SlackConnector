@@ -3,11 +3,11 @@ using SlackConnector.Connections.Sockets.Messages;
 
 namespace SlackConnector.Connections.Sockets
 {
-    internal class WebSocket : IWebSocket
+    internal class WebSocketClient : IWebSocketClient
     {
         private readonly WebSocketSharp.WebSocket _webSocket;
 
-        public WebSocket(IMessageInterpreter interpreter, string url)
+        public WebSocketClient(IMessageInterpreter interpreter, string url)
         {
             _webSocket = new WebSocketSharp.WebSocket(url);
             _webSocket.OnOpen += (sender, args) => OnOpen?.Invoke(sender, args);

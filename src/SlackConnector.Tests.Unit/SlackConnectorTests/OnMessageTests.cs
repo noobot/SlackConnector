@@ -7,7 +7,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
     {
         public class given_standard_message_when_message_is_raised : SpecsFor<SlackConnector>
         {
-            private WebSocketStub _webSocket = new WebSocketStub();
+            private WebSocketClientStub _webSocketClient = new WebSocketClientStub();
 
             protected override void Given()
             {

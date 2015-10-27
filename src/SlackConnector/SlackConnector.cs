@@ -19,7 +19,7 @@ namespace SlackConnector
     {
         private readonly IWebSocketFactory _socketFactory;
         private readonly IRestClient _restClient;
-        private IWebSocket _webSocket;
+        private IWebSocketClient _webSocketClient;
 
         private const string SLACK_API_START_URL = "https://slack.com/api/rtm.start";
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
@@ -145,9 +145,9 @@ namespace SlackConnector
             }
 
             // set up the websocket and connect
-            _webSocket = _socketFactory.Create(webSocketUrl);
+            _webSocketClient = _socketFactory.Create(webSocketUrl);
 
-            _webSocket.OnOpen += (sender, e) =>
+            _webSocketClient.OnOpen += (sender, e) =>
             {
                 // set connection-related properties
                 ConnectedSince = DateTime.Now;
@@ -156,13 +156,13 @@ namespace SlackConnector
 
 
             //TODO DODODODODODO
-            _webSocket.OnMessage += (sender, message) =>
+            _webSocketClient.OnMessage += (sender, message) =>
             {
                 
             };
             //_webSocket.OnMessage += async (sender, message) => await ListenTo(message);
 
-            _webSocket.OnClose += (sender, e) =>
+            _webSocketClient.OnClose += (sender, e) =>
             {
                 // set connection-related properties
                 ConnectedSince = null;
@@ -173,7 +173,7 @@ namespace SlackConnector
                 RaiseConnectionStatusChanged();
             };
 
-            _webSocket.Connect();
+            _webSocketClient.Connect();
         }
 
         private async Task ListenTo(JObject message)
@@ -227,9 +227,9 @@ namespace SlackConnector
 
         public void Disconnect()
         {
-            if (_webSocket != null && _webSocket.IsAlive)
+            if (_webSocketClient != null && _webSocketClient.IsAlive)
             {
-                _webSocket.Close();
+                _webSocketClient.Close();
             }
         }
 

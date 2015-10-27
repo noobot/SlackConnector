@@ -2,6 +2,6 @@
 {
     internal interface IWebSocketFactory
     {
-        IWebSocket Create(string url);
+        IWebSocketClient Create(string url);
     }
 }

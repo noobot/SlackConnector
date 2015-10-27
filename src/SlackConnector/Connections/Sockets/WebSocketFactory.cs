@@ -4,9 +4,9 @@ namespace SlackConnector.Connections.Sockets
 {
     internal class WebSocketFactory : IWebSocketFactory
     {
-        public IWebSocket Create(string url)
+        public IWebSocketClient Create(string url)
         {
-            return new WebSocket(new MessageInterpreter(), url);
+            return new WebSocketClient(new MessageInterpreter(), url);
         }
     }
 }

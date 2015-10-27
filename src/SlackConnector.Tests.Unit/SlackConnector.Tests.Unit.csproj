@@ -76,11 +76,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connections\Handshaking\HandshakerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackConnectorTests\ConnectTests.cs" />
     <Compile Include="SlackConnectorTests\OnMessageTests.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreterTests.cs" />
-    <Compile Include="Stubs\WebSocketStub.cs" />
+    <Compile Include="Stubs\RestClientStub.cs" />
+    <Compile Include="Stubs\WebSocketClientStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SlackConnector\SlackConnector.csproj">
@@ -93,9 +95,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\HandShakeResponse.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Connections\Handshaking\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
