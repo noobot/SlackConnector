@@ -62,8 +62,12 @@
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnector.cs" />
+    <Compile Include="Models\Handshake\Channel.cs" />
     <Compile Include="Models\Handshake\SlackHandshake.cs" />
     <Compile Include="Models\Handshake\Detail.cs" />
+    <Compile Include="Models\Handshake\Im.cs" />
+    <Compile Include="Models\Handshake\User.cs" />
+    <Compile Include="Models\Handshake\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ResponseContext.cs" />
     <Compile Include="Models\SlackAttachment.cs" />
