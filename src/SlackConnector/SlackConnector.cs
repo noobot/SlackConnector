@@ -9,9 +9,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using SlackConnector.BotHelpers;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
-using SlackConnector.Sockets;
 
 namespace SlackConnector
 {

@@ -1,6 +1,6 @@
-﻿using SlackConnector.Sockets.Messages;
+﻿using SlackConnector.Connections.Sockets.Messages;
 
-namespace SlackConnector.Sockets
+namespace SlackConnector.Connections.Sockets
 {
     internal class WebSocketFactory : IWebSocketFactory
     {

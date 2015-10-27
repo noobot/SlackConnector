@@ -1,6 +1,6 @@
 ﻿using System;
-using SlackConnector.Sockets;
-using SlackConnector.Sockets.Messages;
+using SlackConnector.Connections.Sockets;
+using SlackConnector.Connections.Sockets.Messages;
 
 namespace SlackConnector.Tests.Unit.Stubs
 {

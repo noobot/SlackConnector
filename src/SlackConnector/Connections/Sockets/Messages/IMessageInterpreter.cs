@@ -1,4 +1,4 @@
-﻿namespace SlackConnector.Sockets.Messages
+﻿namespace SlackConnector.Connections.Sockets.Messages
 {
     internal interface IMessageInterpreter
     {

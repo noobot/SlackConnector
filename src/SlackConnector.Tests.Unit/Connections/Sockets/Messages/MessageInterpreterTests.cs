@@ -1,10 +1,9 @@
-﻿using System.Net;
-using NUnit.Framework;
-using SlackConnector.Sockets.Messages;
+﻿using NUnit.Framework;
+using SlackConnector.Connections.Sockets.Messages;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
-namespace SlackConnector.Tests.Unit.Sockets.Messages
+namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
 {
     internal class given_standard_message_when_processing_message : SpecsFor<MessageInterpreter>
     {

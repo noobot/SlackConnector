@@ -1,4 +1,4 @@
-﻿namespace SlackConnector.Sockets
+﻿namespace SlackConnector.Connections.Sockets
 {
     internal interface IWebSocketFactory
     {

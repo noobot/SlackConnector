@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SlackConnector.Models.Handshake
+namespace SlackConnector.Connections.Handshaking.Models
 {
     internal class UserProfile
     {

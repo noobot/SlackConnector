@@ -1,8 +1,7 @@
 ﻿using System;
-using Newtonsoft.Json.Linq;
-using SlackConnector.Sockets.Messages;
+using SlackConnector.Connections.Sockets.Messages;
 
-namespace SlackConnector.Sockets
+namespace SlackConnector.Connections.Sockets
 {
     internal class WebSocket : IWebSocket
     {

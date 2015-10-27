@@ -1,5 +1,4 @@
-﻿using SlackConnector.Sockets;
-using SlackConnector.Tests.Unit.Stubs;
+﻿using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
