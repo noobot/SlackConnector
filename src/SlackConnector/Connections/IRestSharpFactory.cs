@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections
 {
-    internal interface IRestSharpFactory
+    public interface IRestSharpFactory
     {
         IRestClient CreateClient(string baseUrl);
     }

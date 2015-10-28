@@ -149,9 +149,12 @@ namespace SlackConnector.Tests.Unit.Stubs
             throw new NotImplementedException();
         }
 
-        public Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request)
+        public string ExecutePostTaskAsync_Content { get; set; }
+        public IRestRequest ExecutePostTaskAsync_Request { get; set; }
+        public async Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request)
         {
-            throw new NotImplementedException();
+            ExecutePostTaskAsync_Request = request;
+            return await Task.FromResult(new RestResponse { Content = ExecutePostTaskAsync_Content });
         }
 
         public Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request, CancellationToken token)

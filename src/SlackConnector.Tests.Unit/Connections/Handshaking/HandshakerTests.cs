@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
+using RestSharp;
+using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
@@ -12,16 +15,19 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
         internal class given_valid_response_when_handshaking_with_slack : SpecsFor<HandshakeClient>
         {
             private const string SLACK_KEY = "something_that_looks_like_a_key";
-            private RestClientStub RestClient { get; set; }
+            private RestClientStub RestStub { get; set; }
             private SlackHandshake Result { get; set; }
 
             protected override void Given()
             {
-                RestClient = new RestClientStub();
+                RestStub = new RestClientStub
+                {
+                    ExecutePostTaskAsync_Content = Resources.ResourceManager.GetHandShakeResponseJson()
+                };
 
                 GetMockFor<IRestSharpFactory>()
                     .Setup(x => x.CreateClient("https://slack.com"))
-                    .Returns(RestClient);
+                    .Returns(RestStub);
             }
 
             protected override void When()
@@ -32,13 +38,18 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
             [Test]
             public void then_should_pass_expected_key()
             {
-                
+                IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
+                Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("token"));
+                keyParam.ShouldNotBeNull();
+                keyParam.Type.ShouldEqual(ParameterType.HttpHeader);
+                keyParam.Value.ShouldEqual(SLACK_KEY);
             }
 
             [Test]
             public void then_should_access_expected_path()
             {
-                
+                IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
+                request.Resource.ShouldEqual(HandshakeClient.HANDSHAKE_PATH);
             }
 
             [Test]
