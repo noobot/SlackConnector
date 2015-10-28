@@ -29,8 +29,8 @@
   "ims": [
     {
       "id": "im-id",
-      "is_im": true,
       "user": "im-user",
+      "is_im": true,
       "is_open": true
     }
   ],

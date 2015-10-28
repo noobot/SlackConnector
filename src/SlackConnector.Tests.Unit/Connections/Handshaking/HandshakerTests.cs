@@ -7,6 +7,7 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
+using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.Connections.Handshaking
 {
@@ -55,7 +56,74 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
             [Test]
             public void then_should_return_expected_model()
             {
-                
+                var expected = new SlackHandshake
+                {
+                    Ok = true,
+                    Self = new Detail
+                    {
+                        Id = "self-id",
+                        Name = "self-name"
+                    },
+                    Team = new Detail
+                    {
+                        Id = "team-id",
+                        Name = "team-name"
+                    },
+                    Channels = new []
+                    {
+                        new Channel
+                        {
+                            Id = "channel-id",
+                            Name = "channel-name",
+                            IsChannel = true,
+                            IsArchived = true,
+                            IsMember = true
+                        }
+                    },
+                    Groups = new []
+                    {
+                        new Group
+                        {
+                            Id = "group-id",
+                            Name = "group-name",
+                            IsGroup = true,
+                            IsArchived = true,
+                            IsOpen = true
+                        }
+                    },
+                    Ims = new []
+                    {
+                        new Im
+                        {
+                            Id = "im-id",
+                            User = "im-user",
+                            IsIm = true,
+                            IsOpen = true
+                        }
+                    },
+                    Users = new[]
+                    {
+                        new User
+                        {
+                            Id = "user-id",
+                            Name = "user-name",
+                            Deleted = true,
+                            Profile = new Profile
+                            {
+                                FirstName = "first-name",
+                                LastName = "last-name",
+                                RealName = "real-name",
+                                RealNameNormalised = "real-name-normalized",
+                                Email = "email"
+                            },
+                            IsAdmin = true,
+                            IsBot = true
+                        }
+                    },
+                    WebSocketUrl = @"wss://ms331.slack-msgs.com/websocket/999"
+                };
+
+                Result.ShouldLookLike(expected);
             }
         }
     }

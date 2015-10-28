@@ -11,9 +11,9 @@ namespace SlackConnector.Connections.Handshaking.Models
 
         public Detail Team { get; set; }
         public Detail Self { get; set; }
-        public Detail[] Users { get; set; }
+        public User[] Users { get; set; }
         public Channel[] Channels { get; set; }
-        public Channel[] Groups { get; set; }
+        public Group[] Groups { get; set; }
         public Im[] Ims { get; set; }
     }
 }

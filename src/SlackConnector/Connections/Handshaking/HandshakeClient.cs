@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RestSharp;
 using SlackConnector.Connections.Handshaking.Models;
 
@@ -22,7 +23,7 @@ namespace SlackConnector.Connections.Handshaking
             IRestClient client = _restSharpFactory.CreateClient("https://slack.com");
             IRestResponse response = await client.ExecutePostTaskAsync(request);
 
-            return null;
+            return JsonConvert.DeserializeObject<SlackHandshake>(response.Content);
         }
     }
 }

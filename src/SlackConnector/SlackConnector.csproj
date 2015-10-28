@@ -60,6 +60,8 @@
     <Compile Include="BotHelpers\BotNameRegexComposer.cs" />
     <Compile Include="Connections\Handshaking\HandshakeClient.cs" />
     <Compile Include="Connections\Handshaking\IHandshakeClient.cs" />
+    <Compile Include="Connections\Handshaking\Models\Group.cs" />
+    <Compile Include="Connections\Handshaking\Models\Profile.cs" />
     <Compile Include="Connections\IConnectionFactory.cs" />
     <Compile Include="Connections\IRestSharpFactory.cs" />
     <Compile Include="EventHandlers\ConnectionStatusChangedEventHandler.cs" />
