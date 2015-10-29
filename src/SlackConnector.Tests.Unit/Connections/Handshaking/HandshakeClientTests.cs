@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using NUnit.Framework;
 using RestSharp;
 using Should;
@@ -11,7 +13,7 @@ using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.Connections.Handshaking
 {
-    public static class HandshakerTests
+    public static class HandshakeClientTests
     {
         internal class given_valid_response_when_handshaking_with_slack : SpecsFor<HandshakeClient>
         {
@@ -23,7 +25,8 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
             {
                 RestStub = new RestClientStub
                 {
-                    ExecutePostTaskAsync_Content = Resources.ResourceManager.GetHandShakeResponseJson()
+                    ExecutePostTaskAsync_Content = Resources.ResourceManager.GetHandShakeResponseJson(),
+                    ExecutePostTaskAsync_StatusCode = HttpStatusCode.OK
                 };
 
                 GetMockFor<IRestSharpFactory>()
@@ -69,7 +72,7 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
                         Id = "team-id",
                         Name = "team-name"
                     },
-                    Channels = new []
+                    Channels = new[]
                     {
                         new Channel
                         {
@@ -80,7 +83,7 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
                             IsMember = true
                         }
                     },
-                    Groups = new []
+                    Groups = new[]
                     {
                         new Group
                         {
@@ -91,7 +94,7 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
                             IsOpen = true
                         }
                     },
-                    Ims = new []
+                    Ims = new[]
                     {
                         new Im
                         {
@@ -124,6 +127,39 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
                 };
 
                 Result.ShouldLookLike(expected);
+            }
+        }
+
+        internal class given_http_error_when_handshaking : SpecsFor<HandshakeClient>
+        {
+            protected override void Given()
+            {
+                var stub = new RestClientStub
+                {
+                    ExecutePostTaskAsync_Content = string.Empty,
+                    ExecutePostTaskAsync_StatusCode = HttpStatusCode.BadRequest
+                };
+
+                GetMockFor<IRestSharpFactory>()
+                    .Setup(x => x.CreateClient("https://slack.com"))
+                    .Returns(stub);
+            }
+
+            [Test]
+            public void then_should_throw_exception()
+            {
+                bool exceptionDetected = false;
+
+                try
+                {
+                    var something = SUT.FirmShake("something").Result;
+                }
+                catch (AggregateException ex)
+                {
+                    exceptionDetected = ex.InnerExceptions[0] is WebException;
+                }
+
+                Assert.That(exceptionDetected, Is.True);
             }
         }
     }

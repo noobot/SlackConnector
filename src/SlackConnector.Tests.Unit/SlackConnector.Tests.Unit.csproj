@@ -76,7 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connections\Handshaking\HandshakerTests.cs" />
+    <Compile Include="Connections\Handshaking\HandshakeClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="SlackConnectorTests\ConnectTests.cs" />

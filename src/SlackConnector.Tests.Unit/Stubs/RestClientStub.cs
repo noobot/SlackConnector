@@ -150,11 +150,18 @@ namespace SlackConnector.Tests.Unit.Stubs
         }
 
         public string ExecutePostTaskAsync_Content { get; set; }
-        public IRestRequest ExecutePostTaskAsync_Request { get; set; }
+        public HttpStatusCode ExecutePostTaskAsync_StatusCode { get; set; }
+        public IRestRequest ExecutePostTaskAsync_Request { get; private set; }
         public async Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request)
         {
             ExecutePostTaskAsync_Request = request;
-            return await Task.FromResult(new RestResponse { Content = ExecutePostTaskAsync_Content });
+            var response = new RestResponse
+            {
+                Content = ExecutePostTaskAsync_Content,
+                StatusCode = ExecutePostTaskAsync_StatusCode
+            };
+
+            return await Task.FromResult(response);
         }
 
         public Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request, CancellationToken token)
