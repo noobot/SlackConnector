@@ -87,7 +87,16 @@ namespace SlackConnector
                 _userNameCache.Add(user.Id, user.Name);
             }
 
-
+            foreach (Channel channel in handshake.Channels)
+            {
+                SlackChatHub newChannel = new SlackChatHub()
+                {
+                    Id = channel.Id,
+                    Name = "#" + channel.Name,
+                    Type = SlackChatHubType.Channel
+                };
+                _connectedHubs.Add(channel.Id, newChannel);
+            }
 
 
 
