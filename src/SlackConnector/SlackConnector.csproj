@@ -58,12 +58,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BotHelpers\BotNameRegexComposer.cs" />
+    <Compile Include="Connections\ConnectionFactory.cs" />
     <Compile Include="Connections\Handshaking\HandshakeClient.cs" />
     <Compile Include="Connections\Handshaking\IHandshakeClient.cs" />
     <Compile Include="Connections\Handshaking\Models\Group.cs" />
     <Compile Include="Connections\Handshaking\Models\Profile.cs" />
     <Compile Include="Connections\IConnectionFactory.cs" />
     <Compile Include="Connections\IRestSharpFactory.cs" />
+    <Compile Include="Connections\RestSharpFactory.cs" />
     <Compile Include="EventHandlers\ConnectionStatusChangedEventHandler.cs" />
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
@@ -85,14 +87,12 @@
     <Compile Include="Models\SlackMessage.cs" />
     <Compile Include="Models\SlackUser.cs" />
     <Compile Include="Connections\Sockets\IWebSocketClient.cs" />
-    <Compile Include="Connections\Sockets\IWebSocketFactory.cs" />
     <Compile Include="Connections\Sockets\Messages\IMessageInterpreter.cs" />
     <Compile Include="Connections\Sockets\Messages\InboundMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreter.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageSubType.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageType.cs" />
     <Compile Include="Connections\Sockets\WebSocketClient.cs" />
-    <Compile Include="Connections\Sockets\WebSocketFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

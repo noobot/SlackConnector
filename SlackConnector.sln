@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector.Tests.Integr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector.Tests.Unit", "src\SlackConnector.Tests.Unit\SlackConnector.Tests.Unit.csproj", "{1D33C34B-54D1-4F3B-80B9-5B23B9619518}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{01D3C8E6-DA36-4D50-B35E-3B3FC78AFFEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CD09750C-2BDF-4C61-935E-C4DCF570219A} = {01D3C8E6-DA36-4D50-B35E-3B3FC78AFFEA}
+		{1D33C34B-54D1-4F3B-80B9-5B23B9619518} = {01D3C8E6-DA36-4D50-B35E-3B3FC78AFFEA}
 	EndGlobalSection
 EndGlobal
