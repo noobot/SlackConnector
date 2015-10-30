@@ -67,6 +67,7 @@
     <Compile Include="Connections\IRestSharpFactory.cs" />
     <Compile Include="Connections\RestSharpFactory.cs" />
     <Compile Include="EventHandlers\ConnectionStatusChangedEventHandler.cs" />
+    <Compile Include="Exceptions\AlreadyConnectedException.cs" />
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnector.cs" />

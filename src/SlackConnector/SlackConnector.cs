@@ -13,6 +13,7 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.EventHandlers;
+using SlackConnector.Exceptions;
 using SlackConnector.Models;
 
 namespace SlackConnector
@@ -21,8 +22,7 @@ namespace SlackConnector
     {
         private readonly IConnectionFactory _connectionFactory;
         private IWebSocketClient _webSocketClient;
-
-        private const string SLACK_API_START_URL = "https://slack.com/api/rtm.start";
+        
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
         private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
 
@@ -67,6 +67,11 @@ namespace SlackConnector
 
         public async Task Connect(string slackKey)
         {
+            if (IsConnected)
+            {
+                throw new AlreadyConnectedException();
+            }
+
             SlackKey = slackKey;
 
             IHandshakeClient handshakeClient = _connectionFactory.CreateHandshakeClient();
@@ -82,9 +87,9 @@ namespace SlackConnector
                 _userNameCache.Add(user.Id, user.Name);
             }
 
-            //// disconnect in case we're already connected like a crazy person
-            //Disconnect();
+            ConnectedSince = DateTime.Now;
 
+            
             //NoobWebClient client = new NoobWebClient();
             //string json = await client.GetResponse(SLACK_API_START_URL, RequestMethod.Post, "token", this.SlackKey);
             //JObject jData = JObject.Parse(json);
@@ -239,7 +244,6 @@ namespace SlackConnector
             if (_webSocketClient != null && _webSocketClient.IsAlive)
             {
                 _webSocketClient.Close();
-                _webSocketClient = null;
             }
         }
 
