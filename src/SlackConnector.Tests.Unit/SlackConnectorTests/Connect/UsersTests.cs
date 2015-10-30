@@ -6,13 +6,12 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SpecsFor;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests
+namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 {
-    public static class ConnectTests
+    public static class UsersTests
     {
-        public class given_api_key_when_connecting_to_slack : SpecsFor<SlackConnector>
+        public class given_user_cache_when_connecting_to_slack : SpecsFor<SlackConnector>
         {
-            private readonly string SlackKey = "000111ooo";
             private SlackHandshake _handshake;
 
             protected override void InitializeClassUnderTest()
@@ -28,46 +27,47 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 _handshake = new SlackHandshake
                 {
-                    Team = new Detail
+                    Users = new []
                     {
-                        Id = "team-id-value",
-                        Name = "team-name-value"
-                    },
-                    Self = new Detail
-                    {
-                        Id = "self-id-value",
-                        Name = "self-name-value"
+                        new User
+                        {
+                            Id = "Id1",
+                            Name = "Name1"
+                        },
+                        new User
+                        {
+                            Id = "Id2",
+                            Name = "Name2"
+                        },
                     }
                 };
 
                 GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(SlackKey))
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
                     .ReturnsAsync(_handshake);
             }
 
             protected override void When()
             {
-                SUT.Connect(SlackKey).Wait();
+                SUT.Connect("").Wait();
             }
 
             [Test]
-            public void then_should_set_slack_key()
+            public void then_should_contain_2_users()
             {
-                SUT.SlackKey.ShouldEqual(SlackKey);
+                SUT.UserNameCache.Count.ShouldEqual(2);
             }
 
             [Test]
-            public void then_should_populate_team_details()
+            public void then_should_contain_user_1()
             {
-                SUT.TeamId.ShouldEqual(_handshake.Team.Id);
-                SUT.TeamName.ShouldEqual(_handshake.Team.Name);
+                SUT.UserNameCache["Id1"].ShouldEqual("Name1");
             }
 
             [Test]
-            public void then_should_populate_self_user_details()
+            public void then_should_contain_user_2()
             {
-                SUT.UserId.ShouldEqual(_handshake.Self.Id);
-                SUT.UserName.ShouldEqual(_handshake.Self.Name);
+                SUT.UserNameCache["Id2"].ShouldEqual("Name2");
             }
         }
     }

@@ -77,6 +77,11 @@ namespace SlackConnector
             UserName = handshake.Self.Name;
             UserId = handshake.Self.Id;
 
+            foreach (User user in handshake.Users)
+            {
+                _userNameCache.Add(user.Id, user.Name);
+            }
+
             //// disconnect in case we're already connected like a crazy person
             //Disconnect();
 

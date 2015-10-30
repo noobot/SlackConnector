@@ -79,7 +79,8 @@
     <Compile Include="Connections\Handshaking\HandshakeClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
-    <Compile Include="SlackConnectorTests\ConnectTests.cs" />
+    <Compile Include="SlackConnectorTests\Connect\UsersTests.cs" />
+    <Compile Include="SlackConnectorTests\Connect\TeamAndSelfTests.cs" />
     <Compile Include="SlackConnectorTests\OnMessageTests.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreterTests.cs" />
     <Compile Include="Stubs\RestClientStub.cs" />
