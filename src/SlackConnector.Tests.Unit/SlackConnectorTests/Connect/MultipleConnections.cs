@@ -26,7 +26,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Responses.ValidHandshake());
+                    .ReturnsAsync(new SlackHandshake());
 
                 SUT.Connect("").Wait();
             }

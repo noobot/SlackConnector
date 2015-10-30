@@ -87,25 +87,13 @@ namespace SlackConnector
                 _userNameCache.Add(user.Id, user.Name);
             }
 
+
+
+
+
+
             ConnectedSince = DateTime.Now;
-
             
-            //NoobWebClient client = new NoobWebClient();
-            //string json = await client.GetResponse(SLACK_API_START_URL, RequestMethod.Post, "token", this.SlackKey);
-            //JObject jData = JObject.Parse(json);
-
-            //TeamId = jData["team"]["id"].Value<string>();
-            //TeamName = jData["team"]["name"].Value<string>();
-            //UserId = jData["self"]["id"].Value<string>();
-            //UserName = jData["self"]["name"].Value<string>();
-            //string webSocketUrl = jData["url"].Value<string>();
-
-            //_userNameCache.Clear();
-            //foreach (JObject userObject in jData["users"])
-            //{
-            //    _userNameCache.Add(userObject["id"].Value<string>(), userObject["name"].Value<string>());
-            //}
-
             //// channelz
             //if (jData["channels"] != null)
             //{
