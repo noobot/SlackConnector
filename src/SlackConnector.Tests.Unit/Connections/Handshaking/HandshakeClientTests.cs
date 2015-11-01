@@ -45,7 +45,7 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("token"));
                 keyParam.ShouldNotBeNull();
-                keyParam.Type.ShouldEqual(ParameterType.HttpHeader);
+                keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
                 keyParam.Value.ShouldEqual(SLACK_KEY);
             }
 

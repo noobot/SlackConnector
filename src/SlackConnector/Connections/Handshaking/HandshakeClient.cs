@@ -19,7 +19,7 @@ namespace SlackConnector.Connections.Handshaking
         public async Task<SlackHandshake> FirmShake(string slackKey)
         {
             var request = new RestRequest(HANDSHAKE_PATH);
-            request.AddHeader("token", slackKey);
+            request.AddParameter("token", slackKey);
 
             IRestClient client = _restSharpFactory.CreateClient("https://slack.com");
             IRestResponse response = await client.ExecutePostTaskAsync(request);
