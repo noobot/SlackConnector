@@ -73,7 +73,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                     Name = "#" + _handshake.Channels[0].Name,
                     Type = SlackChatHubType.Channel,
                 };
-                SUT.ConnectedHubs["Id1"].ShouldLookLike(expected);
+                SUT.ConnectedHubs[_handshake.Channels[0].Id].ShouldLookLike(expected);
             }
 
             [Test]
@@ -85,7 +85,115 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                     Name = "#" + _handshake.Channels[1].Name,
                     Type = SlackChatHubType.Channel,
                 };
-                SUT.ConnectedHubs["Id2"].ShouldLookLike(expected);
+                SUT.ConnectedHubs[_handshake.Channels[1].Id].ShouldLookLike(expected);
+            }
+        }
+
+        public class given_groups_that_are_not_archived_and_is_a_member_of_group : SpecsFor<SlackConnector>
+        {
+            private SlackHandshake _handshake;
+            private const string SelfId = "abc123";
+
+            protected override void InitializeClassUnderTest()
+            {
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
+            }
+
+            protected override void Given()
+            {
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                _handshake = new SlackHandshake
+                {
+                    Self = new Detail { Id = SelfId },
+                    Groups = new[]
+                    {
+                        new Group
+                        {
+                            Id = "group-id",
+                            Name = "group-name",
+                            IsArchived = false,
+                            Members = new [] { SelfId }
+                        }
+                    }
+                };
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(_handshake);
+            }
+
+            protected override void When()
+            {
+                SUT.Connect("").Wait();
+            }
+
+            [Test]
+            public void then_should_contain_single_channel()
+            {
+                SUT.ConnectedHubs.Count.ShouldEqual(1);
+            }
+
+            [Test]
+            public void then_should_contain_channel()
+            {
+                var expected = new SlackChatHub
+                {
+                    Id = _handshake.Groups[0].Id,
+                    Name = "#" + _handshake.Groups[0].Name,
+                    Type = SlackChatHubType.Group,
+                };
+                SUT.ConnectedHubs[_handshake.Groups[0].Id].ShouldLookLike(expected);
+            }
+        }
+
+        public class given_groups_that_are_not_archived_and_is_not_a_member_of_group : SpecsFor<SlackConnector>
+        {
+            private SlackHandshake _handshake;
+            private const string SelfId = "abc123";
+
+            protected override void InitializeClassUnderTest()
+            {
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
+            }
+
+            protected override void Given()
+            {
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                _handshake = new SlackHandshake
+                {
+                    Self = new Detail { Id = SelfId },
+                    Groups = new[]
+                    {
+                        new Group
+                        {
+                            Id = "group-id",
+                            Name = "group-name",
+                            IsArchived = false,
+                            Members = new [] { "something-else" }
+                        }
+                    }
+                };
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(_handshake);
+            }
+
+            protected override void When()
+            {
+                SUT.Connect("").Wait();
+            }
+
+            [Test]
+            public void then_should_not_contain_any_channel()
+            {
+                SUT.ConnectedHubs.Count.ShouldEqual(0);
             }
         }
     }

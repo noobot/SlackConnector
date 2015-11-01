@@ -21,6 +21,7 @@ namespace SlackConnector.Connections.Sockets
         public event EventHandler<InboundMessage> OnMessage;
         public event EventHandler OnClose;
 
+        //TODO: Combine Connect and OnOpen together into an await?
         public void Connect()
         {
             _webSocket.Connect();

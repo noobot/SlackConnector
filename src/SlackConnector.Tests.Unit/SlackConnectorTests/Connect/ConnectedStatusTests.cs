@@ -46,6 +46,18 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                 SUT.ConnectedSince.ShouldBeGreaterThanOrEqualTo(DateTime.Now.AddSeconds(-1));
                 SUT.ConnectedSince.ShouldBeLessThan(DateTime.Now);
             }
+
+            [Test]
+            public void then_should_not_contain_connected_hubs()
+            {
+                SUT.ConnectedHubs.Count.ShouldEqual(0);
+            }
+
+            [Test]
+            public void then_should_not_contain_users()
+            {
+                SUT.UserNameCache.Count.ShouldEqual(0);
+            }
         }
     }
 }

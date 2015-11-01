@@ -5,6 +5,7 @@ namespace SlackConnector.Connections.Handshaking.Models
     internal class SlackHandshake
     {
         public bool Ok { get; set; }
+        public string Error { get; set; }
 
         [JsonProperty("Url")]
         public string WebSocketUrl { get; set; } 

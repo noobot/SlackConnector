@@ -15,6 +15,7 @@ using SlackConnector.Connections.Sockets;
 using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
+using Group = SlackConnector.Connections.Handshaking.Models.Group;
 
 namespace SlackConnector
 {
@@ -89,7 +90,7 @@ namespace SlackConnector
 
             foreach (Channel channel in handshake.Channels)
             {
-                SlackChatHub newChannel = new SlackChatHub()
+                var newChannel = new SlackChatHub
                 {
                     Id = channel.Id,
                     Name = "#" + channel.Name,
@@ -98,28 +99,25 @@ namespace SlackConnector
                 _connectedHubs.Add(channel.Id, newChannel);
             }
 
+            foreach (Group group in handshake.Groups)
+            {
+                if (group.Members.Any(x => x == UserId))
+                {
+                    var newGroup = new SlackChatHub
+                    {
+                        Id = group.Id,
+                        Name = "#" + group.Name,
+                        Type = SlackChatHubType.Group
+                    };
+                    _connectedHubs.Add(group.Id, newGroup);
+                }
+            }
+
 
 
 
             ConnectedSince = DateTime.Now;
             
-            //// channelz
-            //if (jData["channels"] != null)
-            //{
-            //    foreach (JObject channelData in jData["channels"])
-            //    {
-            //        if (!channelData["is_archived"].Value<bool>() && channelData["is_member"].Value<bool>())
-            //        {
-            //            SlackChatHub channel = new SlackChatHub()
-            //            {
-            //                Id = channelData["id"].Value<string>(),
-            //                Name = "#" + channelData["name"].Value<string>(),
-            //                Type = SlackChatHubType.Channel
-            //            };
-            //            _connectedHubs.Add(channel.Id, channel);
-            //        }
-            //    }
-            //}
 
             //// groupz
             //if (jData["groups"] != null)
