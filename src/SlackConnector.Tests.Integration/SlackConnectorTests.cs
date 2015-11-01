@@ -16,11 +16,12 @@ namespace SlackConnector.Tests.Integration
             // given
             var config = new ConfigReader().GetConfig();
 
-            // when
-            ISlackConnector slackConnector = new SlackConnector();
+            var slackConnector = new SlackConnector();
             slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
             slackConnector.OnMessageReceived += SlackConnectorOnOnMessageReceived;
-            slackConnector.Connect(config.Slack.ApiToken);
+
+            // when
+            slackConnector.Connect(config.Slack.ApiToken).Wait();
 
             // then
             DateTime startTime = DateTime.Now;
