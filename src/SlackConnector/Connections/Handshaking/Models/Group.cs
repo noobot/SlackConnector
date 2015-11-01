@@ -12,5 +12,7 @@ namespace SlackConnector.Connections.Handshaking.Models
 
         [JsonProperty("is_open")]
         public bool IsOpen { get; set; }
+
+        public string[] Members { get; set; }
     }
 }

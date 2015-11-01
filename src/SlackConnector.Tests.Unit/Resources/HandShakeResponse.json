@@ -4,7 +4,7 @@
     "id": "self-id",
     "name": "self-name"
   },
-  "team": {   
+  "team": {
     "id": "team-id",
     "name": "team-name"
   },
@@ -23,7 +23,10 @@
       "name": "group-name",
       "is_group": true,
       "is_archived": true,
-      "is_open": true
+      "is_open": true,
+      "members": [
+        "member1"
+      ]
     }
   ],
   "ims": [

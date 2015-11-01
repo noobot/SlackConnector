@@ -91,7 +91,11 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
                             Name = "group-name",
                             IsGroup = true,
                             IsArchived = true,
-                            IsOpen = true
+                            IsOpen = true,
+                            Members = new []
+                            {
+                                "member1"
+                            }
                         }
                     },
                     Ims = new[]
@@ -162,5 +166,8 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
                 Assert.That(exceptionDetected, Is.True);
             }
         }
+
+        //TODO: When error is returned in JSON, display error
+        //TODO: Maybe find all error types and turn into enum?
     }
 }
