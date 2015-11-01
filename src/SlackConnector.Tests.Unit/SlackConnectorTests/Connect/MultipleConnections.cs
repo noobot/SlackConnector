@@ -28,7 +28,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
                     .ReturnsAsync(new SlackHandshake());
 
-                SUT.Connect("").Wait();
+                SUT.Connect("something").Wait();
             }
 
             [Test]

@@ -5,6 +5,7 @@ using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
+using SlackConnector.Exceptions;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
@@ -31,7 +32,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
             protected override void When()
             {
-                SUT.Connect("").Wait();
+                SUT.Connect("key").Wait();
             }
 
             [Test]
@@ -57,6 +58,42 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             public void then_should_not_contain_users()
             {
                 SUT.UserNameCache.Count.ShouldEqual(0);
+            }
+        }
+
+        public class given_empty_api_key : SpecsFor<SlackConnector>
+        {
+            protected override void InitializeClassUnderTest()
+            {
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
+            }
+
+            protected override void Given()
+            {
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(new SlackHandshake());
+            }
+
+            [Test]
+            public void then_should_be_aware_of_current_state()
+            {
+                bool exceptionDetected = false;
+
+                try
+                {
+                    SUT.Connect("").Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    exceptionDetected = ex.InnerExceptions[0] is ArgumentNullException;
+                }
+
+                Assert.That(exceptionDetected, Is.True);
             }
         }
     }

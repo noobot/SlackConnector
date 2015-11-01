@@ -55,7 +55,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
             protected override void When()
             {
-                SUT.Connect("").Wait();
+                SUT.Connect("something").Wait();
             }
 
             [Test]
@@ -127,7 +127,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
             protected override void When()
             {
-                SUT.Connect("").Wait();
+                SUT.Connect("key").Wait();
             }
 
             [Test]
@@ -187,7 +187,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
             protected override void When()
             {
-                SUT.Connect("").Wait();
+                SUT.Connect("key").Wait();
             }
 
             [Test]

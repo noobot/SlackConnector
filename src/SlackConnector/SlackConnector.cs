@@ -73,6 +73,11 @@ namespace SlackConnector
                 throw new AlreadyConnectedException();
             }
 
+            if (string.IsNullOrEmpty(slackKey))
+            {
+                throw new ArgumentNullException("slackKey");
+            }
+
             SlackKey = slackKey;
 
             IHandshakeClient handshakeClient = _connectionFactory.CreateHandshakeClient();
@@ -118,24 +123,7 @@ namespace SlackConnector
 
             ConnectedSince = DateTime.Now;
             
-
-            //// groupz
-            //if (jData["groups"] != null)
-            //{
-            //    foreach (JObject groupData in jData["groups"])
-            //    {
-            //        if (!groupData["is_archived"].Value<bool>() && groupData["members"].Values<string>().Contains(UserId))
-            //        {
-            //            SlackChatHub group = new SlackChatHub()
-            //            {
-            //                Id = groupData["id"].Value<string>(),
-            //                Name = groupData["name"].Value<string>(),
-            //                Type = SlackChatHubType.Group
-            //            };
-            //            _connectedHubs.Add(group.Id, group);
-            //        }
-            //    }
-            //}
+            
 
             //// dmz
             //if (jData["ims"] != null)

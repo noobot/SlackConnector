@@ -49,7 +49,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
             protected override void When()
             {
-                SUT.Connect("").Wait();
+                SUT.Connect("key").Wait();
             }
 
             [Test]
