@@ -84,6 +84,7 @@
     <Compile Include="SlackConnectorTests\Connect\HubsTests.cs" />
     <Compile Include="SlackConnectorTests\Connect\UsersTests.cs" />
     <Compile Include="SlackConnectorTests\Connect\TeamAndSelfTests.cs" />
+    <Compile Include="SlackConnectorTests\Connect\WebSocketTests.cs" />
     <Compile Include="SlackConnectorTests\OnMessageTests.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreterTests.cs" />
     <Compile Include="Stubs\RestClientStub.cs" />

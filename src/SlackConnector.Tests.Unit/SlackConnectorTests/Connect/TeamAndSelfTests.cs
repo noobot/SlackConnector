@@ -4,6 +4,7 @@ using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
+using SlackConnector.Connections.Sockets;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
@@ -25,6 +26,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
+                    .Returns(GetMockFor<IWebSocketClient>().Object);
 
                 _handshake = new SlackHandshake
                 {

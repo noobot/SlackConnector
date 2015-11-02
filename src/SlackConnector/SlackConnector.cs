@@ -129,20 +129,13 @@ namespace SlackConnector
                 _connectedHubs.Add(im.Id, newIm);
             }
 
+            _webSocketClient = _connectionFactory.CreateWebSocketClient(handshake.WebSocketUrl);
+            await _webSocketClient.Connect();
 
             ConnectedSince = DateTime.Now;
-            
-            
+            RaiseConnectionStatusChanged();
 
-            //// set up the websocket and connect
-            //_webSocketClient = _connectionFactory.CreateWebSocketClient(webSocketUrl);
-
-            //_webSocketClient.OnOpen += (sender, e) =>
-            //{
-            //    // set connection-related properties
-            //    ConnectedSince = DateTime.Now;
-            //    RaiseConnectionStatusChanged();
-            //};
+            
 
 
             ////TODO DODODODODODO
@@ -162,8 +155,6 @@ namespace SlackConnector
             //    UserName = null;
             //    RaiseConnectionStatusChanged();
             //};
-
-            //_webSocketClient.Connect();
         }
 
         private async Task ListenTo(JObject message)

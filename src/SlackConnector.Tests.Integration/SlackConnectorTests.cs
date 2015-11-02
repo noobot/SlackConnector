@@ -24,13 +24,6 @@ namespace SlackConnector.Tests.Integration
             slackConnector.Connect(config.Slack.ApiToken).Wait();
 
             // then
-            DateTime startTime = DateTime.Now;
-            while (!slackConnector.IsConnected && (DateTime.Now - startTime) < TimeSpan.FromSeconds(30))
-            {
-                Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            }
-
-            Thread.Sleep(TimeSpan.FromMinutes(1));
             Assert.That(slackConnector.IsConnected, Is.True);
         }
 
