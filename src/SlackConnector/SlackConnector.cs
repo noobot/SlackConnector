@@ -75,7 +75,7 @@ namespace SlackConnector
 
             if (string.IsNullOrEmpty(slackKey))
             {
-                throw new ArgumentNullException("slackKey");
+                throw new ArgumentNullException(nameof(slackKey));
             }
 
             SlackKey = slackKey;
@@ -133,22 +133,6 @@ namespace SlackConnector
             ConnectedSince = DateTime.Now;
             
             
-
-            //// dmz
-            //if (jData["ims"] != null)
-            //{
-            //    foreach (JObject dmData in jData["ims"])
-            //    {
-            //        string userID = dmData["user"].Value<string>();
-            //        SlackChatHub dm = new SlackChatHub()
-            //        {
-            //            Id = dmData["id"].Value<string>(),
-            //            Name = "@" + (_userNameCache.ContainsKey(userID) ? _userNameCache[userID] : userID),
-            //            Type = SlackChatHubType.DM
-            //        };
-            //        _connectedHubs.Add(dm.Id, dm);
-            //    }
-            //}
 
             //// set up the websocket and connect
             //_webSocketClient = _connectionFactory.CreateWebSocketClient(webSocketUrl);
