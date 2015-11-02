@@ -14,8 +14,12 @@ namespace SlackConnector.Tests.Integration.Configuration
             if (Current == null)
             {
                 string fileName = Path.Combine(Environment.CurrentDirectory, @"configuration\config.json");
-                string json = File.ReadAllText(fileName);
+                if (!System.IO.File.Exists(fileName))
+                {
+                    Assert.Inconclusive("Unable to load config file from: " + fileName);
+                }
 
+                string json = File.ReadAllText(fileName);
                 if (string.IsNullOrEmpty(json))
                 {
                     Assert.Inconclusive("Unable to load config");
