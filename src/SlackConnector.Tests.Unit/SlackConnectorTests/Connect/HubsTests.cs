@@ -196,5 +196,69 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                 SUT.ConnectedHubs.Count.ShouldEqual(0);
             }
         }
+
+        public class given_instant_message_channel_when_user_id_doesnt_exists_in_cache : SpecsFor<SlackConnector>
+        {
+            private SlackHandshake _handshake;
+
+            protected override void InitializeClassUnderTest()
+            {
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
+            }
+
+            protected override void Given()
+            {
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                _handshake = new SlackHandshake
+                {
+                    Users = new []
+                    {
+                        new User
+                        {
+                            Id = "different-id-thingy",
+                            Name = "different-namey-thingy"
+                        }
+                    },
+                    Ims = new []
+                    {
+                        new Im
+                        {
+                            Id = "im-id",
+                            User = "user-id-thingy"
+                        }
+                    }
+                };
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(_handshake);
+            }
+
+            protected override void When()
+            {
+                SUT.Connect("something").Wait();
+            }
+
+            [Test]
+            public void then_should_contain_single_channel()
+            {
+                SUT.ConnectedHubs.Count.ShouldEqual(1);
+            }
+
+            [Test]
+            public void then_should_contain_instant_message()
+            {
+                var expected = new SlackChatHub
+                {
+                    Id = _handshake.Ims[0].Id,
+                    Name = "@" + _handshake.Ims[0].User,
+                    Type = SlackChatHubType.DM,
+                };
+                SUT.ConnectedHubs[_handshake.Ims[0].Id].ShouldLookLike(expected);
+            }
+        }
     }
 }

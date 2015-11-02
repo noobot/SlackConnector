@@ -118,7 +118,16 @@ namespace SlackConnector
                 }
             }
 
-
+            foreach (Im im in handshake.Ims)
+            {
+                var newIm = new SlackChatHub
+                {
+                    Id = im.Id,
+                    Name = "@" + (_userNameCache.ContainsKey(im.User) ? _userNameCache[im.User] : im.User),
+                    Type = SlackChatHubType.DM
+                };
+                _connectedHubs.Add(im.Id, newIm);
+            }
 
 
             ConnectedSince = DateTime.Now;
