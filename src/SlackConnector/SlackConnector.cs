@@ -12,6 +12,7 @@ using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
+using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
@@ -23,7 +24,7 @@ namespace SlackConnector
     {
         private readonly IConnectionFactory _connectionFactory;
         private IWebSocketClient _webSocketClient;
-        
+
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
         private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
 
@@ -135,75 +136,63 @@ namespace SlackConnector
             ConnectedSince = DateTime.Now;
             RaiseConnectionStatusChanged();
 
-            
-
-
-            ////TODO DODODODODODO
-            //_webSocketClient.OnMessage += (sender, message) =>
-            //{
-
-            //};
-            ////_webSocket.OnMessage += async (sender, message) => await ListenTo(message);
-
-            //_webSocketClient.OnClose += (sender, e) =>
-            //{
-            //    // set connection-related properties
-            //    ConnectedSince = null;
-            //    TeamId = null;
-            //    TeamName = null;
-            //    UserId = null;
-            //    UserName = null;
-            //    RaiseConnectionStatusChanged();
-            //};
+            _webSocketClient.OnMessage += async (sender, message) => await ListenTo(message);
+            _webSocketClient.OnClose += (sender, e) =>
+            {
+                ConnectedSince = null;
+                RaiseConnectionStatusChanged();
+            };
         }
 
-        private async Task ListenTo(JObject message)
+        private async Task ListenTo(InboundMessage inboundMessage)
         {
-            if (message != null && message["type"].Value<string>() == "message")
-            {
-                string channelId = message["channel"].Value<string>();
-                SlackChatHub hub;
+            //if (message != null && message["type"].Value<string>() == "message")
+            //{
+            //    string channelId = message["channel"].Value<string>();
+            //    SlackChatHub hub;
 
-                if (ConnectedHubs.ContainsKey(channelId))
-                {
-                    hub = ConnectedHubs[channelId];
-                }
-                else
-                {
-                    hub = SlackChatHub.FromId(channelId);
-                    if (!_connectedHubs.ContainsKey(channelId))
-                    {
-                        _connectedHubs.Add(channelId, hub);
-                    }
-                }
+            //    if (ConnectedHubs.ContainsKey(channelId))
+            //    {
+            //        hub = ConnectedHubs[channelId];
+            //    }
+            //    else
+            //    {
+            //        hub = SlackChatHub.FromId(channelId);
+            //        if (!_connectedHubs.ContainsKey(channelId))
+            //        {
+            //            _connectedHubs.Add(channelId, hub);
+            //        }
+            //    }
 
-                string messageText = message["text"]?.Value<string>();
+            //    string messageText = message["text"]?.Value<string>();
 
-                // check to see if bot has been mentioned
-                var slackMessage = new SlackMessage
-                {
-                    ChatHub = hub,
-                    MentionsBot = BotMentioned(messageText),
-                    RawData = message.ToString(),
-                    // some messages may not have text or a user (like unfurled data from URLs)
-                    Text = messageText,
-                    User = (message["user"] != null ? new SlackUser { Id = message["user"].Value<string>() } : null)
-                };
+            //    // check to see if bot has been mentioned
+            //    var slackMessage = new SlackMessage
+            //    {
+            //        ChatHub = hub,
+            //        MentionsBot = BotMentioned(messageText),
+            //        RawData = message.ToString(),
+            //        // some messages may not have text or a user (like unfurled data from URLs)
+            //        Text = messageText,
+            //        User = (message["user"] != null ? new SlackUser { Id = message["user"].Value<string>() } : null)
+            //    };
 
-                var context = new ResponseContext
-                {
-                    BotUserId = UserId,
-                    BotUserName = UserName,
-                    Message = slackMessage,
-                    TeamId = TeamId,
-                    UserNameCache = new ReadOnlyDictionary<string, string>(_userNameCache)
-                };
+            //    var context = new ResponseContext
+            //    {
+            //        BotUserId = UserId,
+            //        BotUserName = UserName,
+            //        Message = slackMessage,
+            //        TeamId = TeamId,
+            //        UserNameCache = new ReadOnlyDictionary<string, string>(_userNameCache)
+            //    };
 
-                if (slackMessage.User != null && slackMessage.User.Id != UserId && slackMessage.Text != null)
-                {
-                    await RaiseMessageReceived(context);
-                }
-            }
+            //    if (slackMessage.User != null && slackMessage.User.Id != UserId && slackMessage.Text != null)
+            //    {
+            //        await RaiseMessageReceived(context);
+            //    }
+            //}
+
+            await Task.Factory.StartNew(() => { });
         }
 
         public void Disconnect()
