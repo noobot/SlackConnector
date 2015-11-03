@@ -146,6 +146,20 @@ namespace SlackConnector
 
         private async Task ListenTo(InboundMessage inboundMessage)
         {
+            var message = new SlackMessage
+            {
+                User = new SlackUser
+                {
+                    Id = inboundMessage.User,
+                    Name = UserNameCache[inboundMessage.User]
+                }
+                
+                //(message["user"] != null ? new SlackUser { Id = message["user"].Value<string>() } : null)
+            };
+
+
+            await RaiseMessageReceived(message);
+
             //if (message != null && message["type"].Value<string>() == "message")
             //{
             //    string channelId = message["channel"].Value<string>();
@@ -192,7 +206,7 @@ namespace SlackConnector
             //    }
             //}
 
-            await Task.Factory.StartNew(() => { });
+         //   await Task.Factory.StartNew(() => { });
         }
 
         public void Disconnect()
@@ -284,11 +298,11 @@ namespace SlackConnector
         }
 
         public event MessageReceivedEventHandler OnMessageReceived;
-        private async Task RaiseMessageReceived(ResponseContext responseContext)
+        private async Task RaiseMessageReceived(SlackMessage message)
         {
             if (OnMessageReceived != null)
             {
-                await OnMessageReceived(responseContext);
+                await OnMessageReceived(message);
             }
         }
     }

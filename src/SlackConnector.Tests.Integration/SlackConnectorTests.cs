@@ -32,7 +32,7 @@ namespace SlackConnector.Tests.Integration
 
         }
 
-        private Task SlackConnectorOnOnMessageReceived(ResponseContext message)
+        private Task SlackConnectorOnOnMessageReceived(SlackMessage message)
         {
             return new Task(() => { });
         }

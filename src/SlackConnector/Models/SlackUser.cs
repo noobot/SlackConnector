@@ -3,6 +3,7 @@
     public class SlackUser
     {
         public string Id { get; set; }
+        public string Name { get; set; }
 
         public string FormattedUserId
         {
@@ -16,9 +17,9 @@
             }
         }
 
-        public bool IsSlackbot
-        {
-            get { return Id == "USLACKBOT"; }
-        }
+        //public bool IsSlackbot
+        //{
+        //    get { return Id == "USLACKBOT"; }
+        //}
     }
 }
