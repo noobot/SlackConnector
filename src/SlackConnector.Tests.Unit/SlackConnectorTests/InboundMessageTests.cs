@@ -24,11 +24,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             protected override void Given()
             {
                 base.Given();
-                
+
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
                     .ReturnsAsync(Handshake ?? new SlackHandshake());
-                
+
                 SUT.OnMessageReceived += async message =>
                 {
                     Result = message;
@@ -64,7 +64,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 InboundMessage = new InboundMessage
                 {
-                    User = "userABC"
+                    User = "userABC",
+                    MessageType = MessageType.Message
                 };
 
                 base.Given();
@@ -98,7 +99,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 InboundMessage = new InboundMessage
                 {
-                    User = "userABC"
+                    User = "userABC",
+                    MessageType = MessageType.Message
                 };
 
                 base.Given();
@@ -117,6 +119,26 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 };
 
                 Result.ShouldLookLike(expected);
+            }
+        }
+
+        internal class given_connector_is_missing_use_when_inbound_message_arrives_that_isnt_message_type : BaseTest
+        {
+            protected override void Given()
+            {
+                InboundMessage = new InboundMessage
+                {
+                    User = "userABC",
+                    MessageType = MessageType.Unknown
+                };
+
+                base.Given();
+            }
+
+            [Test]
+            public void then_should_not_call_callback()
+            {
+                MessageRaised.ShouldBeFalse();
             }
         }
     }

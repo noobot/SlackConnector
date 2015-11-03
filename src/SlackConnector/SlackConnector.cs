@@ -146,6 +146,9 @@ namespace SlackConnector
 
         private async Task ListenTo(InboundMessage inboundMessage)
         {
+            if (inboundMessage.MessageType != MessageType.Message)
+                return;
+
             var message = new SlackMessage
             {
                 User = new SlackUser
