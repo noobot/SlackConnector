@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using SlackConnector.Exceptions;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Connect.Setups;
+using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 {

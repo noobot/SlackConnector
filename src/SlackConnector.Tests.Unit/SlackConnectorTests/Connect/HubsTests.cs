@@ -6,7 +6,7 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Connect.Setups;
+using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
