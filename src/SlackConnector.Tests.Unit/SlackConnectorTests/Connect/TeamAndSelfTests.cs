@@ -5,32 +5,21 @@ using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
+using SlackConnector.Tests.Unit.SlackConnectorTests.Connect.Setups;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 {
     public static class TeamAndSelfTests
     {
-        public class given_api_key_when_connecting_to_slack : SpecsFor<SlackConnector>
+        public class given_api_key_when_connecting_to_slack : ValidSetup
         {
             private readonly string SlackKey = "000111ooo";
             private SlackHandshake _handshake;
-
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
-            }
-
+            
             protected override void Given()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
-
+                base.Given();
                 _handshake = new SlackHandshake
                 {
                     Team = new Detail

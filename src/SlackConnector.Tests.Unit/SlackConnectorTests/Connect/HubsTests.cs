@@ -6,6 +6,7 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
+using SlackConnector.Tests.Unit.SlackConnectorTests.Connect.Setups;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
@@ -13,24 +14,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 {
     public static class HubsTests
     {
-        public class given_channels_that_are_not_archived_and_are_a_member_of : SpecsFor<SlackConnector>
+        public class given_channels_that_are_not_archived_and_are_a_member_of : ValidSetup
         {
             private SlackHandshake _handshake;
 
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
-            }
-
             protected override void Given()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                base.Given();
 
                 _handshake = new SlackHandshake
                 {
@@ -94,25 +84,15 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             }
         }
 
-        public class given_groups_that_are_not_archived_and_is_a_member_of_group : SpecsFor<SlackConnector>
+        public class given_groups_that_are_not_archived_and_is_a_member_of_group : ValidSetup
         {
             private SlackHandshake _handshake;
             private const string SelfId = "abc123";
-
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
-            }
+            
 
             protected override void Given()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                base.Given();
 
                 _handshake = new SlackHandshake
                 {
@@ -158,25 +138,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             }
         }
 
-        public class given_groups_that_are_not_archived_and_is_not_a_member_of_group : SpecsFor<SlackConnector>
+        public class given_groups_that_are_not_archived_and_is_not_a_member_of_group : ValidSetup
         {
             private SlackHandshake _handshake;
             private const string SelfId = "abc123";
-
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
-            }
-
+            
             protected override void Given()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                base.Given();
 
                 _handshake = new SlackHandshake
                 {
@@ -210,24 +179,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             }
         }
 
-        public class given_instant_message_channel_when_user_id_doesnt_exists_in_cache : SpecsFor<SlackConnector>
+        public class given_instant_message_channel_when_user_id_doesnt_exists_in_cache : ValidSetup
         {
             private SlackHandshake _handshake;
-
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
-            }
-
+            
             protected override void Given()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                base.Given();
 
                 _handshake = new SlackHandshake
                 {

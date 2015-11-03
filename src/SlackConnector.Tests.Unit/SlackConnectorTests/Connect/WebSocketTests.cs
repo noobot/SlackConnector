@@ -8,23 +8,21 @@ using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
+using SlackConnector.Tests.Unit.SlackConnectorTests.Connect.Setups;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 {
     public static class WebSocketTests
     {
-        public class given_valid_setup_then_should_connect_to_expected_websocket_url : SpecsFor<SlackConnector>
+        public class given_valid_setup_then_should_connect_to_expected_websocket_url : ValidSetup
         {
             private bool ConnectionChangedValue { get; set; }
 
             protected override void Given()
             {
                 const string webSocketUrl = "im-a-websocket";
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+                base.Given();
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
@@ -34,12 +32,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                     .Setup(x => x.CreateWebSocketClient(webSocketUrl))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
-
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
-            }
-
+            
             protected override void When()
             {
                 SUT.OnConnectionStatusChanged += connected => ConnectionChangedValue = connected;
@@ -60,29 +53,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             }
         }
 
-        public class when_socket_disconnects_given_valid_setup : SpecsFor<SlackConnector>
+        public class when_socket_disconnects_given_valid_setup : ValidSetup
         {
             private Stack<bool> ConnectionChangedValue { get; set; }
-
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object);
-            }
-
+            
             protected override void Given()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(new SlackHandshake());
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
-
+                base.Given();
                 ConnectionChangedValue = new Stack<bool>();
                 
                 SUT.OnConnectionStatusChanged += connected => ConnectionChangedValue.Push(connected);
