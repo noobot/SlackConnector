@@ -154,15 +154,15 @@ namespace SlackConnector
                 User = new SlackUser
                 {
                     Id = inboundMessage.User,
-                    Name = UserNameCache.ContainsKey(inboundMessage.User) ? UserNameCache[inboundMessage.User] : string.Empty,
+                    Name = string.IsNullOrEmpty(inboundMessage.User) ? string.Empty : UserNameCache.ContainsKey(inboundMessage.User) ? UserNameCache[inboundMessage.User] : string.Empty, //TODO Clean
                 },
-                Text = inboundMessage.Text
+                Text = inboundMessage.Text,
+                ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel]
             };
 
             await RaiseMessageReceived(message);
 
-            //if (message != null && message["type"].Value<string>() == "message")
-            //{
+         
             //    string channelId = message["channel"].Value<string>();
             //    SlackChatHub hub;
 
