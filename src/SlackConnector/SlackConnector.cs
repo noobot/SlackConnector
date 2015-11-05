@@ -146,7 +146,7 @@ namespace SlackConnector
 
         private async Task ListenTo(InboundMessage inboundMessage)
         {
-            if (inboundMessage.MessageType != MessageType.Message)
+            if (inboundMessage?.MessageType != MessageType.Message)
                 return;
 
             var message = new SlackMessage
@@ -154,12 +154,10 @@ namespace SlackConnector
                 User = new SlackUser
                 {
                     Id = inboundMessage.User,
-                    Name = UserNameCache.ContainsKey(inboundMessage.User) ? UserNameCache[inboundMessage.User] : string.Empty
-                }
-                
-                //(message["user"] != null ? new SlackUser { Id = message["user"].Value<string>() } : null)
+                    Name = UserNameCache.ContainsKey(inboundMessage.User) ? UserNameCache[inboundMessage.User] : string.Empty,
+                },
+                Text = inboundMessage.Text
             };
-
 
             await RaiseMessageReceived(message);
 

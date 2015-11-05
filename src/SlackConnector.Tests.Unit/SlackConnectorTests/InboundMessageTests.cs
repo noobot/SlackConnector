@@ -65,7 +65,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 InboundMessage = new InboundMessage
                 {
                     User = "userABC",
-                    MessageType = MessageType.Message
+                    MessageType = MessageType.Message,
+                    Text = "amazing-text"
                 };
 
                 base.Given();
@@ -82,6 +83,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 var expected = new SlackMessage
                 {
+                    Text = "amazing-text",
                     User = new SlackUser
                     {
                         Id = "userABC",
@@ -122,15 +124,30 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             }
         }
 
-        internal class given_connector_is_missing_use_when_inbound_message_arrives_that_isnt_message_type : BaseTest
+        internal class given_connector_is_setup_when_inbound_message_arrives_that_isnt_message_type : BaseTest
         {
             protected override void Given()
             {
                 InboundMessage = new InboundMessage
                 {
-                    User = "userABC",
                     MessageType = MessageType.Unknown
                 };
+
+                base.Given();
+            }
+
+            [Test]
+            public void then_should_not_call_callback()
+            {
+                MessageRaised.ShouldBeFalse();
+            }
+        }
+
+        internal class given_null_message_when_inbound_message_arrives : BaseTest
+        {
+            protected override void Given()
+            {
+                InboundMessage = null;
 
                 base.Given();
             }
