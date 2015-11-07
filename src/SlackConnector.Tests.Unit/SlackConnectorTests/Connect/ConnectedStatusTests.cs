@@ -28,7 +28,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             public void then_should_have_a_connected_since_date()
             {
                 SUT.ConnectedSince.ShouldBeGreaterThanOrEqualTo(DateTime.Now.AddSeconds(-1));
-                SUT.ConnectedSince.ShouldBeLessThan(DateTime.Now);
+                SUT.ConnectedSince.ShouldBeLessThan(DateTime.Now.AddSeconds(1));
             }
 
             [Test]
