@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Handshaking.Models;
+using SlackConnector.Connections.Models;
 using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect

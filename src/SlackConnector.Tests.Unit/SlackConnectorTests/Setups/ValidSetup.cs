@@ -2,7 +2,6 @@
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
 using SpecsFor;
 

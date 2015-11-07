@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SlackConnector.Connections.Handshaking.Models
+namespace SlackConnector.Connections.Models
 {
     internal class Im
     {

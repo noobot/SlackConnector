@@ -7,7 +7,7 @@ using Should;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Handshaking.Models;
+using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Models;

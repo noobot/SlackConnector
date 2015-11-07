@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using SlackConnector.Connections.Handshaking.Models;
 
 namespace SlackConnector.Connections.Handshaking
 {

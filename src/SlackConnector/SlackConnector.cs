@@ -8,13 +8,13 @@ using Newtonsoft.Json.Linq;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Handshaking.Models;
+using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using Group = SlackConnector.Connections.Handshaking.Models.Group;
+using Group = SlackConnector.Connections.Models.Group;
 
 namespace SlackConnector
 {

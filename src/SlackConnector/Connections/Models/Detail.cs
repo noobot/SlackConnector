@@ -1,4 +1,4 @@
-﻿namespace SlackConnector.Connections.Handshaking.Models
+﻿namespace SlackConnector.Connections.Models
 {
     internal class Detail
     {

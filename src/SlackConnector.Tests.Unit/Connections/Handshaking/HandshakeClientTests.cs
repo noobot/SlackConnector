@@ -6,7 +6,7 @@ using RestSharp;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Handshaking.Models;
+using SlackConnector.Connections.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;

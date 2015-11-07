@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Exceptions;
 using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
 
