@@ -16,6 +16,11 @@ namespace SlackConnector.Tests.Unit.Stubs
         }
 
         public event EventHandler OnClose;
+        public void RaiseOnClose()
+        {
+            OnClose.Invoke(this, null);
+        }
+
         public Task Connect()
         {
             return Task.Factory.StartNew(() => { });
