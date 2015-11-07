@@ -21,6 +21,7 @@ namespace SlackConnector
     public class SlackConnector : ISlackConnector
     {
         private readonly IConnectionFactory _connectionFactory;
+        private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IBotMentionDetector _botMentionDetector;
         private IWebSocketClient _webSocketClient;
 
@@ -59,12 +60,13 @@ namespace SlackConnector
         public string UserId { get; private set; }
         public string UserName { get; private set; }
 
-        public SlackConnector() : this(new ConnectionFactory(), new BotMentionDetector())
+        public SlackConnector() : this(new ConnectionFactory(), new ChatHubInterpreter(), new BotMentionDetector())
         { }
 
-        internal SlackConnector(IConnectionFactory connectionFactory, IBotMentionDetector botMentionDetector)
+        internal SlackConnector(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IBotMentionDetector botMentionDetector)
         {
             _connectionFactory = connectionFactory;
+            _chatHubInterpreter = chatHubInterpreter;
             _botMentionDetector = botMentionDetector;
         }
 
@@ -163,7 +165,7 @@ namespace SlackConnector
 
             await RaiseMessageReceived(message);
 
-         
+
             //    string channelId = message["channel"].Value<string>();
             //    SlackChatHub hub;
 
@@ -208,7 +210,7 @@ namespace SlackConnector
             //    }
             //}
 
-         //   await Task.Factory.StartNew(() => { });
+            //   await Task.Factory.StartNew(() => { });
         }
 
         private string GetMessageUsername(InboundMessage inboundMessage)

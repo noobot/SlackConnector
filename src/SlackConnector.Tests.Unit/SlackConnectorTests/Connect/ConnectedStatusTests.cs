@@ -48,7 +48,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
         {
             protected override void InitializeClassUnderTest()
             {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, null);
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, null, null);
             }
 
             protected override void Given()
