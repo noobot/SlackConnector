@@ -2,7 +2,7 @@
 
 namespace SlackConnector.BotHelpers
 {
-    internal class ChatHubInterpreter : IChatHubInterpreter
+    public class ChatHubInterpreter : IChatHubInterpreter
     {
         public SlackChatHub FromId(string hubId)
         {

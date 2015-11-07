@@ -2,7 +2,7 @@
 
 namespace SlackConnector.BotHelpers
 {
-    internal interface IChatHubInterpreter
+    public interface IChatHubInterpreter
     {
         SlackChatHub FromId(string hubId);
     }
