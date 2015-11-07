@@ -57,9 +57,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BotHelpers\BotMentionDetector.cs" />
+    <Compile Include="BotHelpers\MentionDetector.cs" />
     <Compile Include="BotHelpers\ChatHubInterpreter.cs" />
-    <Compile Include="BotHelpers\IBotMentionDetector.cs" />
+    <Compile Include="BotHelpers\IMentionDetector.cs" />
     <Compile Include="BotHelpers\IChatHubInterpreter.cs" />
     <Compile Include="Connections\ConnectionFactory.cs" />
     <Compile Include="Connections\Handshaking\HandshakeClient.cs" />

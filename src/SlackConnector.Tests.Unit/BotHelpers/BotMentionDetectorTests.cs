@@ -20,7 +20,7 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             const string userName = "sir-name";
 
             // when
-            var detector = new BotMentionDetector();
+            var detector = new MentionDetector();
             bool detected = detector.WasBotMentioned(userName, userId, messageText);
 
             // then
@@ -39,7 +39,7 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             const string userName = "sir-name";
 
             // when
-            var detector = new BotMentionDetector();
+            var detector = new MentionDetector();
             bool detected = detector.WasBotMentioned(userName, userId, messageText);
 
             // then

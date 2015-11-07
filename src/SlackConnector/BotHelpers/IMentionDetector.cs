@@ -1,6 +1,6 @@
 ﻿namespace SlackConnector.BotHelpers
 {
-    internal interface IBotMentionDetector
+    internal interface IMentionDetector
     {
         bool WasBotMentioned(string username, string userId, string messageText);
     }

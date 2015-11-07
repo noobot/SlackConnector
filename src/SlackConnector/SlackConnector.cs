@@ -22,7 +22,7 @@ namespace SlackConnector
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly IChatHubInterpreter _chatHubInterpreter;
-        private readonly IBotMentionDetector _botMentionDetector;
+        private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
 
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
@@ -60,14 +60,14 @@ namespace SlackConnector
         public string UserId { get; private set; }
         public string UserName { get; private set; }
 
-        public SlackConnector() : this(new ConnectionFactory(), new ChatHubInterpreter(), new BotMentionDetector())
+        public SlackConnector() : this(new ConnectionFactory(), new ChatHubInterpreter(), new MentionDetector())
         { }
 
-        internal SlackConnector(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IBotMentionDetector botMentionDetector)
+        internal SlackConnector(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IMentionDetector mentionDetector)
         {
             _connectionFactory = connectionFactory;
             _chatHubInterpreter = chatHubInterpreter;
-            _botMentionDetector = botMentionDetector;
+            _mentionDetector = mentionDetector;
         }
 
         public async Task Connect(string slackKey)
@@ -167,7 +167,7 @@ namespace SlackConnector
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
                 RawData = inboundMessage.RawData,
-                MentionsBot = _botMentionDetector.WasBotMentioned(UserName, UserId, inboundMessage.Text)
+                MentionsBot = _mentionDetector.WasBotMentioned(UserName, UserId, inboundMessage.Text)
             };
 
             await RaiseMessageReceived(message);

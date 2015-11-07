@@ -253,7 +253,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     Text = "please send help... :-p"
                 };
 
-                GetMockFor<IBotMentionDetector>()
+                GetMockFor<IMentionDetector>()
                     .Setup(x => x.WasBotMentioned(Handshake.Self.Name, Handshake.Self.Id, InboundMessage.Text))
                     .Returns(true);
 

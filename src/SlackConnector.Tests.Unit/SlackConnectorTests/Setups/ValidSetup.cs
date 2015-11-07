@@ -12,7 +12,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Setups
     {
         protected override void InitializeClassUnderTest()
         {
-            SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<IChatHubInterpreter>().Object, GetMockFor<IBotMentionDetector>().Object);
+            SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<IChatHubInterpreter>().Object, GetMockFor<IMentionDetector>().Object);
         }
 
         protected override void Given()
