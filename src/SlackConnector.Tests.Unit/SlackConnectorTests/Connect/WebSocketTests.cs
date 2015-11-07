@@ -26,13 +26,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(new SlackHandshake { WebSocketUrl = webSocketUrl });
+                    .ReturnsAsync(new SlackHandshake { WebSocketUrl = webSocketUrl, Ok = true });
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(webSocketUrl))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
-            
+
             protected override void When()
             {
                 SUT.OnConnectionStatusChanged += connected => ConnectionChangedValue = connected;
@@ -56,12 +56,12 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
         public class when_socket_disconnects_given_valid_setup : ValidSetup
         {
             private Stack<bool> ConnectionChangedValue { get; set; }
-            
+
             protected override void Given()
             {
                 base.Given();
                 ConnectionChangedValue = new Stack<bool>();
-                
+
                 SUT.OnConnectionStatusChanged += connected => ConnectionChangedValue.Push(connected);
                 SUT.Connect("yay").Wait();
             }

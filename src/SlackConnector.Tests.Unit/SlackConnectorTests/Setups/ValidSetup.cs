@@ -23,7 +23,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Setups
 
             GetMockFor<IHandshakeClient>()
                 .Setup(x => x.FirmShake(It.IsAny<string>()))
-                .ReturnsAsync(new SlackHandshake());
+                .ReturnsAsync(new SlackHandshake { Ok = true });
 
             GetMockFor<IConnectionFactory>()
                 .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))

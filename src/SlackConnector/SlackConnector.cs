@@ -87,6 +87,11 @@ namespace SlackConnector
             IHandshakeClient handshakeClient = _connectionFactory.CreateHandshakeClient();
             SlackHandshake handshake = await handshakeClient.FirmShake(slackKey);
 
+            if (!handshake.Ok)
+            {
+                throw new HandshakeException(handshake.Error);
+            }
+
             TeamName = handshake.Team.Name;
             TeamId = handshake.Team.Id;
             UserName = handshake.Self.Name;

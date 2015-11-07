@@ -21,6 +21,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 _handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Channels = new[]
                     {
                         new Channel
@@ -91,6 +92,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 _handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Channels = new[]
                     {
                         new Channel
@@ -138,6 +140,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 _handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Self = new Detail { Id = SelfId },
                     Groups = new[]
                     {
@@ -191,6 +194,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 _handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Self = new Detail { Id = SelfId },
                     Groups = new[]
                     {
@@ -232,6 +236,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 _handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Self = new Detail { Id = SelfId },
                     Groups = new[]
                     {
@@ -272,6 +277,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
 
                 _handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Users = new []
                     {
                         new User

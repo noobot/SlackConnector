@@ -22,6 +22,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                 base.Given();
                 _handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Team = new Detail
                     {
                         Id = "team-id-value",

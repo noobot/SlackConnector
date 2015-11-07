@@ -33,7 +33,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake ?? new SlackHandshake());
+                    .ReturnsAsync(Handshake ?? new SlackHandshake { Ok = true });
 
                 SUT.OnMessageReceived += async message =>
                 {
@@ -58,6 +58,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 Handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Users = new[]
                     {
                         new User
@@ -173,6 +174,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 Handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Channels = new[]
                     {
                         new Channel
@@ -249,6 +251,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 Handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Self = new Detail { Id = "self-id", Name = "self-name" }
                 };
 
@@ -280,6 +283,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 Handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Self = new Detail { Id = "self-id", Name = "self-name" }
                 };
 
@@ -327,7 +331,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         internal class given_exception_thrown_when_handling_inbound_message : BaseTest
         {
             private readonly WebSocketClientStub WebSocket = new WebSocketClientStub();
-            
+
             protected override void Given()
             {
                 GetMockFor<IConnectionFactory>()
@@ -336,15 +340,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(new SlackHandshake());
+                    .ReturnsAsync(new SlackHandshake { Ok = true });
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
                     .Returns(WebSocket);
-
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake ?? new SlackHandshake());
 
                 SUT.OnMessageReceived += message =>
                 {

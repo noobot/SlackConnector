@@ -5,6 +5,7 @@ using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
+using SlackConnector.Exceptions;
 using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
@@ -44,13 +45,44 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             }
         }
 
-        public class given_empty_api_key : ValidSetup
+        public class given_handshake_was_not_ok : ValidSetup
         {
-            protected override void InitializeClassUnderTest()
+            private SlackHandshake HandshakeResponse { get; set; }
+
+            protected override void Given()
             {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, null, null);
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                HandshakeResponse = new SlackHandshake { Ok = false, Error = "I AM A ERROR" };
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(HandshakeResponse);
             }
 
+            [Test]
+            public void then_should_throw_exception()
+            {
+                HandshakeException exception = null;
+
+                try
+                {
+                    SUT.Connect("something").Wait();
+                }
+                catch (AggregateException ex)
+                {
+
+                    exception = ex.InnerExceptions[0] as HandshakeException;
+                }
+
+                Assert.That(exception, Is.Not.Null);
+                Assert.That(exception.Message, Is.EqualTo(HandshakeResponse.Error));
+            }
+        }
+
+        public class given_empty_api_key : ValidSetup
+        {
             protected override void Given()
             {
                 GetMockFor<IConnectionFactory>()
