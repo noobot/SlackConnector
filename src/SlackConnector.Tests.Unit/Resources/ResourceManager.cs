@@ -9,7 +9,7 @@ namespace SlackConnector.Tests.Unit.Resources
         {
             return ReadResource("HandShakeResponse.json");
         }
-
+        
         private static string ReadResource(string path)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();

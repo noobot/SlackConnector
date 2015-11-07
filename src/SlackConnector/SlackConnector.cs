@@ -139,7 +139,7 @@ namespace SlackConnector
             ConnectedSince = DateTime.Now;
             RaiseConnectionStatusChanged();
 
-            _webSocketClient.OnMessage += async (sender, message) => await ListenTo(message);
+            _webSocketClient.OnMessage += async (sender, message) => { await ListenTo(message); };
             _webSocketClient.OnClose += (sender, e) =>
             {
                 ConnectedSince = null;
@@ -150,6 +150,8 @@ namespace SlackConnector
         private async Task ListenTo(InboundMessage inboundMessage)
         {
             if (inboundMessage?.MessageType != MessageType.Message)
+                return;
+            if (string.IsNullOrEmpty(inboundMessage.User))
                 return;
             if (!string.IsNullOrEmpty(UserId) && inboundMessage.User == UserId)
                 return;
@@ -172,7 +174,14 @@ namespace SlackConnector
                 MentionsBot = _mentionDetector.WasBotMentioned(UserName, UserId, inboundMessage.Text)
             };
 
-            await RaiseMessageReceived(message);
+            try
+            {
+                await RaiseMessageReceived(message);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private string GetMessageUsername(InboundMessage inboundMessage)

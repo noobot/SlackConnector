@@ -1,14 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.BotHelpers;
+using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
+using SlackConnector.Tests.Unit.Stubs;
+using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
@@ -182,7 +187,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 InboundMessage = new InboundMessage
                 {
                     Channel = Handshake.Channels[0].Id,
-                    MessageType = MessageType.Message
+                    MessageType = MessageType.Message,
+                    User = "irmBrady"
                 };
 
                 base.Given();
@@ -216,7 +222,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 InboundMessage = new InboundMessage
                 {
                     Channel = _hubId,
-                    MessageType = MessageType.Message
+                    MessageType = MessageType.Message,
+                    User = "something else"
                 };
 
                 base.Given();
@@ -249,7 +256,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 {
                     Channel = "idy",
                     MessageType = MessageType.Message,
-                    Text = "please send help... :-p"
+                    Text = "please send help... :-p",
+                    User = "lalala"
                 };
 
                 GetMockFor<IMentionDetector>()
@@ -292,6 +300,70 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             public void then_should_not_raise_message()
             {
                 MessageRaised.ShouldBeFalse();
+            }
+        }
+
+        internal class given_message_is_missing_user_information : BaseTest
+        {
+            protected override void Given()
+            {
+                InboundMessage = new InboundMessage
+                {
+                    MessageType = MessageType.Message,
+                    User = null
+                };
+
+                base.Given();
+            }
+
+            [Test]
+            public void then_should_not_raise_message()
+            {
+                MessageRaised.ShouldBeFalse();
+            }
+        }
+
+        [TestFixture]
+        internal class given_exception_thrown_when_handling_inbound_message : BaseTest
+        {
+            private readonly WebSocketClientStub WebSocket = new WebSocketClientStub();
+            
+            protected override void Given()
+            {
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(new SlackHandshake());
+
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
+                    .Returns(WebSocket);
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(Handshake ?? new SlackHandshake());
+
+                SUT.OnMessageReceived += message =>
+                {
+                    throw new NotImplementedException();
+                };
+
+                SUT.Connect("asdasd").Wait();
+            }
+
+            [Test]
+            public void should_not_throw_exception_when_error_is_thrown()
+            {
+                var message = new InboundMessage
+                {
+                    User = "something",
+                    MessageType = MessageType.Message
+                };
+
+                WebSocket.RaiseOnMessage(message);
             }
         }
     }
