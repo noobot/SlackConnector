@@ -235,14 +235,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 SUT.ConnectedHubs[_hubId].ShouldEqual(_expectedChatHub);
             }
         }
-        
-        internal class given_bot_was_mentioned_in_text_then_should_be_detected : BaseTest
+
+        internal class given_bot_was_mentioned_in_text : BaseTest
         {
             protected override void Given()
             {
                 Handshake = new SlackHandshake
                 {
-                    Self = new Detail { Id = "self-id", Name = "self-name"}
+                    Self = new Detail { Id = "self-id", Name = "self-name" }
                 };
 
                 InboundMessage = new InboundMessage
@@ -263,6 +263,35 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             public void then_should_return_expected_channel_information()
             {
                 Result.MentionsBot.ShouldBeTrue();
+            }
+        }
+
+        internal class given_message_is_from_self : BaseTest
+        {
+            protected override void Given()
+            {
+                Handshake = new SlackHandshake
+                {
+                    Self = new Detail { Id = "self-id", Name = "self-name" }
+                };
+
+                InboundMessage = new InboundMessage
+                {
+                    MessageType = MessageType.Message,
+                    User = Handshake.Self.Id
+                };
+
+                GetMockFor<IMentionDetector>()
+                    .Setup(x => x.WasBotMentioned(Handshake.Self.Name, Handshake.Self.Id, InboundMessage.Text))
+                    .Returns(true);
+
+                base.Given();
+            }
+
+            [Test]
+            public void then_should_not_raise_message()
+            {
+                MessageRaised.ShouldBeFalse();
             }
         }
     }

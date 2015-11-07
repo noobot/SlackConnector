@@ -151,6 +151,8 @@ namespace SlackConnector
         {
             if (inboundMessage?.MessageType != MessageType.Message)
                 return;
+            if (!string.IsNullOrEmpty(UserId) && inboundMessage.User == UserId)
+                return;
 
             if (inboundMessage.Channel != null && !_connectedHubs.ContainsKey(inboundMessage.Channel))
             {
