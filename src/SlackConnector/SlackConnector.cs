@@ -171,19 +171,6 @@ namespace SlackConnector
             };
 
             await RaiseMessageReceived(message);
-
-
-
-            //    // check to see if bot has been mentioned
-            //    var slackMessage = new SlackMessage
-            //    {
-            //        ChatHub = hub,
-            //        MentionsBot = BotMentioned(messageText),
-            //        RawData = message.ToString(),
-            //        // some messages may not have text or a user (like unfurled data from URLs)
-            //        Text = messageText,
-            //        User = (message["user"] != null ? new SlackUser { Id = message["user"].Value<string>() } : null)
-            //    };
         }
 
         private string GetMessageUsername(InboundMessage inboundMessage)
