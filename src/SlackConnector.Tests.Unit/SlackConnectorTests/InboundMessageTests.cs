@@ -198,5 +198,45 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 Result.ChatHub.ShouldLookLike(expected);
             }
         }
+
+        internal class given_channel_undefined_when_inbound_message_arrives_with_channel : BaseTest
+        {
+            protected override void Given()
+            {
+                Handshake = new SlackHandshake
+                {
+                    Channels = new[]
+                    {
+                        new Channel
+                        {
+                            Id = "channelId",
+                            Name = "NaMe23",
+                            IsArchived = false
+                        }
+                    }
+                };
+
+                InboundMessage = new InboundMessage
+                {
+                    Channel = Handshake.Channels[0].Id,
+                    MessageType = MessageType.Message
+                };
+
+                base.Given();
+            }
+
+            [Test]
+            public void then_should_return_expected_channel_information()
+            {
+                var expected = new SlackChatHub
+                {
+                    Id = Handshake.Channels[0].Id,
+                    Name = "#" + Handshake.Channels[0].Name,
+                    Type = SlackChatHubType.Channel
+                };
+
+                Result.ChatHub.ShouldLookLike(expected);
+            }
+        }
     }
 }

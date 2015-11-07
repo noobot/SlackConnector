@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bazam.NoobWebClient;
 using Newtonsoft.Json;
@@ -23,11 +21,13 @@ namespace SlackConnector
     public class SlackConnector : ISlackConnector
     {
         private readonly IConnectionFactory _connectionFactory;
+        private readonly IBotMentionDetector _botMentionDetector;
         private IWebSocketClient _webSocketClient;
 
         private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
         private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
 
+        //TODO: Remove?
         public string[] Aliases { get; set; } = new string[0];
 
         public SlackChatHub[] ConnectedDMs
@@ -59,12 +59,13 @@ namespace SlackConnector
         public string UserId { get; private set; }
         public string UserName { get; private set; }
 
-        public SlackConnector() : this(new ConnectionFactory())
+        public SlackConnector() : this(new ConnectionFactory(), new BotMentionDetector())
         { }
 
-        internal SlackConnector(IConnectionFactory connectionFactory)
+        internal SlackConnector(IConnectionFactory connectionFactory, IBotMentionDetector botMentionDetector)
         {
             _connectionFactory = connectionFactory;
+            _botMentionDetector = botMentionDetector;
         }
 
         public async Task Connect(string slackKey)
@@ -154,7 +155,7 @@ namespace SlackConnector
                 User = new SlackUser
                 {
                     Id = inboundMessage.User,
-                    Name = string.IsNullOrEmpty(inboundMessage.User) ? string.Empty : UserNameCache.ContainsKey(inboundMessage.User) ? UserNameCache[inboundMessage.User] : string.Empty, //TODO Clean
+                    Name = GetMessageUsername(inboundMessage),
                 },
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel]
@@ -208,6 +209,18 @@ namespace SlackConnector
             //}
 
          //   await Task.Factory.StartNew(() => { });
+        }
+
+        private string GetMessageUsername(InboundMessage inboundMessage)
+        {
+            string username = string.Empty;
+
+            if (!string.IsNullOrEmpty(inboundMessage.User) && UserNameCache.ContainsKey(inboundMessage.User))
+            {
+                username = UserNameCache[inboundMessage.User];
+            }
+
+            return username;
         }
 
         public void Disconnect()
@@ -278,19 +291,6 @@ namespace SlackConnector
             return chatHub;
         }
 
-        private bool BotMentioned(string messageText)
-        {
-            bool mentioned = false;
-
-            // only build the regex if we're connected - if we're not connected we won't know our bot's name or user Id
-            if (IsConnected)
-            {
-                string regex = new BotNameRegexComposer().ComposeFor(UserName, UserId, Aliases);
-                mentioned = (messageText != null && Regex.IsMatch(messageText, regex, RegexOptions.IgnoreCase));
-            }
-
-            return mentioned;
-        }
 
         public event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
         private void RaiseConnectionStatusChanged()
