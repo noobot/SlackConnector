@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SlackConnector.Serialising
 {
-    public class EnumConverter : JsonConverter
+    internal class EnumConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

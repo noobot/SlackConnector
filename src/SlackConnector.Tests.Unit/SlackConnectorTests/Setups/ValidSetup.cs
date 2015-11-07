@@ -1,4 +1,5 @@
 ﻿using Moq;
+using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
@@ -11,7 +12,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Setups
     {
         protected override void InitializeClassUnderTest()
         {
-            SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, null, null);
+            SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<IChatHubInterpreter>().Object, GetMockFor<IBotMentionDetector>().Object);
         }
 
         protected override void Given()

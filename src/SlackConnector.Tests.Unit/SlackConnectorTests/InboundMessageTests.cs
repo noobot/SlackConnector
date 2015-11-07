@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Should;
+using SlackConnector.BotHelpers;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
 using SlackConnector.Connections.Sockets;
@@ -201,24 +203,18 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
         internal class given_channel_undefined_when_inbound_message_arrives_with_channel : BaseTest
         {
+            private readonly string _hubId = "Woozah";
+            private readonly SlackChatHub _expectedChatHub = new SlackChatHub();
+
             protected override void Given()
             {
-                Handshake = new SlackHandshake
-                {
-                    Channels = new[]
-                    {
-                        new Channel
-                        {
-                            Id = "channelId",
-                            Name = "NaMe23",
-                            IsArchived = false
-                        }
-                    }
-                };
+                GetMockFor<IChatHubInterpreter>()
+                    .Setup(x => x.FromId(_hubId))
+                    .Returns(_expectedChatHub);
 
                 InboundMessage = new InboundMessage
                 {
-                    Channel = Handshake.Channels[0].Id,
+                    Channel = _hubId,
                     MessageType = MessageType.Message
                 };
 
@@ -228,14 +224,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             [Test]
             public void then_should_return_expected_channel_information()
             {
-                var expected = new SlackChatHub
-                {
-                    Id = Handshake.Channels[0].Id,
-                    Name = "#" + Handshake.Channels[0].Name,
-                    Type = SlackChatHubType.Channel
-                };
+                Result.ChatHub.ShouldEqual(_expectedChatHub);
+            }
 
-                Result.ChatHub.ShouldLookLike(expected);
+            [Test]
+            public void then_should_add_channel_to_connected_hubs()
+            {
+                SUT.ConnectedHubs.ContainsKey(_hubId).ShouldBeTrue();
+                SUT.ConnectedHubs[_hubId].ShouldEqual(_expectedChatHub);
             }
         }
     }

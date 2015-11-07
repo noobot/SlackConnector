@@ -152,6 +152,11 @@ namespace SlackConnector
             if (inboundMessage?.MessageType != MessageType.Message)
                 return;
 
+            if (inboundMessage.Channel != null && !_connectedHubs.ContainsKey(inboundMessage.Channel))
+            {
+                _connectedHubs[inboundMessage.Channel] = _chatHubInterpreter.FromId(inboundMessage.Channel);
+            }
+
             var message = new SlackMessage
             {
                 User = new SlackUser
@@ -166,24 +171,7 @@ namespace SlackConnector
             await RaiseMessageReceived(message);
 
 
-            //    string channelId = message["channel"].Value<string>();
-            //    SlackChatHub hub;
-
-            //    if (ConnectedHubs.ContainsKey(channelId))
-            //    {
-            //        hub = ConnectedHubs[channelId];
-            //    }
-            //    else
-            //    {
-            //        hub = SlackChatHub.FromId(channelId);
-            //        if (!_connectedHubs.ContainsKey(channelId))
-            //        {
-            //            _connectedHubs.Add(channelId, hub);
-            //        }
-            //    }
-
-            //    string messageText = message["text"]?.Value<string>();
-
+     
             //    // check to see if bot has been mentioned
             //    var slackMessage = new SlackMessage
             //    {

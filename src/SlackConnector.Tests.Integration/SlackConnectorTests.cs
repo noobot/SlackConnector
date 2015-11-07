@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
