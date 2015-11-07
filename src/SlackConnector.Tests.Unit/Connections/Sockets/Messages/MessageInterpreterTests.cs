@@ -38,7 +38,8 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 Channel = "<myChannel>",
                 User = "<myUser>",
                 Text = "hi, my name is <noobot>",
-                Team = "<myTeam>"
+                Team = "<myTeam>",
+                RawData = Json
             };
 
             Result.ShouldLookLike(expected);
@@ -66,6 +67,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             var expected = new InboundMessage
             {
                 MessageType = MessageType.Unknown,
+                RawData = Json
             };
 
             Result.ShouldLookLike(expected);

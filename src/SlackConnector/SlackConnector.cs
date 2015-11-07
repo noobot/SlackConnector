@@ -165,13 +165,15 @@ namespace SlackConnector
                     Name = GetMessageUsername(inboundMessage),
                 },
                 Text = inboundMessage.Text,
-                ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel]
+                ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
+                RawData = inboundMessage.RawData,
+                MentionsBot = _botMentionDetector.WasBotMentioned(UserName, UserId, inboundMessage.Text)
             };
 
             await RaiseMessageReceived(message);
 
 
-     
+
             //    // check to see if bot has been mentioned
             //    var slackMessage = new SlackMessage
             //    {
@@ -182,23 +184,6 @@ namespace SlackConnector
             //        Text = messageText,
             //        User = (message["user"] != null ? new SlackUser { Id = message["user"].Value<string>() } : null)
             //    };
-
-            //    var context = new ResponseContext
-            //    {
-            //        BotUserId = UserId,
-            //        BotUserName = UserName,
-            //        Message = slackMessage,
-            //        TeamId = TeamId,
-            //        UserNameCache = new ReadOnlyDictionary<string, string>(_userNameCache)
-            //    };
-
-            //    if (slackMessage.User != null && slackMessage.User.Id != UserId && slackMessage.Text != null)
-            //    {
-            //        await RaiseMessageReceived(context);
-            //    }
-            //}
-
-            //   await Task.Factory.StartNew(() => { });
         }
 
         private string GetMessageUsername(InboundMessage inboundMessage)

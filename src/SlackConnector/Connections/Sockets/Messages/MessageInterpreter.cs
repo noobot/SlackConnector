@@ -15,6 +15,7 @@ namespace SlackConnector.Connections.Sockets.Messages
                 message.User = WebUtility.HtmlDecode(message.User);
                 message.Text = WebUtility.HtmlDecode(message.Text);
                 message.Team = WebUtility.HtmlDecode(message.Team);
+                message.RawData = json;
             }
 
             return message;

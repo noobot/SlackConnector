@@ -68,7 +68,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 {
                     User = "userABC",
                     MessageType = MessageType.Message,
-                    Text = "amazing-text"
+                    Text = "amazing-text",
+                    RawData = "I am raw data yo"
                 };
 
                 base.Given();
@@ -90,7 +91,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     {
                         Id = "userABC",
                         Name = "I-have-a-name"
-                    }
+                    },
+                    RawData = InboundMessage.RawData
                 };
 
                 Result.ShouldLookLike(expected);
@@ -232,6 +234,36 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 SUT.ConnectedHubs.ContainsKey(_hubId).ShouldBeTrue();
                 SUT.ConnectedHubs[_hubId].ShouldEqual(_expectedChatHub);
+            }
+        }
+        
+        internal class given_bot_was_mentioned_in_text_then_should_be_detected : BaseTest
+        {
+            protected override void Given()
+            {
+                Handshake = new SlackHandshake
+                {
+                    Self = new Detail { Id = "self-id", Name = "self-name"}
+                };
+
+                InboundMessage = new InboundMessage
+                {
+                    Channel = "idy",
+                    MessageType = MessageType.Message,
+                    Text = "please send help... :-p"
+                };
+
+                GetMockFor<IBotMentionDetector>()
+                    .Setup(x => x.WasBotMentioned(Handshake.Self.Name, Handshake.Self.Id, InboundMessage.Text))
+                    .Returns(true);
+
+                base.Given();
+            }
+
+            [Test]
+            public void then_should_return_expected_channel_information()
+            {
+                Result.MentionsBot.ShouldBeTrue();
             }
         }
     }
