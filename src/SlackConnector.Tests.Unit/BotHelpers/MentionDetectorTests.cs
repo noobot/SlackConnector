@@ -5,7 +5,7 @@ using SlackConnector.BotHelpers;
 namespace SlackConnector.Tests.Unit.BotHelpers
 {
     [TestFixture]
-    public class BotMentionDetectorTests
+    public class MentionDetectorTests
     {
         [TestCase("sir-name")]
         [TestCase("<@my-id>")]
