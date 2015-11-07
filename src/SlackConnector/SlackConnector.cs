@@ -52,7 +52,7 @@ namespace SlackConnector
         private readonly Dictionary<string, string> _userNameCache = new Dictionary<string, string>();
         public IReadOnlyDictionary<string, string> UserNameCache => _userNameCache;
 
-        public bool IsConnected => ConnectedSince != null;
+        public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
         public string SlackKey { get; private set; }
         public string TeamId { get; private set; }
