@@ -88,5 +88,10 @@ namespace SlackConnector.Models
         {
             Content = new Dictionary<string, object>();
         }
+
+        //public static implicit operator ResponseContext(ResponseContext v)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

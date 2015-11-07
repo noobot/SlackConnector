@@ -57,6 +57,7 @@
     <Compile Include="SlackConnectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Configuration\config.default.json" />
     <None Include="Configuration\config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

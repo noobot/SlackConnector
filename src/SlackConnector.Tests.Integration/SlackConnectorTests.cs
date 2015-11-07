@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
@@ -15,17 +13,16 @@ namespace SlackConnector.Tests.Integration
         {
             // given
             var config = new ConfigReader().GetConfig();
-            
-            // when
-            ISlackConnector slackConnector = new SlackConnector();
+
+            var slackConnector = new SlackConnector();
             slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
+            slackConnector.OnMessageReceived += SlackConnectorOnOnMessageReceived;
 
-            slackConnector.OnMessageReceived+= SlackConnectorOnOnMessageReceived;
-
-            slackConnector.Connect(config.Slack.ApiToken);
+            // when
+            slackConnector.Connect(config.Slack.ApiToken).Wait();
 
             // then
-            Thread.Sleep(TimeSpan.FromSeconds(30));
+            Assert.That(slackConnector.IsConnected, Is.True);
         }
 
         private void SlackConnectorOnConnectionStatusChanged(bool isConnected)
@@ -33,7 +30,7 @@ namespace SlackConnector.Tests.Integration
 
         }
 
-        private Task SlackConnectorOnOnMessageReceived(ResponseContext message)
+        private Task SlackConnectorOnOnMessageReceived(SlackMessage message)
         {
             return new Task(() => { });
         }

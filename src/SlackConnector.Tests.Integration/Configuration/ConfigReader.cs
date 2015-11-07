@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
+using NUnit.Framework;
 
 namespace SlackConnector.Tests.Integration.Configuration
 {
@@ -13,7 +14,17 @@ namespace SlackConnector.Tests.Integration.Configuration
             if (Current == null)
             {
                 string fileName = Path.Combine(Environment.CurrentDirectory, @"configuration\config.json");
+                if (!System.IO.File.Exists(fileName))
+                {
+                    Assert.Inconclusive("Unable to load config file from: " + fileName);
+                }
+
                 string json = File.ReadAllText(fileName);
+                if (string.IsNullOrEmpty(json))
+                {
+                    Assert.Inconclusive("Unable to load config");
+                }
+
                 Current = JsonConvert.DeserializeObject<Config>(json);
             }
 
