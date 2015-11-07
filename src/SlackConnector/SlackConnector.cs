@@ -97,7 +97,7 @@ namespace SlackConnector
                 _userNameCache.Add(user.Id, user.Name);
             }
 
-            foreach (Channel channel in handshake.Channels)
+            foreach (Channel channel in handshake.Channels.Where(x => !x.IsArchived))
             {
                 var newChannel = new SlackChatHub
                 {
@@ -108,7 +108,7 @@ namespace SlackConnector
                 _connectedHubs.Add(channel.Id, newChannel);
             }
 
-            foreach (Group group in handshake.Groups)
+            foreach (Group group in handshake.Groups.Where(x => !x.IsArchived))
             {
                 if (group.Members.Any(x => x == UserId))
                 {

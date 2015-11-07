@@ -1,13 +1,10 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Should;
-using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Handshaking.Models;
-using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
-using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
@@ -84,11 +81,56 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
             }
         }
 
+        public class given_channels_are_archived : ValidSetup
+        {
+            private SlackHandshake _handshake;
+
+            protected override void Given()
+            {
+                base.Given();
+
+                _handshake = new SlackHandshake
+                {
+                    Channels = new[]
+                    {
+                        new Channel
+                        {
+                            Id = "Id1",
+                            Name = "Name1",
+                            IsArchived = true,
+                            IsMember = true
+                        },
+                        new Channel
+                        {
+                            Id = "Id2",
+                            Name = "Name2",
+                            IsArchived = true,
+                            IsMember = true
+                        },
+                    }
+                };
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(_handshake);
+            }
+
+            protected override void When()
+            {
+                SUT.Connect("something").Wait();
+            }
+
+            [Test]
+            public void then_should_contain_2_channels()
+            {
+                SUT.ConnectedHubs.Count.ShouldEqual(0);
+            }
+        }
+
         public class given_groups_that_are_not_archived_and_is_a_member_of_group : ValidSetup
         {
             private SlackHandshake _handshake;
             private const string SelfId = "abc123";
-            
 
             protected override void Given()
             {
@@ -135,6 +177,47 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
                     Type = SlackChatHubType.Group,
                 };
                 SUT.ConnectedHubs[_handshake.Groups[0].Id].ShouldLookLike(expected);
+            }
+        }
+
+        public class given_groups_are_archived : ValidSetup
+        {
+            private SlackHandshake _handshake;
+            private const string SelfId = "abc123";
+
+            protected override void Given()
+            {
+                base.Given();
+
+                _handshake = new SlackHandshake
+                {
+                    Self = new Detail { Id = SelfId },
+                    Groups = new[]
+                    {
+                        new Group
+                        {
+                            Id = "group-id",
+                            Name = "group-name",
+                            IsArchived = true,
+                            Members = new [] { SelfId }
+                        }
+                    }
+                };
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(It.IsAny<string>()))
+                    .ReturnsAsync(_handshake);
+            }
+
+            protected override void When()
+            {
+                SUT.Connect("key").Wait();
+            }
+
+            [Test]
+            public void then_should_contain_single_channel()
+            {
+                SUT.ConnectedHubs.Count.ShouldEqual(0);
             }
         }
 
