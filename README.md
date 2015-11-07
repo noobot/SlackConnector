@@ -5,7 +5,5 @@ A shameless consumption of MargieBot's innards to replace "SlackApi" as the comm
 Install-Package SlackConnector
 ```
 
-[![Build status](https://ci.appveyor.com/api/projects/status/q1jw9209xl7ibvhs?svg=true)](https://ci.appveyor.com/project/Workshop2/slackconnector)
-
-[![Test status](http://teststatusbadge.azurewebsites.net/api/status/Workshop2/slackconnector)]
-(https://ci.appveyor.com/project/Workshop2/slackconnector)
+[![Build status](https://ci.appveyor.com/api/projects/status/m92929hjx6ab3jpl?svg=true)](https://ci.appveyor.com/project/Workshop2/slackconnector-glqir) [![Test status](http://teststatusbadge.azurewebsites.net/api/status/Workshop2/slackconnector-glqir)]
+(https://ci.appveyor.com/project/Workshop2/slackconnector-glqir)
