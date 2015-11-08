@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bazam.NoobWebClient;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
@@ -26,8 +23,6 @@ namespace SlackConnector
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
         
-        private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
-
         //TODO: Remove?
         public string[] Aliases { get; set; } = new string[0];
 
