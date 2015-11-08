@@ -1,29 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
 using SlackConnector.Exceptions;
-using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
-using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.Connections.Messaging
 {
-    public static class ChatMessengerTests
+    public static class ChannelMessengerTests
     {
-        internal class given_valid_standard_setup : SpecsFor<ChatMessenger>
+        internal class given_valid_standard_setup : SpecsFor<ChannelMessenger>
         {
             private string _slackKey = "super-key";
-            private string _channel = "super-channel";
-            private string _text = "boom-jiggy-boom";
+            private string _user = "super-user";
             private RestClientStub RestStub { get; set; }
 
             protected override void Given()
@@ -41,7 +35,7 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
 
             protected override void When()
             {
-                SUT.PostMessage(_slackKey, _channel, _text, null).Wait();
+                SUT.JoinDirectMessageChannel(_slackKey, _user).Wait();
             }
 
             [Test]
@@ -58,48 +52,28 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
             public void then_should_pass_expected_channel()
             {
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
-                Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("channel"));
+                Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("user"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
-                keyParam.Value.ShouldEqual(_channel);
-            }
-
-            [Test]
-            public void then_should_pass_expected_text()
-            {
-                IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
-                Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("text"));
-                keyParam.ShouldNotBeNull();
-                keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
-                keyParam.Value.ShouldEqual(_text);
-            }
-
-            [Test]
-            public void then_should_pass_expected_user_param()
-            {
-                IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
-                Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("as_user"));
-                keyParam.ShouldNotBeNull();
-                keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
-                keyParam.Value.ShouldEqual("true");
+                keyParam.Value.ShouldEqual(_user);
             }
 
             [Test]
             public void then_should_access_expected_path()
             {
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
-                request.Resource.ShouldEqual(ChatMessenger.SEND_MESSAGE_PATH);
+                request.Resource.ShouldEqual(ChannelMessenger.JOIN_DM_PATH);
             }
 
             [Test]
-            public void then_should_have_4_params()
+            public void then_should_have_2_params()
             {
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
-                request.Parameters.Count.ShouldEqual(4);
+                request.Parameters.Count.ShouldEqual(2);
             }
         }
 
-        internal class given_error_occured_in_communications : SpecsFor<ChatMessenger>
+        internal class given_error_occured_in_communications : SpecsFor<ChannelMessenger>
         {
             private RestClientStub RestStub { get; set; }
 
@@ -123,7 +97,7 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
 
                 try
                 {
-                    SUT.PostMessage("", "", "", null).Wait();
+                    SUT.JoinDirectMessageChannel("", "").Wait();
                 }
                 catch (AggregateException ex)
                 {
@@ -131,11 +105,11 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
                 }
 
                 Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo($"Error occured while posting message '{RestStub.ExecutePostTaskAsync_StatusCode}'"));
+                Assert.That(exception.Message, Is.EqualTo($"Error occured while joining channel '{RestStub.ExecutePostTaskAsync_StatusCode}'"));
             }
         }
 
-        internal class given_error_occured_in_response_json : SpecsFor<ChatMessenger>
+        internal class given_error_occured_in_response_json : SpecsFor<ChannelMessenger>
         {
             private RestClientStub RestStub { get; set; }
 
@@ -159,7 +133,7 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
 
                 try
                 {
-                    SUT.PostMessage("", "", "", null).Wait();
+                    SUT.JoinDirectMessageChannel("", "").Wait();
                 }
                 catch (AggregateException ex)
                 {
@@ -167,7 +141,7 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
                 }
 
                 Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo($"Error occured while posting message 'blooming error'"));
+                Assert.That(exception.Message, Is.EqualTo("Error occured while joining channel 'blooming error'"));
             }
         }
     }

@@ -24,8 +24,7 @@ namespace SlackConnector
         private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
-
-        private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
+        
         private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
 
         //TODO: Remove?
@@ -70,6 +69,7 @@ namespace SlackConnector
             _mentionDetector = mentionDetector;
         }
 
+        //TODO: move this into a factory
         public async Task Connect(string slackKey)
         {
             if (IsConnected)

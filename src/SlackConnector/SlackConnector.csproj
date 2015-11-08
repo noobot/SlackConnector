@@ -64,6 +64,8 @@
     <Compile Include="Connections\ConnectionFactory.cs" />
     <Compile Include="Connections\Handshaking\HandshakeClient.cs" />
     <Compile Include="Connections\Handshaking\IHandshakeClient.cs" />
+    <Compile Include="Connections\Messaging\ChannelMessenger.cs" />
+    <Compile Include="Connections\Messaging\IChannelMessenger.cs" />
     <Compile Include="Connections\Messaging\IChatMessenger.cs" />
     <Compile Include="Connections\Messaging\ChatMessenger.cs" />
     <Compile Include="Connections\Models\Group.cs" />
