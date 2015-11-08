@@ -17,7 +17,7 @@ namespace SlackConnector.Connections.Messaging
             _restSharpFactory = restSharpFactory;
         }
 
-        public async Task JoinDirectMessageChannel(string slackKey, string user)
+        public async Task<Channel> JoinDirectMessageChannel(string slackKey, string user)
         {
             var client = _restSharpFactory.CreateClient("https://slack.com");
 
@@ -31,11 +31,13 @@ namespace SlackConnector.Connections.Messaging
                 throw new CommunicationException($"Error occured while joining channel '{response.StatusCode}'");
             }
 
-            StandardResponse slackResponse = JsonConvert.DeserializeObject<StandardResponse>(response.Content);
+            JoinChannelResponse slackResponse = JsonConvert.DeserializeObject<JoinChannelResponse>(response.Content);
             if (!slackResponse.Ok)
             {
                 throw new CommunicationException($"Error occured while joining channel '{slackResponse.Error}'");
             }
+
+            return slackResponse.Channel;
         }
     }
 }

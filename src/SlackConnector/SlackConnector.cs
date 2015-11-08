@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
+using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
@@ -222,28 +223,20 @@ namespace SlackConnector
 
         public async Task<SlackChatHub> JoinDirectMessageChannel(string user)
         {
-            SlackChatHub chatHub = null;
-
-            var values = new[]
+            if (string.IsNullOrEmpty(user))
             {
-                "token", this.SlackKey,
-                "user", user
-            };
-
-            var client = new NoobWebClient();
-            string json = await client.GetResponse(SLACK_API_JOIN_DM_URL, RequestMethod.Post, values);
-            JObject jData = JObject.Parse(json);
-
-            if (jData["ok"] != null && jData["ok"].Value<bool>())
-            {
-                chatHub = new SlackChatHub
-                {
-                    Id = jData["channel"]["id"].Value<string>(),
-                    Type = SlackChatHubType.DM
-                };
+                throw new ArgumentNullException(nameof(user));
             }
 
-            return chatHub;
+            IChannelMessenger client = _connectionFactory.CreateChannelMessenger();
+            Channel channel = await client.JoinDirectMessageChannel(SlackKey, user);
+
+            return new SlackChatHub
+            {
+                Id = channel.Id,
+                Name = channel.Name,
+                Type = SlackChatHubType.DM
+            };
         }
 
 

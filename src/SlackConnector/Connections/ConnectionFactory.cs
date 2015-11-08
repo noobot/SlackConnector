@@ -28,5 +28,10 @@ namespace SlackConnector.Connections
         {
             return new ChatMessenger(_restSharpFactory);
         }
+
+        public IChannelMessenger CreateChannelMessenger()
+        {
+            return new ChannelMessenger(_restSharpFactory);
+        }
     }
 }

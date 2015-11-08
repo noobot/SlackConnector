@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using NUnit.Framework;
 using RestSharp;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Models;
 using SlackConnector.Exceptions;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
+using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.Connections.Messaging
 {
@@ -19,13 +22,20 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
             private string _slackKey = "super-key";
             private string _user = "super-user";
             private RestClientStub RestStub { get; set; }
+            private Channel Result { get; set; }
 
             protected override void Given()
             {
                 RestStub = new RestClientStub
                 {
                     ExecutePostTaskAsync_StatusCode = HttpStatusCode.OK,
-                    ExecutePostTaskAsync_Content = "{'ok':true}"
+                    ExecutePostTaskAsync_Content = @"{
+                                                        'ok':true, 
+                                                        'channel': {
+                                                            'id': 'my-id',
+                                                            'name': 'my-name',
+                                                        }
+                                                     }"
                 };
 
                 GetMockFor<IRestSharpFactory>()
@@ -35,7 +45,7 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
 
             protected override void When()
             {
-                SUT.JoinDirectMessageChannel(_slackKey, _user).Wait();
+                Result = SUT.JoinDirectMessageChannel(_slackKey, _user).Result;
             }
 
             [Test]
@@ -70,6 +80,18 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
             {
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
                 request.Parameters.Count.ShouldEqual(2);
+            }
+
+            [Test]
+            public void should_return_expected_channel()
+            {
+                var expected = new Channel
+                {
+                    Id = "my-id",
+                    Name = "my-name"
+                };
+
+                Result.ShouldLookLike(expected);
             }
         }
 

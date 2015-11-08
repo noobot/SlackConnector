@@ -91,6 +91,7 @@
     <Compile Include="SlackConnectorTests\InboundMessageTests.cs" />
     <Compile Include="SlackConnectorTests\Connect\MultipleConnections.cs" />
     <Compile Include="SlackConnectorTests\Connect\HubsTests.cs" />
+    <Compile Include="SlackConnectorTests\JoinDirectMessageChannelTests.cs" />
     <Compile Include="SlackConnectorTests\SayTests.cs" />
     <Compile Include="SlackConnectorTests\Setups\ValidSetup.cs" />
     <Compile Include="SlackConnectorTests\Connect\UsersTests.cs" />

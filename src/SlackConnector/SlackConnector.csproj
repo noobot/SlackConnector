@@ -69,6 +69,7 @@
     <Compile Include="Connections\Messaging\IChatMessenger.cs" />
     <Compile Include="Connections\Messaging\ChatMessenger.cs" />
     <Compile Include="Connections\Models\Group.cs" />
+    <Compile Include="Connections\Models\JoinChannelResponse.cs" />
     <Compile Include="Connections\Models\Profile.cs" />
     <Compile Include="Connections\IConnectionFactory.cs" />
     <Compile Include="Connections\IRestSharpFactory.cs" />
