@@ -1,4 +1,5 @@
 ﻿using SlackConnector.Connections.Handshaking;
+using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Sockets;
 
 namespace SlackConnector.Connections
@@ -7,5 +8,7 @@ namespace SlackConnector.Connections
     {
         IWebSocketClient CreateWebSocketClient(string url);
         IHandshakeClient CreateHandshakeClient();
+        IChatMessenger CreateChatMessenger();
+        IChannelMessenger CreateChannelMessenger();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SlackConnector.Connections.Handshaking;
+using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
 
@@ -6,6 +7,13 @@ namespace SlackConnector.Connections
 {
     internal class ConnectionFactory : IConnectionFactory
     {
+        private readonly IRestSharpFactory _restSharpFactory;
+
+        public ConnectionFactory()
+        {
+            _restSharpFactory = new RestSharpFactory();
+        }
+
         public IWebSocketClient CreateWebSocketClient(string url)
         {
             return new WebSocketClient(new MessageInterpreter(), url);
@@ -13,7 +21,17 @@ namespace SlackConnector.Connections
 
         public IHandshakeClient CreateHandshakeClient()
         {
-            return new HandshakeClient(new RestSharpFactory());
+            return new HandshakeClient(_restSharpFactory);
+        }
+
+        public IChatMessenger CreateChatMessenger()
+        {
+            return new ChatMessenger(_restSharpFactory);
+        }
+
+        public IChannelMessenger CreateChannelMessenger()
+        {
+            return new ChannelMessenger(_restSharpFactory);
         }
     }
 }

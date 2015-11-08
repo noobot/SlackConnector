@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bazam.NoobWebClient;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
+using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
@@ -24,10 +22,7 @@ namespace SlackConnector
         private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
-
-        private const string SLACK_API_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
-        private const string SLACK_API_JOIN_DM_URL = "https://slack.com/api/im.open";
-
+        
         //TODO: Remove?
         public string[] Aliases { get; set; } = new string[0];
 
@@ -70,6 +65,7 @@ namespace SlackConnector
             _mentionDetector = mentionDetector;
         }
 
+        //TODO: move this into a factory
         public async Task Connect(string slackKey)
         {
             if (IsConnected)
@@ -211,62 +207,31 @@ namespace SlackConnector
 
         public async Task Say(BotMessage message)
         {
-            string chatHubId = null;
-
-            if (message.ChatHub != null)
+            if (string.IsNullOrEmpty(message.ChatHub?.Id))
             {
-                chatHubId = message.ChatHub.Id;
+                throw new MissingChannelException("When calling the Say() method, the message parameter must have its ChatHub property set.");
             }
 
-            if (!string.IsNullOrEmpty(chatHubId))
-            {
-                var values = new List<string>
-                {
-                    "token", this.SlackKey,
-                    "channel", chatHubId,
-                    "text", message.Text,
-                    "as_user", "true"
-                };
-
-                if (message.Attachments.Count > 0)
-                {
-                    values.Add("attachments");
-                    values.Add(JsonConvert.SerializeObject(message.Attachments));
-                }
-
-                var client = new NoobWebClient();
-                await client.GetResponse(SLACK_API_SEND_MESSAGE_URL, RequestMethod.Post, values.ToArray());
-            }
-            else
-            {
-                throw new ArgumentException("When calling the Say() method, the message parameter must have its ChatHub property set.");
-            }
+            var client = _connectionFactory.CreateChatMessenger();
+            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
         }
 
         public async Task<SlackChatHub> JoinDirectMessageChannel(string user)
         {
-            SlackChatHub chatHub = null;
-
-            var values = new[]
+            if (string.IsNullOrEmpty(user))
             {
-                "token", this.SlackKey,
-                "user", user
-            };
-
-            var client = new NoobWebClient();
-            string json = await client.GetResponse(SLACK_API_JOIN_DM_URL, RequestMethod.Post, values);
-            JObject jData = JObject.Parse(json);
-
-            if (jData["ok"] != null && jData["ok"].Value<bool>())
-            {
-                chatHub = new SlackChatHub
-                {
-                    Id = jData["channel"]["id"].Value<string>(),
-                    Type = SlackChatHubType.DM
-                };
+                throw new ArgumentNullException(nameof(user));
             }
 
-            return chatHub;
+            IChannelMessenger client = _connectionFactory.CreateChannelMessenger();
+            Channel channel = await client.JoinDirectMessageChannel(SlackKey, user);
+
+            return new SlackChatHub
+            {
+                Id = channel.Id,
+                Name = channel.Name,
+                Type = SlackChatHubType.DM
+            };
         }
 
 

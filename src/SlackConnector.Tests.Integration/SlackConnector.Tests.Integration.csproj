@@ -52,6 +52,7 @@
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\IConfigReader.cs" />
     <Compile Include="Configuration\SlackConfig.cs" />
+    <Compile Include="SayTests.cs" />
     <Compile Include="JoinDmChannelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackConnectorTests.cs" />
