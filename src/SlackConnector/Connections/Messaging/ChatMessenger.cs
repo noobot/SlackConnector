@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -19,7 +20,7 @@ namespace SlackConnector.Connections.Messaging
             _restSharpFactory = restSharpFactory;
         }
 
-        public async Task PostMessage(string slackKey, string channel, string text, SlackAttachment[] attachments)
+        public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
         {
             var client = _restSharpFactory.CreateClient("https://slack.com");
 

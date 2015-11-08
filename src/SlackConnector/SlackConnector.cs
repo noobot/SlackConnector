@@ -211,36 +211,13 @@ namespace SlackConnector
 
         public async Task Say(BotMessage message)
         {
-            string chatHubId = null;
-
-            if (message.ChatHub != null)
+            if (string.IsNullOrEmpty(message.ChatHub?.Id))
             {
-                chatHubId = message.ChatHub.Id;
+                throw new MissingChannelException("When calling the Say() method, the message parameter must have its ChatHub property set.");
             }
 
-            if (!string.IsNullOrEmpty(chatHubId))
-            {
-                var values = new List<string>
-                {
-                    "token", this.SlackKey,
-                    "channel", chatHubId,
-                    "text", message.Text,
-                    "as_user", "true"
-                };
-
-                if (message.Attachments.Count > 0)
-                {
-                    values.Add("attachments");
-                    values.Add(JsonConvert.SerializeObject(message.Attachments));
-                }
-
-                var client = new NoobWebClient();
-                await client.GetResponse(SLACK_API_SEND_MESSAGE_URL, RequestMethod.Post, values.ToArray());
-            }
-            else
-            {
-                throw new ArgumentException("When calling the Say() method, the message parameter must have its ChatHub property set.");
-            }
+            var client = _connectionFactory.CreateChatMessenger();
+            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
         }
 
         public async Task<SlackChatHub> JoinDirectMessageChannel(string user)

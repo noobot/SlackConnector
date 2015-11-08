@@ -76,6 +76,7 @@
     <Compile Include="Exceptions\AlreadyConnectedException.cs" />
     <Compile Include="Exceptions\CommunicationException.cs" />
     <Compile Include="Exceptions\HandshakeException.cs" />
+    <Compile Include="Exceptions\MissingChannelException.cs" />
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnector.cs" />
