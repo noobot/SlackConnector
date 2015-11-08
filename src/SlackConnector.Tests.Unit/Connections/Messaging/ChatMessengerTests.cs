@@ -1,14 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
 using SlackConnector.Exceptions;
+using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
+using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.Connections.Messaging
 {
@@ -85,6 +90,13 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
                 request.Resource.ShouldEqual(ChatMessenger.SEND_MESSAGE_PATH);
             }
+
+            [Test]
+            public void then_should_have_4_params()
+            {
+                IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
+                request.Parameters.Count.ShouldEqual(4);
+            }
         }
 
         internal class given_error_occured_in_communications : SpecsFor<ChatMessenger>
@@ -156,6 +168,58 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
 
                 Assert.That(exception, Is.Not.Null);
                 Assert.That(exception.Message, Is.EqualTo($"Error occured while posting message 'blooming error'"));
+            }
+        }
+
+        internal class given_attachments_are_supplied : SpecsFor<ChatMessenger>
+        {
+            private RestClientStub RestStub { get; set; }
+            private SlackAttachment[] Attachments { get; set; }
+
+            protected override void Given()
+            {
+                RestStub = new RestClientStub
+                {
+                    ExecutePostTaskAsync_StatusCode = HttpStatusCode.OK,
+                    ExecutePostTaskAsync_Content = "{'ok':true}"
+                };
+
+                GetMockFor<IRestSharpFactory>()
+                    .Setup(x => x.CreateClient(It.IsAny<string>()))
+                    .Returns(RestStub);
+
+                Attachments = new[]
+                {
+                    new SlackAttachment
+                    {
+                        Text = "Something",
+                        ColorHex = "something-else",
+                        Fallback = "dunno",
+                        Fields = new List<SlackAttachmentField> {new SlackAttachmentField {Value = "asdasd", IsShort = true,Title = "bewbs"} },
+                        Title = "doobee",
+                        ImageUrl = "ding dong",
+                        PreText = "captain",
+                        TitleLink = "america"
+                    }
+                };
+            }
+
+            protected override void When()
+            {
+                SUT.PostMessage("", "", "", Attachments).Wait();
+            }
+
+            [Test]
+            public void should_contain_attachment_parameter()
+            {
+                IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
+                Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("attachments"));
+                keyParam.ShouldNotBeNull();
+                keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
+                
+                string json = keyParam.Value as string;
+                var result = JsonConvert.DeserializeObject<SlackAttachment[]>(json);
+                result.ShouldLookLike(Attachments);
             }
         }
     }

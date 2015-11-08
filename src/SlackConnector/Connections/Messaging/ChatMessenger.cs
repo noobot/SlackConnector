@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
@@ -28,14 +29,18 @@ namespace SlackConnector.Connections.Messaging
             request.AddParameter("text", text);
             request.AddParameter("as_user", "true");
 
-            IRestResponse response = await client.ExecutePostTaskAsync(request);
+            if (attachments != null && attachments.Any())
+            {
+                request.AddParameter("attachments", JsonConvert.SerializeObject(attachments));
+            }
 
+            IRestResponse response = await client.ExecutePostTaskAsync(request);
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new CommunicationException($"Error occured while posting message '{response.StatusCode}'");
             }
 
-            var slackResponse = JsonConvert.DeserializeObject<StandardResponse>(response.Content);
+            StandardResponse slackResponse = JsonConvert.DeserializeObject<StandardResponse>(response.Content);
             if (!slackResponse.Ok)
             {
                 throw new CommunicationException($"Error occured while posting message '{slackResponse.Error}'");
