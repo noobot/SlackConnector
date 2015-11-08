@@ -216,6 +216,7 @@ namespace SlackConnector
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
         }
 
+		//TODO: Cache newly created channel, and return if already exists
         public async Task<SlackChatHub> JoinDirectMessageChannel(string user)
         {
             if (string.IsNullOrEmpty(user))
