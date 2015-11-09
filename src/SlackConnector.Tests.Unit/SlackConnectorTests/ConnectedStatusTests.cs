@@ -1,10 +1,12 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Exceptions;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
+using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
@@ -13,11 +15,21 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
     {
         public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
         {
+            private SlackConnectionFactoryStub FactoryStub { get; set; }
+            private SlackConnectionStub Connection { get; set; }
             private ISlackConnection Result { get; set; }
 
+            protected override void InitializeClassUnderTest()
+            {
+                FactoryStub = new SlackConnectionFactoryStub();
+                SUT = new SlackConnector(FactoryStub);
+            }
+            //TODO: Conintue refactoring all this gunk out
             protected override void Given()
             {
-                base.Given();
+                Connection = new SlackConnectionStub();
+
+
             }
 
             protected override void When()
@@ -28,26 +40,26 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             [Test]
             public void then_should_be_aware_of_current_state()
             {
-                SUT.IsConnected.ShouldBeTrue();
+                Result.IsConnected.ShouldBeTrue();
             }
 
             [Test]
             public void then_should_have_a_connected_since_date()
             {
-                SUT.ConnectedSince.ShouldBeGreaterThanOrEqualTo(DateTime.Now.AddSeconds(-1));
-                SUT.ConnectedSince.ShouldBeLessThan(DateTime.Now.AddSeconds(1));
+                Result.ConnectedSince.ShouldBeGreaterThanOrEqualTo(DateTime.Now.AddSeconds(-1));
+                Result.ConnectedSince.ShouldBeLessThan(DateTime.Now.AddSeconds(1));
             }
 
             [Test]
             public void then_should_not_contain_connected_hubs()
             {
-                SUT.ConnectedHubs.Count.ShouldEqual(0);
+                Result.ConnectedHubs.Count.ShouldEqual(0);
             }
 
             [Test]
             public void then_should_not_contain_users()
             {
-                SUT.UserNameCache.Count.ShouldEqual(0);
+                Result.UserNameCache.Count.ShouldEqual(0);
             }
         }
 

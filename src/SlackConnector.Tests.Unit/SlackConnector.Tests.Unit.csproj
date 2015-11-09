@@ -105,6 +105,7 @@
     <Compile Include="SlackConnectionTests\Connect\WebSocketTests.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreterTests.cs" />
     <Compile Include="Stubs\RestClientStub.cs" />
+    <Compile Include="Stubs\SlackConnectionStub.cs" />
     <Compile Include="Stubs\WebSocketClientStub.cs" />
   </ItemGroup>
   <ItemGroup>
