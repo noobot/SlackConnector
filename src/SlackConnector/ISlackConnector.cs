@@ -11,18 +11,17 @@ namespace SlackConnector
         #region Properties
 
         string[] Aliases { get; set; }
-        SlackChatHub[] ConnectedDMs { get; }
-        SlackChatHub[] ConnectedChannels { get; }
-        SlackChatHub[] ConnectedGroups { get; }
+        IEnumerable<SlackChatHub> ConnectedDMs { get; }
+        IEnumerable<SlackChatHub> ConnectedChannels { get; }
+        IEnumerable<SlackChatHub> ConnectedGroups { get; }
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
         IReadOnlyDictionary<string, string> UserNameCache { get; }
         bool IsConnected { get; }
         DateTime? ConnectedSince { get; }
         string SlackKey { get; }
-        string TeamId { get; }
-        string TeamName { get; }
-        string UserId { get; }
-        string UserName { get; }
+
+        ContactDetails Team { get; }
+        ContactDetails Self { get; }
 
         #endregion
 

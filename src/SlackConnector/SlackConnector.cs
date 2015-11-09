@@ -26,19 +26,19 @@ namespace SlackConnector
         //TODO: Remove?
         public string[] Aliases { get; set; } = new string[0];
 
-        public SlackChatHub[] ConnectedDMs
+        public IEnumerable<SlackChatHub> ConnectedDMs
         {
-            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.DM).ToArray(); }
+            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.DM); }
         }
 
-        public SlackChatHub[] ConnectedChannels
+        public IEnumerable<SlackChatHub> ConnectedChannels
         {
-            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Channel).ToArray(); }
+            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Channel); }
         }
 
-        public SlackChatHub[] ConnectedGroups
+        public IEnumerable<SlackChatHub> ConnectedGroups
         {
-            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Group).ToArray(); }
+            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Group); }
         }
 
         private readonly Dictionary<string, SlackChatHub> _connectedHubs = new Dictionary<string, SlackChatHub>();
@@ -49,11 +49,16 @@ namespace SlackConnector
 
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
-        public string SlackKey { get; private set; }
-        public string TeamId { get; private set; }
-        public string TeamName { get; private set; }
-        public string UserId { get; private set; }
-        public string UserName { get; private set; }
+        public string SlackKey { get; internal set; }
+
+        public ContactDetails Team { get; set; }
+        public ContactDetails Self { get; set; }
+
+        //TODO: Delete
+        public string TeamId { get; internal set; }
+        public string TeamName { get; internal set; }
+        public string UserId { get; internal set; }
+        public string UserName { get; internal set; }
 
         public SlackConnector() : this(new ConnectionFactory(), new ChatHubInterpreter(), new MentionDetector())
         { }
