@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
+using SlackConnector.Connections.Models;
 using SlackConnector.Models;
 
 namespace SlackConnector
@@ -26,10 +29,17 @@ namespace SlackConnector
 
             var connectionInfo = new ConnectionInformation
             {
-                Self = new ContactDetails { Id = handshake.Self.Id, Name = handshake.Self.Name }
+                Self = new ContactDetails { Id = handshake.Self.Id, Name = handshake.Self.Name },
+                Team = new ContactDetails { Id = handshake.Team.Id, Name = handshake.Team.Name },
+                Users = GenerateUsers(handshake.Users)
             };
 
             return _slackConnectionFactory.Create(connectionInfo);
+        }
+
+        private Dictionary<string, string> GenerateUsers(User[] users)
+        {
+            return users.ToDictionary(user => user.Id, user => user.Name);
         }
     }
 }

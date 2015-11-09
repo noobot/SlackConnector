@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using Should;
@@ -33,7 +34,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 Handshake = new SlackHandshake
                 {
-                    Self = new Detail { Id = "my-id", Name = "my-name" }
+                    Self = new Detail { Id = "my-id", Name = "my-name" },
+                    Team = new Detail { Id = "team-id", Name = "team-name" },
+                    Users = new[]
+                    {
+                        new User { Id = "user-1-id", Name = "user-1-name" },
+                        new User { Id = "user-2-id", Name = "user-2-name" },
+                    }
                 };
 
                 GetMockFor<IHandshakeClient>()
@@ -66,6 +73,25 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 self.ShouldNotBeNull();
                 self.Id.ShouldEqual(Handshake.Self.Id);
                 self.Name.ShouldEqual(Handshake.Self.Name);
+            }
+
+            [Test]
+            public void then_should_pass_in_team_details()
+            {
+                ContactDetails team = SlackFactoryStub.Create_ConnectionInformation.Team;
+                team.ShouldNotBeNull();
+                team.Id.ShouldEqual(Handshake.Team.Id);
+                team.Name.ShouldEqual(Handshake.Team.Name);
+            }
+
+            [Test]
+            public void then_should_pass_expected_users()
+            {
+                Dictionary<string, string> users = SlackFactoryStub.Create_ConnectionInformation.Users;
+                users.ShouldNotBeNull();
+                users.Count.ShouldEqual(2);
+                users[Handshake.Users[0].Id].ShouldEqual(Handshake.Users[0].Name);
+                users[Handshake.Users[1].Id].ShouldEqual(Handshake.Users[1].Name);
             }
 
 
