@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
-using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
+using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 using SpecsFor.ShouldExtensions;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests
+namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class JoinDirectMessageChannel
     {

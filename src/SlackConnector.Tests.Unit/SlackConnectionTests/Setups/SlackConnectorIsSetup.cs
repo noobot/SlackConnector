@@ -5,7 +5,7 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Sockets;
 using SpecsFor;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests.Setups
+namespace SlackConnector.Tests.Unit.SlackConnectionTests.Setups
 {
     public abstract class SlackConnectorIsSetup : SpecsFor<SlackConnection>
     {

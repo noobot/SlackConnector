@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
@@ -7,10 +6,9 @@ using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Sockets;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
-using SpecsFor;
+using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
+namespace SlackConnector.Tests.Unit.SlackConnectionTests.Connect
 {
     public static class WebSocketTests
     {

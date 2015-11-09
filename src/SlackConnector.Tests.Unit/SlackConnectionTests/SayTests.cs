@@ -6,10 +6,9 @@ using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
-using SpecsFor;
+using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests
+namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class SayTests
     {

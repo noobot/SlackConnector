@@ -1,9 +1,9 @@
 ﻿using System;
 using NUnit.Framework;
 using SlackConnector.Exceptions;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
+using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests.Connect
+namespace SlackConnector.Tests.Unit.SlackConnectionTests.Connect
 {
     public static class MultipleConnections
     {

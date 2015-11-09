@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -11,12 +10,11 @@ using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
+using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests
+namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class InboundMessageTests
     {

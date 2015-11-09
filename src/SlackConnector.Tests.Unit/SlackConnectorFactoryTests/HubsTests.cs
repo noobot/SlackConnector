@@ -4,7 +4,7 @@ using Should;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
+using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorFactoryTests
