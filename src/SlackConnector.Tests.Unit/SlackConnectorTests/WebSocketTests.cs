@@ -8,7 +8,7 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorFactoryTests
+namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class WebSocketTests
     {

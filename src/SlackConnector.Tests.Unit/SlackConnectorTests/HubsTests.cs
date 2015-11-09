@@ -7,7 +7,7 @@ using SlackConnector.Models;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 using SpecsFor.ShouldExtensions;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorFactoryTests
+namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class HubsTests
     {

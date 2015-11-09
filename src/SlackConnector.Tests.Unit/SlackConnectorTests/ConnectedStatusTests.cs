@@ -1,18 +1,17 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
-using SpecsFor;
-using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Exceptions;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
+using SpecsFor;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorFactoryTests
+namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class ConnectedStatusTests
     {
-        public class given_valid_setup_when_connected : SpecsFor<SlackConnectorFactory>
+        public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
         {
             private ISlackConnection Result { get; set; }
 

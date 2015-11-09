@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SlackConnector.Exceptions;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorFactoryTests
+namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class MultipleConnections
     {

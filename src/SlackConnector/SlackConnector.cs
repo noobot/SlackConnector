@@ -2,7 +2,7 @@
 
 namespace SlackConnector
 {
-    public class SlackConnectorFactory : ISlackConnectorFactory
+    public class SlackConnector : ISlackConnector
     {
         public Task<ISlackConnection> Connect(string slackKey)
         {

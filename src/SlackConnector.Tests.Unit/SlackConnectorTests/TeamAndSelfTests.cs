@@ -5,7 +5,7 @@ using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorFactoryTests
+namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class TeamAndSelfTests
     {

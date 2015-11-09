@@ -2,7 +2,7 @@
 
 namespace SlackConnector
 {
-    public interface ISlackConnectorFactory
+    public interface ISlackConnector
     {
         Task<ISlackConnection> Connect(string slackKey);
     }
