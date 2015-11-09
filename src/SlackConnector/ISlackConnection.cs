@@ -6,7 +6,7 @@ using SlackConnector.Models;
 
 namespace SlackConnector
 {
-    public interface ISlackConnector
+    public interface ISlackConnection
     {
         #region Properties
 

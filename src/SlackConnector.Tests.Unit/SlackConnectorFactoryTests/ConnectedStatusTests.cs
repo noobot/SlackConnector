@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using SpecsFor;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
@@ -11,11 +12,18 @@ namespace SlackConnector.Tests.Unit.SlackConnectorFactoryTests
 {
     public static class ConnectedStatusTests
     {
-        public class given_valid_setup_when_connected : SlackConnectorIsSetup
+        public class given_valid_setup_when_connected : SpecsFor<SlackConnectorFactory>
         {
+            private ISlackConnection Result { get; set; }
+
+            protected override void Given()
+            {
+                base.Given();
+            }
+
             protected override void When()
             {
-                SUT.Connect("key").Wait();
+                Result = SUT.Connect("key").Result;
             }
 
             [Test]

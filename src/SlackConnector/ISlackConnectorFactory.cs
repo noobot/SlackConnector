@@ -1,7 +1,9 @@
-﻿namespace SlackConnector
+﻿using System.Threading.Tasks;
+
+namespace SlackConnector
 {
     public interface ISlackConnectorFactory
     {
-        ISlackConnector Connect(string slackKey);
+        Task<ISlackConnection> Connect(string slackKey);
     }
 }

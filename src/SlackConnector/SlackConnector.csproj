@@ -79,7 +79,7 @@
     <Compile Include="ISlackConnectorFactory.cs" />
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
-    <Compile Include="ISlackConnector.cs" />
+    <Compile Include="ISlackConnection.cs" />
     <Compile Include="Connections\Models\Channel.cs" />
     <Compile Include="Connections\Handshaking\SlackHandshake.cs" />
     <Compile Include="Connections\Models\Detail.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Models\SlackChatHub.cs" />
     <Compile Include="Models\SlackChatHubType.cs" />
     <Compile Include="Serialising\EnumConverter.cs" />
-    <Compile Include="SlackConnector.cs" />
+    <Compile Include="SlackConnection.cs" />
     <Compile Include="Models\SlackMessage.cs" />
     <Compile Include="Models\SlackUser.cs" />
     <Compile Include="Connections\Sockets\IWebSocketClient.cs" />

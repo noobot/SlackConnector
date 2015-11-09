@@ -16,7 +16,7 @@ using Group = SlackConnector.Connections.Models.Group;
 
 namespace SlackConnector
 {
-    public class SlackConnector : ISlackConnector
+    public class SlackConnection : ISlackConnection
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly IChatHubInterpreter _chatHubInterpreter;
@@ -60,10 +60,10 @@ namespace SlackConnector
         public string UserId { get; internal set; }
         public string UserName { get; internal set; }
 
-        public SlackConnector() : this(new ConnectionFactory(), new ChatHubInterpreter(), new MentionDetector())
+        public SlackConnection() : this(new ConnectionFactory(), new ChatHubInterpreter(), new MentionDetector())
         { }
 
-        internal SlackConnector(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IMentionDetector mentionDetector)
+        internal SlackConnection(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IMentionDetector mentionDetector)
         {
             _connectionFactory = connectionFactory;
             _chatHubInterpreter = chatHubInterpreter;

@@ -14,7 +14,7 @@ namespace SlackConnector.Tests.Integration
             // given
             var config = new ConfigReader().GetConfig();
 
-            var slackConnector = new SlackConnector();
+            var slackConnector = new SlackConnection();
             slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
             slackConnector.OnMessageReceived += SlackConnectorOnOnMessageReceived;
 

@@ -7,11 +7,11 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests.Setups
 {
-    public abstract class SlackConnectorIsSetup : SpecsFor<SlackConnector>
+    public abstract class SlackConnectorIsSetup : SpecsFor<SlackConnection>
     {
         protected override void InitializeClassUnderTest()
         {
-            SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<IChatHubInterpreter>().Object, GetMockFor<IMentionDetector>().Object);
+            SUT = new SlackConnection(GetMockFor<IConnectionFactory>().Object, GetMockFor<IChatHubInterpreter>().Object, GetMockFor<IMentionDetector>().Object);
         }
 
         protected override void Given()
