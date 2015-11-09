@@ -4,7 +4,9 @@ using NUnit.Framework;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
+using SlackConnector.Connections.Models;
 using SlackConnector.Exceptions;
+using SlackConnector.Models;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
@@ -15,52 +17,69 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
     {
         public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
         {
-            private SlackConnectionFactoryStub FactoryStub { get; set; }
+            private const string SlackKey = "slacKing-off-ey?";
+            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
             private SlackConnectionStub Connection { get; set; }
+            private SlackHandshake Handshake { get; set; }
             private ISlackConnection Result { get; set; }
 
             protected override void InitializeClassUnderTest()
             {
-                FactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(FactoryStub);
+                SlackFactoryStub = new SlackConnectionFactoryStub();
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
             }
-            //TODO: Conintue refactoring all this gunk out
+
             protected override void Given()
             {
+                Handshake = new SlackHandshake
+                {
+                    Self = new Detail { Id = "my-id", Name = "my-name" }
+                };
+
+                GetMockFor<IHandshakeClient>()
+                    .Setup(x => x.FirmShake(SlackKey))
+                    .ReturnsAsync(Handshake);
+
                 Connection = new SlackConnectionStub();
+                SlackFactoryStub.Create_Value = Connection;
 
-
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
             }
 
             protected override void When()
             {
-                Result = SUT.Connect("key").Result;
+                Result = SUT.Connect(SlackKey).Result;
             }
 
             [Test]
-            public void then_should_be_aware_of_current_state()
+            public void then_should_return_expected_connection()
             {
-                Result.IsConnected.ShouldBeTrue();
+                Result.ShouldEqual(Connection);
             }
 
             [Test]
-            public void then_should_have_a_connected_since_date()
+            public void then_should_pass_in_self_details()
             {
-                Result.ConnectedSince.ShouldBeGreaterThanOrEqualTo(DateTime.Now.AddSeconds(-1));
-                Result.ConnectedSince.ShouldBeLessThan(DateTime.Now.AddSeconds(1));
+                ContactDetails self = SlackFactoryStub.Create_ConnectionInformation.Self;
+                self.ShouldNotBeNull();
+                self.Id.ShouldEqual(Handshake.Self.Id);
+                self.Name.ShouldEqual(Handshake.Self.Name);
             }
 
-            [Test]
-            public void then_should_not_contain_connected_hubs()
-            {
-                Result.ConnectedHubs.Count.ShouldEqual(0);
-            }
 
-            [Test]
-            public void then_should_not_contain_users()
-            {
-                Result.UserNameCache.Count.ShouldEqual(0);
-            }
+            //[Test]
+            //public void then_should_not_contain_connected_hubs()
+            //{
+            //    Result.ConnectedHubs.Count.ShouldEqual(0);
+            //}
+
+            //[Test]
+            //public void then_should_not_contain_users()
+            //{
+            //    Result.UserNameCache.Count.ShouldEqual(0);
+            //}
         }
 
         public class given_handshake_was_not_ok : SlackConnectorIsSetup
