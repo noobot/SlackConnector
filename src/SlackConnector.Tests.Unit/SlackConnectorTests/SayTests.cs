@@ -13,7 +13,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class SayTests
     {
-        public class given_valid_bot_message : ValidSetup
+        public class given_valid_bot_message : SlackConnectorIsSetup
         {
             private string SlackKey = "doobeedoo";
             private BotMessage Message { get; set; }
@@ -48,7 +48,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             }
         }
 
-        public class given_no_valid_chathub_id : ValidSetup
+        public class given_no_valid_chathub_id : SlackConnectorIsSetup
         {
             protected override void Given()
             {

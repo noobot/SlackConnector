@@ -14,7 +14,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class JoinDirectMessageChannel
     {
-        public class given_dm_channel : ValidSetup
+        public class given_dm_channel : SlackConnectorIsSetup
         {
             private readonly string SlackKey = "doobeedoo";
             private readonly string UserId = "something interesting";
@@ -53,7 +53,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             }
         }
 
-        public class given_no_valid_user_id : ValidSetup
+        public class given_no_valid_user_id : SlackConnectorIsSetup
         {
             protected override void Given()
             {

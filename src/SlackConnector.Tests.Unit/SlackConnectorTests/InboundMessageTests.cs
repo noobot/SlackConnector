@@ -20,7 +20,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     public static class InboundMessageTests
     {
-        internal class BaseTest : ValidSetup
+        internal class BaseTest : SlackConnectorIsSetup
         {
             protected InboundMessage InboundMessage { get; set; }
             protected bool MessageRaised { get; set; }

@@ -93,7 +93,7 @@
     <Compile Include="SlackConnectorTests\Connect\HubsTests.cs" />
     <Compile Include="SlackConnectorTests\JoinDirectMessageChannelTests.cs" />
     <Compile Include="SlackConnectorTests\SayTests.cs" />
-    <Compile Include="SlackConnectorTests\Setups\ValidSetup.cs" />
+    <Compile Include="SlackConnectorTests\Setups\SlackConnectorIsSetup.cs" />
     <Compile Include="SlackConnectorTests\Connect\UsersTests.cs" />
     <Compile Include="SlackConnectorTests\Connect\TeamAndSelfTests.cs" />
     <Compile Include="SlackConnectorTests\Connect\WebSocketTests.cs" />
@@ -112,7 +112,9 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\HandShakeResponse.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="SlackConnectorFactoryTests\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
