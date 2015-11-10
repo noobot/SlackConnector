@@ -172,23 +172,16 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 GetMockFor<IWebSocketClient>()
                     .Verify(x => x.Connect());
             }
-
-            //[Test]
-            //public void then_should_not_contain_connected_hubs()
-            //{
-            //    Result.ConnectedHubs.Count.ShouldEqual(0);
-            //}
-
-            //[Test]
-            //public void then_should_not_contain_users()
-            //{
-            //    Result.UserNameCache.Count.ShouldEqual(0);
-            //}
         }
 
-        public class given_handshake_was_not_ok : SlackConnectorIsSetup
+        public class given_handshake_was_not_ok : SpecsFor<SlackConnector>
         {
             private SlackHandshake HandshakeResponse { get; set; }
+
+            protected override void InitializeClassUnderTest()
+            {
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<ISlackConnectionFactory>().Object);
+            }
 
             protected override void Given()
             {
@@ -222,17 +215,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             }
         }
 
-        public class given_empty_api_key : SlackConnectorIsSetup
+        public class given_empty_api_key : SpecsFor<SlackConnector>
         {
-            protected override void Given()
+            protected override void InitializeClassUnderTest()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(new SlackHandshake());
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<ISlackConnectionFactory>().Object);
             }
 
             [Test]

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
+using SlackConnector.Exceptions;
 using SlackConnector.Models;
 
 namespace SlackConnector
@@ -25,8 +27,18 @@ namespace SlackConnector
 
         public async Task<ISlackConnection> Connect(string slackKey)
         {
+            if (string.IsNullOrEmpty(slackKey))
+            {
+                throw new ArgumentNullException(nameof(slackKey));
+            }
+
             var handshakeClient = _connectionFactory.CreateHandshakeClient();
             SlackHandshake handshake = await handshakeClient.FirmShake(slackKey);
+
+            if (!handshake.Ok)
+            {
+                throw new HandshakeException(handshake.Error);
+            }
 
             var connectionInfo = new ConnectionInformation
             {
