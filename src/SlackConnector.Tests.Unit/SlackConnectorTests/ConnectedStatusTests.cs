@@ -45,11 +45,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     },
                     Channels = new[]
                     {
-                        new Channel {Id = "i-am-a-channel", Name = "channel-name"}
+                        new Channel { Id = "i-am-a-channel", Name = "channel-name" }
                     },
                     Groups = new[]
                     {
-                        new Group {Id = "i-am-a-group", Name = "group-name"},
+                        new Group { Id = "i-am-a-group", Name = "group-name", Members = new [] {"my-id"} },
                     },
                     Ims = new[]
                     {

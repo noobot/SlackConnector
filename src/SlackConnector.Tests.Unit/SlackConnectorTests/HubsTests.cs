@@ -129,16 +129,21 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             }
         }
 
-        public class given_groups_that_are_not_archived_and_is_not_a_member_of_group : SlackConnectorIsSetup
+        public class given_groups_that_are_not_archived_and_is_not_a_member_of_group : SpecsFor<SlackConnector>
         {
-            private SlackHandshake _handshake;
+            private SlackHandshake Handshake { get; set; }
             private const string SelfId = "abc123";
-            
+            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
+
+            protected override void InitializeClassUnderTest()
+            {
+                SlackFactoryStub = new SlackConnectionFactoryStub();
+                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
+            }
+
             protected override void Given()
             {
-                base.Given();
-
-                _handshake = new SlackHandshake
+                Handshake = new SlackHandshake
                 {
                     Ok = true,
                     Self = new Detail { Id = SelfId },
@@ -156,7 +161,15 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(_handshake);
+                    .ReturnsAsync(Handshake);
+
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateHandshakeClient())
+                    .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateWebSocketClient(Handshake.WebSocketUrl))
+                    .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
             protected override void When()
@@ -167,7 +180,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             [Test]
             public void then_should_not_contain_any_channel()
             {
-                SUT.ConnectedHubs.Count.ShouldEqual(0);
+                SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs.Count.ShouldEqual(0);
             }
         }
 

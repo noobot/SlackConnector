@@ -68,24 +68,21 @@ namespace SlackConnector
         {
             var hubs = new Dictionary<string, SlackChatHub>();
 
-            foreach (Channel channel in handshake.Channels)
+            foreach (Channel channel in handshake.Channels.Where(x => !x.IsArchived))
             {
-                if (!channel.IsArchived)
+                var newChannel = new SlackChatHub
                 {
-                    var newChannel = new SlackChatHub
-                    {
-                        Id = channel.Id,
-                        Name = "#" + channel.Name,
-                        Type = SlackChatHubType.Channel
-                    };
+                    Id = channel.Id,
+                    Name = "#" + channel.Name,
+                    Type = SlackChatHubType.Channel
+                };
 
-                    hubs.Add(channel.Id, newChannel);
-                }
+                hubs.Add(channel.Id, newChannel);
             }
 
-            foreach (Group group in handshake.Groups)
+            foreach (Group group in handshake.Groups.Where(x => !x.IsArchived))
             {
-                if (!group.IsArchived)
+                if (group.Members.Any(x => x == handshake.Self.Id))
                 {
                     var newGroup = new SlackChatHub
                     {
