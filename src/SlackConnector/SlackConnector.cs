@@ -97,10 +97,11 @@ namespace SlackConnector
 
             foreach (Im im in handshake.Ims)
             {
+                User user = handshake.Users.FirstOrDefault(x => x.Id == im.User);
                 var dm = new SlackChatHub
                 {
                     Id = im.Id,
-                    Name = "@" + im.Id,
+                    Name = "@" + (user == null ? im.User : user.Name),
                     Type = SlackChatHubType.DM
                 };
 

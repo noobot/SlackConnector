@@ -53,7 +53,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     },
                     Ims = new[]
                     {
-                        new Im { Id = "i-am-a-im" }
+                        new Im { Id = "i-am-a-im", User = "user-i-am_yup"}
                     },
                     WebSocketUrl = "some-valid-url"
                 };
@@ -155,7 +155,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 var hub = hubs[Handshake.Ims[0].Id];
                 hub.ShouldNotBeNull();
                 hub.Id.ShouldEqual(Handshake.Ims[0].Id);
-                hub.Name.ShouldEqual("@" + Handshake.Ims[0].Id);
+                hub.Name.ShouldEqual("@" + Handshake.Ims[0].User);
                 hub.Type.ShouldEqual(SlackChatHubType.DM);
             }
 
