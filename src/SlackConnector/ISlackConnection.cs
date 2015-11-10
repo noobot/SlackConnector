@@ -10,13 +10,19 @@ namespace SlackConnector
     {
         #region Properties
 
+        [Obsolete("This may be removed in the future, currently this does nothing")]
         string[] Aliases { get; set; }
+
+        //TODO: move these into extension methods
         IEnumerable<SlackChatHub> ConnectedDMs { get; }
         IEnumerable<SlackChatHub> ConnectedChannels { get; }
         IEnumerable<SlackChatHub> ConnectedGroups { get; }
+
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
         IReadOnlyDictionary<string, string> UserNameCache { get; }
-        bool IsConnected { get; }
+
+        //TODO: Fully remove
+        //bool IsConnected { get; }
         DateTime? ConnectedSince { get; }
         string SlackKey { get; }
 
@@ -27,6 +33,7 @@ namespace SlackConnector
 
 
         Task Connect(string slackKey);
+
         void Disconnect();
         Task Say(BotMessage message);
         Task<SlackChatHub> JoinDirectMessageChannel(string user);
