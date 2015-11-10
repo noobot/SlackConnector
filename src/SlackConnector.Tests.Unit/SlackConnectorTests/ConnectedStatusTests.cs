@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
@@ -52,7 +54,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     Ims = new[]
                     {
                         new Im { Id = "i-am-a-im" }
-                    }
+                    },
+                    WebSocketUrl = "some-valid-url"
                 };
 
                 GetMockFor<IHandshakeClient>()
@@ -65,6 +68,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
+
+                GetMockFor<IConnectionFactory>()
+                    .Setup(x => x.CreateWebSocketClient(Handshake.WebSocketUrl))
+                    .Returns(GetMockFor<IWebSocketClient>().Object);
+
+                GetMockFor<IWebSocketClient>()
+                    .Setup(x => x.Connect())
+                    .Returns(Task.Factory.StartNew(() => { }));
             }
 
             protected override void When()
@@ -112,7 +123,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
                 hubs.ShouldNotBeNull();
                 hubs.Count.ShouldBeGreaterThan(0);
-                
+
                 var hub = hubs[Handshake.Channels[0].Id];
                 hub.ShouldNotBeNull();
                 hub.Id.ShouldEqual(Handshake.Channels[0].Id);
@@ -148,6 +159,19 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 hub.Type.ShouldEqual(SlackChatHubType.DM);
             }
 
+            [Test]
+            public void then_should_pass_in_expected_websocket()
+            {
+                var webSocket = SlackFactoryStub.Create_ConnectionInformation.WebSocket;
+                webSocket.ShouldEqual(GetMockFor<IWebSocketClient>().Object);
+            }
+
+            [Test]
+            public void then_should_connect_websocket()
+            {
+                GetMockFor<IWebSocketClient>()
+                    .Verify(x => x.Connect());
+            }
 
             //[Test]
             //public void then_should_not_contain_connected_hubs()

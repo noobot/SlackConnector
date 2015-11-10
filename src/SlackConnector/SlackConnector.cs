@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
 
 namespace SlackConnector
@@ -32,10 +33,18 @@ namespace SlackConnector
                 Self = new ContactDetails { Id = handshake.Self.Id, Name = handshake.Self.Name },
                 Team = new ContactDetails { Id = handshake.Team.Id, Name = handshake.Team.Name },
                 Users = GenerateUsers(handshake.Users),
-                SlackChatHubs = GetChatHubs(handshake)
+                SlackChatHubs = GetChatHubs(handshake),
+                WebSocket = await GetWebSocket(handshake)
             };
 
             return _slackConnectionFactory.Create(connectionInfo);
+        }
+
+        private async Task<IWebSocketClient> GetWebSocket(SlackHandshake handshake)
+        {
+            var webSocketClient = _connectionFactory.CreateWebSocketClient(handshake.WebSocketUrl);
+            await webSocketClient.Connect();
+            return webSocketClient;
         }
 
         private Dictionary<string, string> GenerateUsers(User[] users)
