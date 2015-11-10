@@ -89,10 +89,6 @@
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="SlackConnectorTests\ConnectedStatusTests.cs" />
     <Compile Include="SlackConnectorTests\HubsTests.cs" />
-    <Compile Include="SlackConnectorTests\MultipleConnections.cs" />
-    <Compile Include="SlackConnectorTests\TeamAndSelfTests.cs" />
-    <Compile Include="SlackConnectorTests\UsersTests.cs" />
-    <Compile Include="SlackConnectorTests\WebSocketTests.cs" />
     <Compile Include="SlackConnectionTests\Connect\ConnectedStatusTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests.cs" />
     <Compile Include="SlackConnectionTests\Connect\MultipleConnections.cs" />
