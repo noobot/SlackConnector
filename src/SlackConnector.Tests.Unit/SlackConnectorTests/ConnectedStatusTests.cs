@@ -40,6 +40,18 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     {
                         new User { Id = "user-1-id", Name = "user-1-name" },
                         new User { Id = "user-2-id", Name = "user-2-name" },
+                    },
+                    Channels = new[]
+                    {
+                        new Channel {Id = "i-am-a-channel", IsArchived = false, Name = "channel-name"}
+                    },
+                    Groups = new[]
+                    {
+                        new Group {Id = "i-am-a-group", IsArchived = false, Name = "group-name"},
+                    },
+                    Ims = new[]
+                    {
+                        new Im { Id = "i-am-a-im" }
                     }
                 };
 
@@ -92,6 +104,48 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 users.Count.ShouldEqual(2);
                 users[Handshake.Users[0].Id].ShouldEqual(Handshake.Users[0].Name);
                 users[Handshake.Users[1].Id].ShouldEqual(Handshake.Users[1].Name);
+            }
+
+            [Test]
+            public void then_should_pass_expected_channels()
+            {
+                Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
+                hubs.ShouldNotBeNull();
+                hubs.Count.ShouldBeGreaterThan(0);
+                
+                var hub = hubs[Handshake.Channels[0].Id];
+                hub.ShouldNotBeNull();
+                hub.Id.ShouldEqual(Handshake.Channels[0].Id);
+                hub.Name.ShouldEqual("#" + Handshake.Channels[0].Name);
+                hub.Type.ShouldEqual(SlackChatHubType.Channel);
+            }
+
+            [Test]
+            public void then_should_pass_expected_groups()
+            {
+                Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
+                hubs.ShouldNotBeNull();
+                hubs.Count.ShouldBeGreaterThan(0);
+
+                var hub = hubs[Handshake.Groups[0].Id];
+                hub.ShouldNotBeNull();
+                hub.Id.ShouldEqual(Handshake.Groups[0].Id);
+                hub.Name.ShouldEqual("#" + Handshake.Groups[0].Name);
+                hub.Type.ShouldEqual(SlackChatHubType.Group);
+            }
+
+            [Test]
+            public void then_should_pass_expected_ims()
+            {
+                Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
+                hubs.ShouldNotBeNull();
+                hubs.Count.ShouldBeGreaterThan(0);
+
+                var hub = hubs[Handshake.Ims[0].Id];
+                hub.ShouldNotBeNull();
+                hub.Id.ShouldEqual(Handshake.Ims[0].Id);
+                hub.Name.ShouldEqual("@" + Handshake.Ims[0].Id);
+                hub.Type.ShouldEqual(SlackChatHubType.DM);
             }
 
 

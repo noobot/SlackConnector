@@ -31,7 +31,8 @@ namespace SlackConnector
             {
                 Self = new ContactDetails { Id = handshake.Self.Id, Name = handshake.Self.Name },
                 Team = new ContactDetails { Id = handshake.Team.Id, Name = handshake.Team.Name },
-                Users = GenerateUsers(handshake.Users)
+                Users = GenerateUsers(handshake.Users),
+                SlackChatHubs = GetChatHubs(handshake)
             };
 
             return _slackConnectionFactory.Create(connectionInfo);
@@ -40,6 +41,49 @@ namespace SlackConnector
         private Dictionary<string, string> GenerateUsers(User[] users)
         {
             return users.ToDictionary(user => user.Id, user => user.Name);
+        }
+
+        private Dictionary<string, SlackChatHub> GetChatHubs(SlackHandshake handshake)
+        {
+            var hubs = new Dictionary<string, SlackChatHub>();
+
+            foreach (Channel channel in handshake.Channels)
+            {
+                var newChannel = new SlackChatHub
+                {
+                    Id = channel.Id,
+                    Name = "#" + channel.Name,
+                    Type = SlackChatHubType.Channel
+                };
+
+                hubs.Add(channel.Id, newChannel);
+            }
+
+            foreach (Group group in handshake.Groups)
+            {
+                var newGroup = new SlackChatHub
+                {
+                    Id = group.Id,
+                    Name = "#" + group.Name,
+                    Type = SlackChatHubType.Group
+                };
+
+                hubs.Add(group.Id, newGroup);
+            }
+
+            foreach (Im im in handshake.Ims)
+            {
+                var dm = new SlackChatHub
+                {
+                    Id = im.Id,
+                    Name = "@" + im.Id,
+                    Type = SlackChatHubType.DM
+                };
+
+                hubs.Add(im.Id, dm);
+            }
+
+            return hubs;
         }
     }
 }
