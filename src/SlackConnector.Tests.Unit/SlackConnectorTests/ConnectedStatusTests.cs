@@ -10,7 +10,6 @@ using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
@@ -36,6 +35,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 Handshake = new SlackHandshake
                 {
+                    Ok = true,
                     Self = new Detail { Id = "my-id", Name = "my-name" },
                     Team = new Detail { Id = "team-id", Name = "team-name" },
                     Users = new[]
@@ -45,11 +45,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     },
                     Channels = new[]
                     {
-                        new Channel {Id = "i-am-a-channel", IsArchived = false, Name = "channel-name"}
+                        new Channel {Id = "i-am-a-channel", Name = "channel-name"}
                     },
                     Groups = new[]
                     {
-                        new Group {Id = "i-am-a-group", IsArchived = false, Name = "group-name"},
+                        new Group {Id = "i-am-a-group", Name = "group-name"},
                     },
                     Ims = new[]
                     {

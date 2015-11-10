@@ -70,26 +70,32 @@ namespace SlackConnector
 
             foreach (Channel channel in handshake.Channels)
             {
-                var newChannel = new SlackChatHub
+                if (!channel.IsArchived)
                 {
-                    Id = channel.Id,
-                    Name = "#" + channel.Name,
-                    Type = SlackChatHubType.Channel
-                };
+                    var newChannel = new SlackChatHub
+                    {
+                        Id = channel.Id,
+                        Name = "#" + channel.Name,
+                        Type = SlackChatHubType.Channel
+                    };
 
-                hubs.Add(channel.Id, newChannel);
+                    hubs.Add(channel.Id, newChannel);
+                }
             }
 
             foreach (Group group in handshake.Groups)
             {
-                var newGroup = new SlackChatHub
+                if (!group.IsArchived)
                 {
-                    Id = group.Id,
-                    Name = "#" + group.Name,
-                    Type = SlackChatHubType.Group
-                };
+                    var newGroup = new SlackChatHub
+                    {
+                        Id = group.Id,
+                        Name = "#" + group.Name,
+                        Type = SlackChatHubType.Group
+                    };
 
-                hubs.Add(group.Id, newGroup);
+                    hubs.Add(group.Id, newGroup);
+                }
             }
 
             foreach (Im im in handshake.Ims)
