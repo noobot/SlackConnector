@@ -70,14 +70,17 @@ namespace SlackConnector
 
             foreach (Channel channel in handshake.Channels.Where(x => !x.IsArchived))
             {
-                var newChannel = new SlackChatHub
+                if (channel.IsMember)
                 {
-                    Id = channel.Id,
-                    Name = "#" + channel.Name,
-                    Type = SlackChatHubType.Channel
-                };
+                    var newChannel = new SlackChatHub
+                    {
+                        Id = channel.Id,
+                        Name = "#" + channel.Name,
+                        Type = SlackChatHubType.Channel
+                    };
 
-                hubs.Add(channel.Id, newChannel);
+                    hubs.Add(channel.Id, newChannel);
+                }
             }
 
             foreach (Group group in handshake.Groups.Where(x => !x.IsArchived))

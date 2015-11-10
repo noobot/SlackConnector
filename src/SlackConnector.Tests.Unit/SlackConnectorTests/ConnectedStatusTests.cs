@@ -45,7 +45,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     },
                     Channels = new[]
                     {
-                        new Channel { Id = "i-am-a-channel", Name = "channel-name" }
+                        new Channel { Id = "i-am-a-channel", Name = "channel-name" , IsMember = true }
                     },
                     Groups = new[]
                     {
