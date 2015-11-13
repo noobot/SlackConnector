@@ -63,6 +63,17 @@ namespace SlackConnector
         {
             Team = connectionInformation.Team;
             Self = connectionInformation.Self;
+            _userNameCache = connectionInformation.Users;
+            _connectedHubs = connectionInformation.SlackChatHubs;
+
+            _webSocketClient = connectionInformation.WebSocket;
+            _webSocketClient.OnClose += (sender, args) =>
+            {
+                ConnectedSince = null;
+                RaiseConnectionStatusChanged();
+            };
+
+            ConnectedSince = DateTime.Now;
         }
 
         private async Task ListenTo(InboundMessage inboundMessage)

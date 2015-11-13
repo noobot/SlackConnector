@@ -1,5 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using Should;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
 using SpecsFor;
 
@@ -17,6 +19,9 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 {
                     Self = new ContactDetails { Id = "self-id" },
                     Team = new ContactDetails { Id = "team-id" },
+                    Users = new Dictionary<string, string> { { "userid", "userName" } },
+                    SlackChatHubs = new Dictionary<string, SlackChatHub> { { "some-hub", new SlackChatHub() } },
+                    WebSocket = GetMockFor<IWebSocketClient>().Object
                 };
             }
 
@@ -35,6 +40,25 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             public void then_should_populate_team()
             {
                 SUT.Team.ShouldEqual(Info.Team);
+            }
+
+            [Test]
+            public void then_should_populate_users()
+            {
+                SUT.UserNameCache.ShouldEqual(Info.Users);
+            }
+
+            [Test]
+            public void then_should_slack_hubs()
+            {
+                SUT.ConnectedHubs.ShouldEqual(Info.SlackChatHubs);
+            }
+
+            [Test]
+            public void then_should_detect_as_connected()
+            {
+                SUT.IsConnected.ShouldBeTrue();
+                SUT.ConnectedSince.HasValue.ShouldBeTrue();
             }
         }
     }
