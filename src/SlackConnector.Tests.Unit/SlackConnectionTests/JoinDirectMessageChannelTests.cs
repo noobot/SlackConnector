@@ -12,7 +12,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class JoinDirectMessageChannel
     {
-        public class given_dm_channel : SlackConnectorIsSetup
+        internal class given_dm_channel : SlackConnectorIsSetup
         {
             private readonly string SlackKey = "doobeedoo";
             private readonly string UserId = "something interesting";
@@ -22,7 +22,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             protected override void Given()
             {
                 base.Given();
-                SUT.Connect(SlackKey).Wait();
+                //SUT.Connect(SlackKey).Wait();
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChannelMessenger())
@@ -51,12 +51,12 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        public class given_no_valid_user_id : SlackConnectorIsSetup
+        internal class given_no_valid_user_id : SlackConnectorIsSetup
         {
             protected override void Given()
             {
                 base.Given();
-                SUT.Connect("something").Wait();
+                //SUT.Connect("something").Wait();
             }
 
             [Test]

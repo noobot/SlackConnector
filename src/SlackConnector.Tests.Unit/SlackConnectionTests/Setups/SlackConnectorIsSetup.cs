@@ -7,7 +7,7 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.Setups
 {
-    public abstract class SlackConnectorIsSetup : SpecsFor<SlackConnection>
+    internal abstract class SlackConnectorIsSetup : SpecsFor<SlackConnection>
     {
         protected override void InitializeClassUnderTest()
         {

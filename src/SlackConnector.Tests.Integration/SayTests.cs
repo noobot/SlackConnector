@@ -15,20 +15,20 @@ namespace SlackConnector.Tests.Integration
             // given
             var config = new ConfigReader().GetConfig();
 
-            ISlackConnection slackConnection = new SlackConnection();
-            slackConnection.Connect(config.Slack.ApiToken).Wait();
+            //ISlackConnection slackConnection = new SlackConnection(null, null, null);
+            // slackConnection.Connect(config.Slack.ApiToken).Wait();
 
             var message = new BotMessage
             {
                 Text = "Test text for INT test",
-                ChatHub = slackConnection.ConnectedChannels.First(x => x.Name.Equals("#general", StringComparison.InvariantCultureIgnoreCase))
+            //    ChatHub = slackConnection.ConnectedChannels.First(x => x.Name.Equals("#general", StringComparison.InvariantCultureIgnoreCase))
             };
 
             // when
-            slackConnection.Say(message).Wait();
+           // slackConnection.Say(message).Wait();
 
             // then
-
+            Assert.That(null, Is.Not.Null);
         }
     }
 }

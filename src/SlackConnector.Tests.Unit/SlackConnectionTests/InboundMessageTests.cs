@@ -40,7 +40,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     await Task.Factory.StartNew(() => { });
                 };
 
-                SUT.Connect("blah").Wait();
+               // SUT.Connect("blah").Wait();
             }
 
             protected override void When()
@@ -349,7 +349,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     throw new NotImplementedException();
                 };
 
-                SUT.Connect("asdasd").Wait();
+               // SUT.Connect("asdasd").Wait();
             }
 
             [Test]

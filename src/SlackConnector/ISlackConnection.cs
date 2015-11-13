@@ -21,8 +21,7 @@ namespace SlackConnector
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
         IReadOnlyDictionary<string, string> UserNameCache { get; }
 
-        //TODO: Fully remove
-        //bool IsConnected { get; }
+        bool IsConnected { get; }
         DateTime? ConnectedSince { get; }
         string SlackKey { get; }
 
@@ -30,10 +29,7 @@ namespace SlackConnector
         ContactDetails Self { get; }
 
         #endregion
-
-
-        Task Connect(string slackKey);
-
+        
         void Disconnect();
         Task Say(BotMessage message);
         Task<SlackChatHub> JoinDirectMessageChannel(string user);

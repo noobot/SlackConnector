@@ -12,11 +12,11 @@ namespace SlackConnector.Tests.Integration
             // given
             var config = new ConfigReader().GetConfig();
 
-            ISlackConnection slackConnection = new SlackConnection();
-            slackConnection.Connect(config.Slack.ApiToken).Wait();
+            //ISlackConnection slackConnection = new SlackConnection(null, null, null);
+            // slackConnection.Connect(config.Slack.ApiToken).Wait();
 
             // when
-            var result = slackConnection.JoinDirectMessageChannel(config.Slack.TestUserId).Result;
+            object result = null;//slackConnection.JoinDirectMessageChannel(config.Slack.TestUserId).Result;
 
             // then
             Assert.That(result, Is.Not.Null);

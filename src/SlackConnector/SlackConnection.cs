@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
@@ -12,17 +11,16 @@ using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using Group = SlackConnector.Connections.Models.Group;
 
 namespace SlackConnector
 {
-    public class SlackConnection : ISlackConnection
+    internal class SlackConnection : ISlackConnection
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
-        
+
         //TODO: Remove?
         public string[] Aliases { get; set; } = new string[0];
 
@@ -41,116 +39,30 @@ namespace SlackConnector
             get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Group); }
         }
 
-        private readonly Dictionary<string, SlackChatHub> _connectedHubs = new Dictionary<string, SlackChatHub>();
+        private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
-        private readonly Dictionary<string, string> _userNameCache = new Dictionary<string, string>();
+        private Dictionary<string, string> _userNameCache { get; set; }
         public IReadOnlyDictionary<string, string> UserNameCache => _userNameCache;
 
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
-        public string SlackKey { get; internal set; }
+        public string SlackKey { get; private set; }
 
-        public ContactDetails Team { get; set; }
-        public ContactDetails Self { get; set; }
+        public ContactDetails Team { get; private set; }
+        public ContactDetails Self { get; private set; }
 
-        //TODO: Delete
-        public string TeamId { get; internal set; }
-        public string TeamName { get; internal set; }
-        public string UserId { get; internal set; }
-        public string UserName { get; internal set; }
-
-        public SlackConnection() : this(new ConnectionFactory(), new ChatHubInterpreter(), new MentionDetector())
-        { }
-
-        internal SlackConnection(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IMentionDetector mentionDetector)
+        public SlackConnection(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IMentionDetector mentionDetector)
         {
             _connectionFactory = connectionFactory;
             _chatHubInterpreter = chatHubInterpreter;
             _mentionDetector = mentionDetector;
         }
 
-        //TODO: move this into a factory
-        public async Task Connect(string slackKey)
+        public void Initialise(ConnectionInformation connectionInformation)
         {
-            if (IsConnected)
-            {
-                throw new AlreadyConnectedException();
-            }
-
-            if (string.IsNullOrEmpty(slackKey))
-            {
-                throw new ArgumentNullException(nameof(slackKey));
-            }
-
-            SlackKey = slackKey;
-
-            IHandshakeClient handshakeClient = _connectionFactory.CreateHandshakeClient();
-            SlackHandshake handshake = await handshakeClient.FirmShake(slackKey);
-
-            if (!handshake.Ok)
-            {
-                throw new HandshakeException(handshake.Error);
-            }
-
-            TeamName = handshake.Team.Name;
-            TeamId = handshake.Team.Id;
-            UserName = handshake.Self.Name;
-            UserId = handshake.Self.Id;
-
-            foreach (User user in handshake.Users)
-            {
-                _userNameCache.Add(user.Id, user.Name);
-            }
-
-            foreach (Channel channel in handshake.Channels.Where(x => !x.IsArchived))
-            {
-                var newChannel = new SlackChatHub
-                {
-                    Id = channel.Id,
-                    Name = "#" + channel.Name,
-                    Type = SlackChatHubType.Channel
-                };
-                _connectedHubs.Add(channel.Id, newChannel);
-            }
-
-            foreach (Group group in handshake.Groups.Where(x => !x.IsArchived))
-            {
-                if (group.Members.Any(x => x == UserId))
-                {
-                    var newGroup = new SlackChatHub
-                    {
-                        Id = group.Id,
-                        Name = "#" + group.Name,
-                        Type = SlackChatHubType.Group
-                    };
-                    _connectedHubs.Add(group.Id, newGroup);
-                }
-            }
-
-            foreach (Im im in handshake.Ims)
-            {
-                var newIm = new SlackChatHub
-                {
-                    Id = im.Id,
-                    Name = "@" + (_userNameCache.ContainsKey(im.User) ? _userNameCache[im.User] : im.User),
-                    Type = SlackChatHubType.DM
-                };
-                _connectedHubs.Add(im.Id, newIm);
-            }
-
-            _webSocketClient = _connectionFactory.CreateWebSocketClient(handshake.WebSocketUrl);
-            await _webSocketClient.Connect();
-
-            ConnectedSince = DateTime.Now;
-            RaiseConnectionStatusChanged();
-
-            _webSocketClient.OnMessage += async (sender, message) => { await ListenTo(message); };
-            _webSocketClient.OnClose += (sender, e) =>
-            {
-                ConnectedSince = null;
-                RaiseConnectionStatusChanged();
-            };
+            Team = connectionInformation.Team;
+            Self = connectionInformation.Self;
         }
 
         private async Task ListenTo(InboundMessage inboundMessage)
@@ -159,7 +71,7 @@ namespace SlackConnector
                 return;
             if (string.IsNullOrEmpty(inboundMessage.User))
                 return;
-            if (!string.IsNullOrEmpty(UserId) && inboundMessage.User == UserId)
+            if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return;
 
             if (inboundMessage.Channel != null && !_connectedHubs.ContainsKey(inboundMessage.Channel))
@@ -177,17 +89,10 @@ namespace SlackConnector
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
                 RawData = inboundMessage.RawData,
-                MentionsBot = _mentionDetector.WasBotMentioned(UserName, UserId, inboundMessage.Text)
+                MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text)
             };
 
-            try
-            {
-                await RaiseMessageReceived(message);
-            }
-            catch (Exception)
-            {
-
-            }
+            await RaiseMessageReceived(message);
         }
 
         private string GetMessageUsername(InboundMessage inboundMessage)
@@ -221,7 +126,7 @@ namespace SlackConnector
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
         }
 
-		//TODO: Cache newly created channel, and return if already exists
+        //TODO: Cache newly created channel, and return if already exists
         public async Task<SlackChatHub> JoinDirectMessageChannel(string user)
         {
             if (string.IsNullOrEmpty(user))
@@ -252,7 +157,14 @@ namespace SlackConnector
         {
             if (OnMessageReceived != null)
             {
-                await OnMessageReceived(message);
+                try
+                {
+                    await OnMessageReceived(message);
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
     }

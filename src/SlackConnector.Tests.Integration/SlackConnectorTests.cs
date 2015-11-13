@@ -14,15 +14,16 @@ namespace SlackConnector.Tests.Integration
             // given
             var config = new ConfigReader().GetConfig();
 
-            var slackConnector = new SlackConnection();
-            slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
-            slackConnector.OnMessageReceived += SlackConnectorOnOnMessageReceived;
+            //var slackConnector = new SlackConnection(null, null, null);
+            //slackConnector.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
+            //slackConnector.OnMessageReceived += SlackConnectorOnOnMessageReceived;
 
             // when
-            slackConnector.Connect(config.Slack.ApiToken).Wait();
+            //slackConnector.Connect(config.Slack.ApiToken).Wait();
 
             // then
-            Assert.That(slackConnector.IsConnected, Is.True);
+            //Assert.That(slackConnector.IsConnected, Is.True);
+            Assert.That(null, Is.Not.Null);
         }
 
         private void SlackConnectorOnConnectionStatusChanged(bool isConnected)

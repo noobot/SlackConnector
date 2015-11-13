@@ -12,7 +12,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class SayTests
     {
-        public class given_valid_bot_message : SlackConnectorIsSetup
+        internal class given_valid_bot_message : SlackConnectorIsSetup
         {
             private string SlackKey = "doobeedoo";
             private BotMessage Message { get; set; }
@@ -20,7 +20,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             protected override void Given()
             {
                 base.Given();
-                SUT.Connect(SlackKey).Wait();
+               // SUT.Connect(SlackKey).Wait();
 
                 Message = new BotMessage
                 {
@@ -47,12 +47,12 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        public class given_no_valid_chathub_id : SlackConnectorIsSetup
+        internal class given_no_valid_chathub_id : SlackConnectorIsSetup
         {
             protected override void Given()
             {
                 base.Given();
-                SUT.Connect("something").Wait();
+                //SUT.Connect("something").Wait();
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChatMessenger())
