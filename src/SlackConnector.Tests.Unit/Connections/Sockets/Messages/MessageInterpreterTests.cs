@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Should;
 using SlackConnector.Connections.Sockets.Messages;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
@@ -71,6 +72,28 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             };
 
             Result.ShouldLookLike(expected);
+        }
+    }
+
+    internal class given_dodge_json_message_when_processing_message : SpecsFor<MessageInterpreter>
+    {
+        private string Json { get; set; }
+        private InboundMessage Result { get; set; }
+
+        protected override void Given()
+        {
+            Json = @"{ 'type': 'something_else', 'channel': { 'isObject': true } }";
+        }
+
+        protected override void When()
+        {
+            Result = SUT.InterpretMessage(Json);
+        }
+
+        [Test]
+        public void then_should_return_null()
+        {
+            Result.ShouldBeNull();
         }
     }
 }
