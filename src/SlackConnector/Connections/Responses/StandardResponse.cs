@@ -1,4 +1,4 @@
-﻿namespace SlackConnector.Connections.Models
+﻿namespace SlackConnector.Connections.Responses
 {
     internal class StandardResponse
     {

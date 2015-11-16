@@ -7,6 +7,7 @@ using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Responses;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;

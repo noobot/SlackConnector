@@ -65,11 +65,11 @@
     <Compile Include="Connections\Messaging\IChatMessenger.cs" />
     <Compile Include="Connections\Messaging\ChatMessenger.cs" />
     <Compile Include="Connections\Models\Group.cs" />
-    <Compile Include="Connections\Models\JoinChannelResponse.cs" />
+    <Compile Include="Connections\Responses\JoinChannelResponse.cs" />
     <Compile Include="Connections\Models\Profile.cs" />
     <Compile Include="Connections\IConnectionFactory.cs" />
     <Compile Include="Connections\IRestSharpFactory.cs" />
-    <Compile Include="Connections\Models\StandardResponse.cs" />
+    <Compile Include="Connections\Responses\StandardResponse.cs" />
     <Compile Include="Connections\RestSharpFactory.cs" />
     <Compile Include="EventHandlers\ConnectionStatusChangedEventHandler.cs" />
     <Compile Include="Exceptions\AlreadyConnectedException.cs" />
@@ -82,7 +82,7 @@
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnection.cs" />
     <Compile Include="Connections\Models\Channel.cs" />
-    <Compile Include="Connections\Handshaking\SlackHandshake.cs" />
+    <Compile Include="Connections\Responses\SlackHandshake.cs" />
     <Compile Include="Connections\Models\Detail.cs" />
     <Compile Include="Connections\Models\Im.cs" />
     <Compile Include="Connections\Models\User.cs" />

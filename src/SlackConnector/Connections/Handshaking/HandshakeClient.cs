@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
+using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Handshaking
 {
