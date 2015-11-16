@@ -172,6 +172,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 GetMockFor<IWebSocketClient>()
                     .Verify(x => x.Connect());
             }
+
+            [Test]
+            public void then_should_pass_in_slack_key()
+            {
+                string key = SlackFactoryStub.Create_ConnectionInformation.SlackKey;
+                key.ShouldEqual(SlackKey);
+            }
         }
 
         public class given_handshake_was_not_ok : SpecsFor<SlackConnector>

@@ -4,24 +4,22 @@ using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
+using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class SayTests
     {
-        internal class given_valid_bot_message : SlackConnectorIsSetup
+        internal class given_valid_bot_message : SpecsFor<SlackConnection>
         {
             private string SlackKey = "doobeedoo";
             private BotMessage Message { get; set; }
 
             protected override void Given()
             {
-                base.Given();
-               // SUT.Connect(SlackKey).Wait();
-
                 Message = new BotMessage
                 {
                     Text = "some text",
@@ -32,6 +30,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChatMessenger())
                     .Returns(GetMockFor<IChatMessenger>().Object);
+
+                var connectionInfo = new ConnectionInformation
+                {
+                    SlackKey = SlackKey,
+                    WebSocket = GetMockFor<IWebSocketClient>().Object
+                };
+                SUT.Initialise(connectionInfo);
             }
 
             protected override void When()
@@ -47,13 +52,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_no_valid_chathub_id : SlackConnectorIsSetup
+        internal class given_no_valid_chathub_id : SpecsFor<SlackConnection>
         {
             protected override void Given()
             {
-                base.Given();
-                //SUT.Connect("something").Wait();
-
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChatMessenger())
                     .Returns(GetMockFor<IChatMessenger>().Object);

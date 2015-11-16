@@ -42,6 +42,7 @@ namespace SlackConnector
 
             var connectionInfo = new ConnectionInformation
             {
+                SlackKey = slackKey,
                 Self = new ContactDetails { Id = handshake.Self.Id, Name = handshake.Self.Name },
                 Team = new ContactDetails { Id = handshake.Team.Id, Name = handshake.Team.Name },
                 Users = GenerateUsers(handshake.Users),

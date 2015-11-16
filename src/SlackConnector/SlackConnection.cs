@@ -61,6 +61,7 @@ namespace SlackConnector
 
         public void Initialise(ConnectionInformation connectionInformation)
         {
+            SlackKey = connectionInformation.SlackKey;
             Team = connectionInformation.Team;
             Self = connectionInformation.Self;
             _userNameCache = connectionInformation.Users;
@@ -72,6 +73,8 @@ namespace SlackConnector
                 ConnectedSince = null;
                 RaiseConnectionStatusChanged();
             };
+
+            _webSocketClient.OnMessage += async (sender, message) => await ListenTo(message);
 
             ConnectedSince = DateTime.Now;
         }

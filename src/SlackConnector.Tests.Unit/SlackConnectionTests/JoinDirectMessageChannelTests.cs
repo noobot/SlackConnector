@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
+using SlackConnector.Tests.Unit.Stubs;
+using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class JoinDirectMessageChannel
     {
-        internal class given_dm_channel : SlackConnectorIsSetup
+        internal class given_dm_channel : SpecsFor<SlackConnection>
         {
             private readonly string SlackKey = "doobeedoo";
             private readonly string UserId = "something interesting";
@@ -21,8 +23,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 
             protected override void Given()
             {
-                base.Given();
-                //SUT.Connect(SlackKey).Wait();
+                var connectionInfo = new ConnectionInformation { SlackKey = SlackKey,  WebSocket = new WebSocketClientStub()};
+                SUT.Initialise(connectionInfo);
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChannelMessenger())
@@ -51,14 +53,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_no_valid_user_id : SlackConnectorIsSetup
+        internal class given_no_valid_user_id : SpecsFor<SlackConnection>
         {
-            protected override void Given()
-            {
-                base.Given();
-                //SUT.Connect("something").Wait();
-            }
-
             [Test]
             public void should_throw_exception_when_no_chathub_given()
             {

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Should;
@@ -7,11 +6,8 @@ using SlackConnector.Connections;
 using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
-using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectionTests.Setups;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
-using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
