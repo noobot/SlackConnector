@@ -1,40 +1,29 @@
 ﻿using System;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
-using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.BotHelpers;
-using SlackConnector.Connections;
-using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.SlackConnectorTests.Setups;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
-namespace SlackConnector.Tests.Unit.SlackConnectorTests
+namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class InboundMessageTests
     {
-        internal class BaseTest : ValidSetup
+        internal class BaseTest : SpecsFor<SlackConnection>
         {
             protected InboundMessage InboundMessage { get; set; }
             protected bool MessageRaised { get; set; }
             protected SlackMessage Result { get; set; }
-            protected SlackHandshake Handshake { get; set; }
+            protected ConnectionInformation ConnectionInfo { get; set; }
 
             protected override void Given()
             {
-                base.Given();
-
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake ?? new SlackHandshake { Ok = true });
-
                 SUT.OnMessageReceived += async message =>
                 {
                     Result = message;
@@ -42,11 +31,12 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     await Task.Factory.StartNew(() => { });
                 };
 
-                SUT.Connect("blah").Wait();
+                ConnectionInfo = new ConnectionInformation { WebSocket = GetMockFor<IWebSocketClient>().Object };
             }
 
             protected override void When()
             {
+                SUT.Initialise(ConnectionInfo);
                 GetMockFor<IWebSocketClient>()
                     .Raise(x => x.OnMessage += null, null, InboundMessage);
             }
@@ -56,18 +46,9 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         {
             protected override void Given()
             {
-                Handshake = new SlackHandshake
-                {
-                    Ok = true,
-                    Users = new[]
-                    {
-                        new User
-                        {
-                            Id = "userABC",
-                            Name = "I-have-a-name"
-                        },
-                    }
-                };
+                base.Given();
+
+                ConnectionInfo.Users.Add("userABC", "i-have-a-name");
 
                 InboundMessage = new InboundMessage
                 {
@@ -76,8 +57,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     Text = "amazing-text",
                     RawData = "I am raw data yo"
                 };
-
-                base.Given();
             }
 
             [Test]
@@ -95,7 +74,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     User = new SlackUser
                     {
                         Id = "userABC",
-                        Name = "I-have-a-name"
+                        Name = "i-have-a-name"
                     },
                     RawData = InboundMessage.RawData
                 };
@@ -108,13 +87,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         {
             protected override void Given()
             {
+                base.Given();
+
                 InboundMessage = new InboundMessage
                 {
                     User = "userABC",
                     MessageType = MessageType.Message
                 };
-
-                base.Given();
             }
 
             [Test]
@@ -172,41 +151,23 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         {
             protected override void Given()
             {
-                Handshake = new SlackHandshake
-                {
-                    Ok = true,
-                    Channels = new[]
-                    {
-                        new Channel
-                        {
-                            Id = "channelId",
-                            Name = "NaMe23",
-                            IsArchived = false
-                        }
-                    }
-                };
+                base.Given();
+
+                ConnectionInfo.SlackChatHubs.Add("channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" });
 
                 InboundMessage = new InboundMessage
                 {
-                    Channel = Handshake.Channels[0].Id,
+                    Channel = ConnectionInfo.SlackChatHubs.First().Key,
                     MessageType = MessageType.Message,
                     User = "irmBrady"
                 };
-
-                base.Given();
             }
 
             [Test]
             public void then_should_return_expected_channel_information()
             {
-                var expected = new SlackChatHub
-                {
-                    Id = Handshake.Channels[0].Id,
-                    Name = "#" + Handshake.Channels[0].Name,
-                    Type = SlackChatHubType.Channel
-                };
-
-                Result.ChatHub.ShouldLookLike(expected);
+                SlackChatHub expected = ConnectionInfo.SlackChatHubs.First().Value;
+                Result.ChatHub.ShouldEqual(expected);
             }
         }
 
@@ -217,6 +178,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
             protected override void Given()
             {
+                base.Given();
+
                 GetMockFor<IChatHubInterpreter>()
                     .Setup(x => x.FromId(_hubId))
                     .Returns(_expectedChatHub);
@@ -227,8 +190,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     MessageType = MessageType.Message,
                     User = "something else"
                 };
-
-                base.Given();
             }
 
             [Test]
@@ -249,12 +210,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         {
             protected override void Given()
             {
-                Handshake = new SlackHandshake
-                {
-                    Ok = true,
-                    Self = new Detail { Id = "self-id", Name = "self-name" }
-                };
+                base.Given();
 
+                ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
+                
                 InboundMessage = new InboundMessage
                 {
                     Channel = "idy",
@@ -264,10 +223,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 };
 
                 GetMockFor<IMentionDetector>()
-                    .Setup(x => x.WasBotMentioned(Handshake.Self.Name, Handshake.Self.Id, InboundMessage.Text))
+                    .Setup(x => x.WasBotMentioned(ConnectionInfo.Self.Name, ConnectionInfo.Self.Id, InboundMessage.Text))
                     .Returns(true);
-
-                base.Given();
             }
 
             [Test]
@@ -281,23 +238,15 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         {
             protected override void Given()
             {
-                Handshake = new SlackHandshake
-                {
-                    Ok = true,
-                    Self = new Detail { Id = "self-id", Name = "self-name" }
-                };
+                base.Given();
 
+                ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
+                
                 InboundMessage = new InboundMessage
                 {
                     MessageType = MessageType.Message,
-                    User = Handshake.Self.Id
+                    User = ConnectionInfo.Self.Id
                 };
-
-                GetMockFor<IMentionDetector>()
-                    .Setup(x => x.WasBotMentioned(Handshake.Self.Name, Handshake.Self.Id, InboundMessage.Text))
-                    .Returns(true);
-
-                base.Given();
             }
 
             [Test]
@@ -311,13 +260,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         {
             protected override void Given()
             {
+                base.Given();
+
                 InboundMessage = new InboundMessage
                 {
                     MessageType = MessageType.Message,
                     User = null
                 };
-
-                base.Given();
             }
 
             [Test]
@@ -330,28 +279,19 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         [TestFixture]
         internal class given_exception_thrown_when_handling_inbound_message : BaseTest
         {
-            private readonly WebSocketClientStub WebSocket = new WebSocketClientStub();
+            private WebSocketClientStub WebSocket { get; set; }
 
             protected override void Given()
             {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+                base.Given();
 
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(new SlackHandshake { Ok = true });
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(It.IsAny<string>()))
-                    .Returns(WebSocket);
+                WebSocket = new WebSocketClientStub();
+                ConnectionInfo.WebSocket = WebSocket;
 
                 SUT.OnMessageReceived += message =>
                 {
                     throw new NotImplementedException();
                 };
-
-                SUT.Connect("asdasd").Wait();
             }
 
             [Test]

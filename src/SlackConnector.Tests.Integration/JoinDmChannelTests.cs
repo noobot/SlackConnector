@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
 
 namespace SlackConnector.Tests.Integration
@@ -12,11 +13,11 @@ namespace SlackConnector.Tests.Integration
             // given
             var config = new ConfigReader().GetConfig();
 
-            ISlackConnector slackConnector = new SlackConnector();
-            slackConnector.Connect(config.Slack.ApiToken).Wait();
+            var slackConnector = new SlackConnector();
+            var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
 
             // when
-            var result = slackConnector.JoinDirectMessageChannel(config.Slack.TestUserId).Result;
+            SlackChatHub result = connection.JoinDirectMessageChannel(config.Slack.TestUserId).Result;
 
             // then
             Assert.That(result, Is.Not.Null);

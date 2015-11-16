@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
+using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Handshaking
 {
@@ -15,7 +16,7 @@ namespace SlackConnector.Connections.Handshaking
             _restSharpFactory = restSharpFactory;
         }
 
-        public async Task<SlackHandshake> FirmShake(string slackKey)
+        public async Task<HandshakeResponse> FirmShake(string slackKey)
         {
             var request = new RestRequest(HANDSHAKE_PATH);
             request.AddParameter("token", slackKey);
@@ -28,7 +29,7 @@ namespace SlackConnector.Connections.Handshaking
                 throw new WebException($"An error occured while attemping to handshake with Slack. HttpStatus: {response.StatusCode}", response.ErrorException);
             }
 
-            return JsonConvert.DeserializeObject<SlackHandshake>(response.Content);
+            return JsonConvert.DeserializeObject<HandshakeResponse>(response.Content);
         }
     }
 }
