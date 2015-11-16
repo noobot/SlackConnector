@@ -158,8 +158,7 @@ namespace SlackConnector
                 Type = SlackChatHubType.DM
             };
         }
-
-
+        
         public event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
         private void RaiseConnectionStatusChanged()
         {
