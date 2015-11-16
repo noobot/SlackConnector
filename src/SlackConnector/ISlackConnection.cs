@@ -10,7 +10,7 @@ namespace SlackConnector
     {
         #region Properties
 
-        [Obsolete("This may be removed in the future, currently this does nothing")]
+        [Obsolete("This may be removed in the future, currently this does nothing")] 
         string[] Aliases { get; set; }
 
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
