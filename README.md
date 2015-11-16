@@ -21,9 +21,17 @@ Install-Package SlackConnector
 
 ## Usage
 
-```cs
+``` cs
 ISlackConnector connector = new SlackConnector.SlackConnector();
 ISlackConnection connection = await connector.Connect(slackKey);
 connection.OnMessageReceived += MessageReceived;
 connection.OnConnectionStatusChanged += ConnectionStatusChanged;
 ```
+
+##Features
+
+ - Async by default
+ - Easy setup
+ - Real-time communication
+ - Supports default proxies
+ - Unit tested
