@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
-using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
