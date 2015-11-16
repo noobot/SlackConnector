@@ -17,3 +17,13 @@ This library was originally extracted MargieBot and has iterated on it's own to 
 ```
 Install-Package SlackConnector
 ```
+
+
+## Usage
+
+```cs
+ISlackConnector connector = new SlackConnector.SlackConnector();
+ISlackConnection connection = await connector.Connect(slackKey);
+connection.OnMessageReceived += MessageReceived;
+connection.OnConnectionStatusChanged += ConnectionStatusChanged;
+```
