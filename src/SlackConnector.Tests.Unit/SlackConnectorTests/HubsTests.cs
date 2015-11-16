@@ -16,7 +16,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
     {
         public class given_channels_are_archived : SpecsFor<SlackConnector>
         {
-            private SlackHandshake Handshake { get; set; }
+            private HandshakeResponse HandshakeResponse { get; set; }
             private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
 
             protected override void InitializeClassUnderTest()
@@ -27,7 +27,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
             protected override void Given()
             {
-                Handshake = new SlackHandshake
+                HandshakeResponse = new HandshakeResponse
                 {
                     Ok = true,
                     Channels = new[]
@@ -51,14 +51,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake);
+                    .ReturnsAsync(HandshakeResponse);
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(Handshake.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -75,7 +75,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         }
         public class given_channels_are_not_archived_and_not_a_member : SpecsFor<SlackConnector>
         {
-            private SlackHandshake Handshake { get; set; }
+            private HandshakeResponse HandshakeResponse { get; set; }
             private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
 
             protected override void InitializeClassUnderTest()
@@ -86,7 +86,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
             protected override void Given()
             {
-                Handshake = new SlackHandshake
+                HandshakeResponse = new HandshakeResponse
                 {
                     Ok = true,
                     Channels = new[]
@@ -103,14 +103,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake);
+                    .ReturnsAsync(HandshakeResponse);
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(Handshake.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -128,7 +128,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
         public class given_groups_are_archived : SpecsFor<SlackConnector>
         {
-            private SlackHandshake Handshake { get; set; }
+            private HandshakeResponse HandshakeResponse { get; set; }
             private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
 
             protected override void InitializeClassUnderTest()
@@ -139,7 +139,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
             protected override void Given()
             {
-                Handshake = new SlackHandshake
+                HandshakeResponse = new HandshakeResponse
                 {
                     Ok = true,
                     Groups = new[]
@@ -156,14 +156,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake);
+                    .ReturnsAsync(HandshakeResponse);
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(Handshake.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -181,7 +181,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
         public class given_groups_that_are_not_archived_and_is_not_a_member_of_group : SpecsFor<SlackConnector>
         {
-            private SlackHandshake Handshake { get; set; }
+            private HandshakeResponse HandshakeResponse { get; set; }
             private const string SelfId = "abc123";
             private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
 
@@ -193,7 +193,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
             protected override void Given()
             {
-                Handshake = new SlackHandshake
+                HandshakeResponse = new HandshakeResponse
                 {
                     Ok = true,
                     Self = new Detail { Id = SelfId },
@@ -211,14 +211,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake);
+                    .ReturnsAsync(HandshakeResponse);
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(Handshake.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -236,7 +236,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
         public class given_instant_message_channel_when_user_id_exists_in_cache : SpecsFor<SlackConnector>
         {
-            private SlackHandshake Handshake { get; set; }
+            private HandshakeResponse HandshakeResponse { get; set; }
             private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
 
             protected override void InitializeClassUnderTest()
@@ -247,7 +247,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
             protected override void Given()
             {
-                Handshake = new SlackHandshake
+                HandshakeResponse = new HandshakeResponse
                 {
                     Ok = true,
                     Users = new []
@@ -270,14 +270,14 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IHandshakeClient>()
                     .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(Handshake);
+                    .ReturnsAsync(HandshakeResponse);
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(Handshake.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -296,7 +296,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             public void then_should_use_username()
             {
                 var im = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs.First().Value;
-                im.Name.ShouldEqual("@" + Handshake.Users[0].Name);
+                im.Name.ShouldEqual("@" + HandshakeResponse.Users[0].Name);
             }
         }
     }

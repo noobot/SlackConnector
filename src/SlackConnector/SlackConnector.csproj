@@ -82,7 +82,7 @@
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnection.cs" />
     <Compile Include="Connections\Models\Channel.cs" />
-    <Compile Include="Connections\Responses\SlackHandshake.cs" />
+    <Compile Include="Connections\Responses\HandshakeResponse.cs" />
     <Compile Include="Connections\Models\Detail.cs" />
     <Compile Include="Connections\Models\Im.cs" />
     <Compile Include="Connections\Models\User.cs" />

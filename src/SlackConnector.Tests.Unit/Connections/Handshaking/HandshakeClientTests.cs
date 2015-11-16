@@ -20,7 +20,7 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
         {
             private const string SLACK_KEY = "something_that_looks_like_a_key";
             private RestClientStub RestStub { get; set; }
-            private SlackHandshake Result { get; set; }
+            private HandshakeResponse Result { get; set; }
 
             protected override void Given()
             {
@@ -60,7 +60,7 @@ namespace SlackConnector.Tests.Unit.Connections.Handshaking
             [Test]
             public void then_should_return_expected_model()
             {
-                var expected = new SlackHandshake
+                var expected = new HandshakeResponse
                 {
                     Ok = true,
                     Self = new Detail

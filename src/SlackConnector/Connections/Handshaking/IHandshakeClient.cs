@@ -8,6 +8,6 @@ namespace SlackConnector.Connections.Handshaking
         /// <summary>
         /// No one likes a limp shake - AMIRITE?
         /// </summary>
-        Task<SlackHandshake> FirmShake(string slackKey);
+        Task<HandshakeResponse> FirmShake(string slackKey);
     }
 }

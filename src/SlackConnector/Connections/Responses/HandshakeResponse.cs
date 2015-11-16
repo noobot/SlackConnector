@@ -3,7 +3,7 @@ using SlackConnector.Connections.Models;
 
 namespace SlackConnector.Connections.Responses
 {
-    internal class SlackHandshake : StandardResponse
+    internal class HandshakeResponse : StandardResponse
     {
         [JsonProperty("Url")]
         public string WebSocketUrl { get; set; } 
