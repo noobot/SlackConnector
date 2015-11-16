@@ -40,6 +40,15 @@ namespace SlackConnector.Tests.Unit.Stubs
         }
 
         public event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
+        public void RaiseOnConnectionStatusChanged()
+        {
+            OnConnectionStatusChanged?.Invoke(true);
+        }
+
         public event MessageReceivedEventHandler OnMessageReceived;
+        public void RaiseOnMessageReceived()
+        {
+            OnMessageReceived?.Invoke(null);
+        }
     }
 }
