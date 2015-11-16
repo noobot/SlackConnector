@@ -20,7 +20,7 @@ namespace SlackConnector.Tests.Integration
             var message = new BotMessage
             {
                 Text = "Test text for INT test",
-                ChatHub = connection.ConnectedChannels.First(x => x.Name.Equals("#general", StringComparison.InvariantCultureIgnoreCase))
+                ChatHub = connection.ConnectedChannels().First(x => x.Name.Equals("#general", StringComparison.InvariantCultureIgnoreCase))
             };
             
             // when

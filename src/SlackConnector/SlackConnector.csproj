@@ -106,6 +106,7 @@
     <Compile Include="Connections\Sockets\Messages\MessageSubType.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageType.cs" />
     <Compile Include="Connections\Sockets\WebSocketClient.cs" />
+    <Compile Include="SlackConnectionExtensions.cs" />
     <Compile Include="SlackConnectionFactory.cs" />
     <Compile Include="SlackConnector.cs" />
   </ItemGroup>

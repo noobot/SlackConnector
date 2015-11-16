@@ -13,11 +13,6 @@ namespace SlackConnector
         [Obsolete("This may be removed in the future, currently this does nothing")]
         string[] Aliases { get; set; }
 
-        //TODO: move these into extension methods
-        IEnumerable<SlackChatHub> ConnectedDMs { get; }
-        IEnumerable<SlackChatHub> ConnectedChannels { get; }
-        IEnumerable<SlackChatHub> ConnectedGroups { get; }
-
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
         IReadOnlyDictionary<string, string> UserNameCache { get; }
 

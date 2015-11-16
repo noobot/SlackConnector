@@ -23,22 +23,7 @@ namespace SlackConnector
 
         //TODO: Remove?
         public string[] Aliases { get; set; } = new string[0];
-
-        public IEnumerable<SlackChatHub> ConnectedDMs
-        {
-            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.DM); }
-        }
-
-        public IEnumerable<SlackChatHub> ConnectedChannels
-        {
-            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Channel); }
-        }
-
-        public IEnumerable<SlackChatHub> ConnectedGroups
-        {
-            get { return ConnectedHubs.Values.Where(hub => hub.Type == SlackChatHubType.Group); }
-        }
-
+        
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
