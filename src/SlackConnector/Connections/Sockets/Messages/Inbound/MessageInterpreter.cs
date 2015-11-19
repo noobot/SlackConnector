@@ -2,7 +2,7 @@
 using System.Net;
 using Newtonsoft.Json;
 
-namespace SlackConnector.Connections.Sockets.Messages
+namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
     internal class MessageInterpreter : IMessageInterpreter
     {

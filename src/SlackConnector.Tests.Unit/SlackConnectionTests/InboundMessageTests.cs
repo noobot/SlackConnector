@@ -6,6 +6,7 @@ using Should;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
+using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;

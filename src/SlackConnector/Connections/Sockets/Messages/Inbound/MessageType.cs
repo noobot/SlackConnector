@@ -1,4 +1,4 @@
-﻿namespace SlackConnector.Connections.Sockets.Messages
+﻿namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
     internal enum MessageType
     {

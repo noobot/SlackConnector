@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Sockets.Messages;
+using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 

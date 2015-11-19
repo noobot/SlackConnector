@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SlackConnector.Serialising;
 
-namespace SlackConnector.Connections.Sockets.Messages
+namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
     internal class InboundMessage
     {

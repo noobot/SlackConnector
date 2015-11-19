@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SlackConnector.Connections.Sockets.Messages;
+using Newtonsoft.Json;
+using SlackConnector.Connections.Sockets.Messages.Inbound;
+using SlackConnector.Connections.Sockets.Messages.Outbound;
 
 namespace SlackConnector.Connections.Sockets
 {
     internal class WebSocketClient : IWebSocketClient
     {
         private readonly WebSocketSharp.WebSocket _webSocket;
+        private int _currentMessageId = 0;
 
         public WebSocketClient(IMessageInterpreter interpreter, string url)
         {
@@ -16,7 +19,7 @@ namespace SlackConnector.Connections.Sockets
         }
 
         public bool IsAlive => _webSocket.IsAlive;
-        
+
         public event EventHandler<InboundMessage> OnMessage;
         public event EventHandler OnClose;
         
@@ -30,10 +33,13 @@ namespace SlackConnector.Connections.Sockets
             await taskSource.Task;
         }
 
-        public async Task SendMessage(string json)
+        public async Task SendMessage(BaseMessage message)
         {
-            var taskSource = new TaskCompletionSource<bool>();
+            _currentMessageId++;
+            message.Id = _currentMessageId;
+            string json = JsonConvert.SerializeObject(message);
 
+            var taskSource = new TaskCompletionSource<bool>();
             _webSocket.SendAsync(json, sent =>
             {
                 if (sent)
@@ -45,7 +51,7 @@ namespace SlackConnector.Connections.Sockets
                     taskSource.SetException(new Exception("Error occured while sending message"));
                 }
             });
-
+            
             await taskSource.Task;
         }
 

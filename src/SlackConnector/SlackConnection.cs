@@ -8,6 +8,8 @@ using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
+using SlackConnector.Connections.Sockets.Messages.Inbound;
+using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
@@ -20,7 +22,7 @@ namespace SlackConnector
         private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
-        
+
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
@@ -141,9 +143,15 @@ namespace SlackConnector
             };
         }
 
-        public Task IndicateTyping(SlackChatHub chatHub)
+        public async Task IndicateTyping(SlackChatHub chatHub)
         {
-            throw new NotImplementedException();
+            var message = new TypingIndicatorMessage
+            {
+                Channel = chatHub.Id,
+                Type = "typing"
+            };
+
+            await _webSocketClient.SendMessage(message);
         }
 
         public event DisconnectEventHandler OnDisconnect;

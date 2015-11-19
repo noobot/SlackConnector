@@ -2,12 +2,15 @@
 using System.Threading.Tasks;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
+using SlackConnector.Connections.Sockets.Messages.Inbound;
+using SlackConnector.Connections.Sockets.Messages.Outbound;
 
 namespace SlackConnector.Tests.Unit.Stubs
 {
     internal class WebSocketClientStub : IWebSocketClient
     {
-        public bool IsAlive { get; }
+        public bool IsAlive { get; set; }
+        public int CurrentMessageId { get; set; }
 
         public event EventHandler<InboundMessage> OnMessage;
         public void RaiseOnMessage(InboundMessage message)
@@ -26,13 +29,13 @@ namespace SlackConnector.Tests.Unit.Stubs
             return Task.Factory.StartNew(() => { });
         }
 
-        public string SendMessage_Json { get; private set; }
-        public Task SendMessage(string json)
+        public BaseMessage SendMessage_Message { get; private set; }
+        public Task SendMessage(BaseMessage message)
         {
-            SendMessage_Json = json;
+            SendMessage_Message = message;
             return Task.Factory.StartNew(() => { });
         }
-
+        
         public void Close()
         {
 
