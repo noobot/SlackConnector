@@ -11,12 +11,12 @@ namespace SlackConnector
         #region Properties
 
         /// <summary>
-        /// All of the ChatHubs that are currently open
+        /// All of the ChatHubs that are currently open.
         /// </summary>
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
 
         /// <summary>
-        /// UserId => UserName cache
+        /// UserId => UserName cache.
         /// </summary>
         IReadOnlyDictionary<string, string> UserNameCache { get; }
 
@@ -31,29 +31,29 @@ namespace SlackConnector
         DateTime? ConnectedSince { get; }
 
         /// <summary>
-        /// Slack Authentication Key
+        /// Slack Authentication Key.
         /// </summary>
         string SlackKey { get; }
 
         /// <summary>
-        /// Connected Team Details
+        /// Connected Team Details.
         /// </summary>
         ContactDetails Team { get; }
 
         /// <summary>
-        /// Authenticated Self Details
+        /// Authenticated Self Details.
         /// </summary>
         ContactDetails Self { get; }
 
         #endregion
         
         /// <summary>
-        /// Disconnect from Slack
+        /// Disconnect from Slack.
         /// </summary>
         void Disconnect();
 
         /// <summary>
-        /// Send message to Slack channel
+        /// Send message to Slack channel.
         /// </summary>
         Task Say(BotMessage message);
 
@@ -68,9 +68,13 @@ namespace SlackConnector
         Task IndicateTyping(SlackChatHub chatHub);
 
         /// <summary>
-        /// 
+        /// Raised when the websocket disconnects from the mothership.
         /// </summary>
         event DisconnectEventHandler OnDisconnect;
+
+        /// <summary>
+        /// Raised when real-time messages are received.
+        /// </summary>
         event MessageReceivedEventHandler OnMessageReceived;
     }
 }
