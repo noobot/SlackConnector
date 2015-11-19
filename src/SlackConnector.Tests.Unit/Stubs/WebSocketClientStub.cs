@@ -26,6 +26,13 @@ namespace SlackConnector.Tests.Unit.Stubs
             return Task.Factory.StartNew(() => { });
         }
 
+        public string SendMessage_Json { get; private set; }
+        public Task SendMessage(string json)
+        {
+            SendMessage_Json = json;
+            return Task.Factory.StartNew(() => { });
+        }
+
         public void Close()
         {
 

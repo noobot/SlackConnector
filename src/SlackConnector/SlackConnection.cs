@@ -20,9 +20,6 @@ namespace SlackConnector
         private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
-
-        //TODO: Remove?
-        public string[] Aliases { get; set; } = new string[0];
         
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
@@ -56,7 +53,7 @@ namespace SlackConnector
             _webSocketClient.OnClose += (sender, args) =>
             {
                 ConnectedSince = null;
-                RaiseConnectionStatusChanged();
+                RaiseOnDisconnect();
             };
 
             _webSocketClient.OnMessage += async (sender, message) => await ListenTo(message);
@@ -143,11 +140,16 @@ namespace SlackConnector
                 Type = SlackChatHubType.DM
             };
         }
-        
-        public event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
-        private void RaiseConnectionStatusChanged()
+
+        public Task IndicateTyping(SlackChatHub chatHub)
         {
-            OnConnectionStatusChanged?.Invoke(IsConnected);
+            throw new NotImplementedException();
+        }
+
+        public event DisconnectEventHandler OnDisconnect;
+        private void RaiseOnDisconnect()
+        {
+            OnDisconnect?.Invoke();
         }
 
         public event MessageReceivedEventHandler OnMessageReceived;

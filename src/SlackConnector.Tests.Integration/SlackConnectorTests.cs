@@ -17,14 +17,14 @@ namespace SlackConnector.Tests.Integration
 
             // when
             var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
-            connection.OnConnectionStatusChanged += SlackConnectorOnConnectionStatusChanged;
+            connection.OnDisconnect += SlackConnector_OnDisconnect;
             connection.OnMessageReceived += SlackConnectorOnOnMessageReceived;
 
             // then
             Assert.That(connection.IsConnected, Is.True);
         }
 
-        private void SlackConnectorOnConnectionStatusChanged(bool isConnected)
+        private void SlackConnector_OnDisconnect()
         {
 
         }

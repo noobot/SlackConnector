@@ -71,7 +71,7 @@
     <Compile Include="Connections\IRestSharpFactory.cs" />
     <Compile Include="Connections\Responses\StandardResponse.cs" />
     <Compile Include="Connections\RestSharpFactory.cs" />
-    <Compile Include="EventHandlers\ConnectionStatusChangedEventHandler.cs" />
+    <Compile Include="EventHandlers\DisconnectEventHandler.cs" />
     <Compile Include="Exceptions\AlreadyConnectedException.cs" />
     <Compile Include="Exceptions\CommunicationException.cs" />
     <Compile Include="Exceptions\HandshakeException.cs" />

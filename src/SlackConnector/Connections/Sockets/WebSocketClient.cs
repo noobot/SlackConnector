@@ -27,6 +27,24 @@ namespace SlackConnector.Connections.Sockets
             _webSocket.OnOpen += (sender, args) => { taskSource?.SetResult(true); };
             _webSocket.OnError += (sender, args) => { taskSource?.SetException(args.Exception); };
             _webSocket.Connect();
+            await taskSource.Task;
+        }
+
+        public async Task SendMessage(string json)
+        {
+            var taskSource = new TaskCompletionSource<bool>();
+
+            _webSocket.SendAsync(json, sent =>
+            {
+                if (sent)
+                {
+                    taskSource.SetResult(true);
+                }
+                else
+                {
+                    taskSource.SetException(new Exception("Error occured while sending message"));
+                }
+            });
 
             await taskSource.Task;
         }

@@ -12,14 +12,12 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
     {
         internal class when_socket_disconnects_given_valid_setup : SpecsFor<SlackConnection>
         {
-            private Stack<bool> ConnectionChangedValue { get; set; }
+            private bool ConnectionChangedValue { get; set; }
 
             protected override void Given()
             {
                 base.Given();
-                ConnectionChangedValue = new Stack<bool>();
-
-                SUT.OnConnectionStatusChanged += connected => ConnectionChangedValue.Push(connected);
+                SUT.OnDisconnect += () => ConnectionChangedValue = true;
 
                 var info = new ConnectionInformation { WebSocket = GetMockFor<IWebSocketClient>().Object };
                 SUT.Initialise(info);
@@ -34,8 +32,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             [Test]
             public void then_should_detect_diconnect()
             {
-                ConnectionChangedValue.Count.ShouldEqual(1);
-                ConnectionChangedValue.Pop().ShouldBeFalse();
+                ConnectionChangedValue.ShouldBeTrue();
             }
 
             [Test]

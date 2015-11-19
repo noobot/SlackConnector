@@ -12,6 +12,7 @@ namespace SlackConnector.Connections.Sockets
         event EventHandler OnClose;
 
         Task Connect();
+        Task SendMessage(string json);
         void Close();
     }
 }

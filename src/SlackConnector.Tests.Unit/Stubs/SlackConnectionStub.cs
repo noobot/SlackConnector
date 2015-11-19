@@ -39,10 +39,15 @@ namespace SlackConnector.Tests.Unit.Stubs
             throw new NotImplementedException();
         }
 
-        public event ConnectionStatusChangedEventHandler OnConnectionStatusChanged;
-        public void RaiseOnConnectionStatusChanged()
+        public Task IndicateTyping(SlackChatHub chatHub)
         {
-            OnConnectionStatusChanged?.Invoke(true);
+            throw new NotImplementedException();
+        }
+
+        public event DisconnectEventHandler OnDisconnect;
+        public void RaiseOnDisconnect()
+        {
+            OnDisconnect?.Invoke();
         }
 
         public event MessageReceivedEventHandler OnMessageReceived;
