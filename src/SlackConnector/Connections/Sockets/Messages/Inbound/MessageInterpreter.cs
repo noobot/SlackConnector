@@ -27,8 +27,11 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unable to parse message: {json}");
-                Console.WriteLine(ex);
+                if (SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors)
+                {
+                    Console.WriteLine($"Unable to parse message: {json}");
+                    Console.WriteLine(ex);
+                }
             }
 
             return message;

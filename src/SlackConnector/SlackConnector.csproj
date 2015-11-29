@@ -73,6 +73,7 @@
     <Compile Include="Connections\RestSharpFactory.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\BaseMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\TypingIndicatorMessage.cs" />
+    <Compile Include="ConsoleLoggingLevel.cs" />
     <Compile Include="EventHandlers\DisconnectEventHandler.cs" />
     <Compile Include="Exceptions\AlreadyConnectedException.cs" />
     <Compile Include="Exceptions\CommunicationException.cs" />
