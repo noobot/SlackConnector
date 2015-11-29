@@ -32,7 +32,7 @@ namespace SlackConnector.Connections.Messaging
 
             if (attachments != null && attachments.Any())
             {
-                request.AddParameter("attachment", JsonConvert.SerializeObject(attachments));
+                request.AddParameter("attachments", JsonConvert.SerializeObject(attachments));
             }
 
             IRestResponse response = await client.ExecutePostTaskAsync(request);

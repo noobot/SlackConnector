@@ -14,6 +14,7 @@ namespace SlackConnector.Connections.Sockets
         public WebSocketClient(IMessageInterpreter interpreter, string url)
         {
             _webSocket = new WebSocketSharp.WebSocket(url);
+            _webSocket.Log.Level = WebSocketSharp.LogLevel.Warn;
             _webSocket.OnMessage += (sender, args) => OnMessage?.Invoke(sender, interpreter.InterpretMessage(args?.Data ?? ""));
             _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
         }
