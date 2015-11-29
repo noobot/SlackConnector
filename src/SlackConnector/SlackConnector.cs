@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Handshaking;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Connections.Sockets;
@@ -14,6 +13,8 @@ namespace SlackConnector
 {
     public class SlackConnector : ISlackConnector
     {
+        public static ConsoleLoggingLevel LoggingLevel = ConsoleLoggingLevel.FatalErrors;
+
         private readonly IConnectionFactory _connectionFactory;
         private readonly ISlackConnectionFactory _slackConnectionFactory;
 

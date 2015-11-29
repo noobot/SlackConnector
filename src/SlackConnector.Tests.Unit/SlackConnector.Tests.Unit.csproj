@@ -85,6 +85,7 @@
     <Compile Include="Connections\Handshaking\HandshakeClientTests.cs" />
     <Compile Include="Connections\Messaging\ChannelMessengerTests.cs" />
     <Compile Include="Connections\Messaging\ChatMessengerTests.cs" />
+    <Compile Include="Models\SlackAttachmentSerialisationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="SlackConnectionTests\InitialiseTests.cs" />
@@ -110,7 +111,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resources\HandShakeResponse.json" />
+    <EmbeddedResource Include="Resources\Responses\HandShake.json" />
+    <EmbeddedResource Include="Resources\Inputs\Attachments.json" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

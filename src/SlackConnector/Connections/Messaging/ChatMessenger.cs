@@ -22,7 +22,7 @@ namespace SlackConnector.Connections.Messaging
 
         public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
         {
-            var client = _restSharpFactory.CreateClient("https://slack.com");
+            IRestClient client = _restSharpFactory.CreateClient("https://slack.com");
 
             var request = new RestRequest(SEND_MESSAGE_PATH);
             request.AddParameter("token", slackKey);
@@ -32,7 +32,7 @@ namespace SlackConnector.Connections.Messaging
 
             if (attachments != null && attachments.Any())
             {
-                request.AddParameter("attachment", JsonConvert.SerializeObject(attachments));
+                request.AddParameter("attachments", JsonConvert.SerializeObject(attachments));
             }
 
             IRestResponse response = await client.ExecutePostTaskAsync(request);

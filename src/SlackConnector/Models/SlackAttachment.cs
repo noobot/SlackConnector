@@ -5,11 +5,32 @@ namespace SlackConnector.Models
 {
     public class SlackAttachment
     {
+        [JsonProperty(PropertyName = "fallback")]
+        public string Fallback { get; set; }
+
         [JsonProperty(PropertyName = "color")]
         public string ColorHex { get; set; }
 
-        [JsonProperty(PropertyName = "fallback")]
-        public string Fallback { get; set; }
+        [JsonProperty(PropertyName = "pretext")]
+        public string PreText { get; set; }
+
+        [JsonProperty(PropertyName = "author_name")]
+        public string AuthorName { get; set; }
+
+        [JsonProperty(PropertyName = "author_link")]
+        public string AuthorLink { get; set; }
+
+        [JsonProperty(PropertyName = "author_icon")]
+        public string AuthorIcon { get; set; }
+
+        [JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
+
+        [JsonProperty(PropertyName = "title_link")]
+        public string TitleLink { get; set; }
+
+        [JsonProperty(PropertyName = "text")]
+        public string Text { get; set; }
 
         [JsonProperty(PropertyName = "fields")]
         public IList<SlackAttachmentField> Fields { get; set; }
@@ -17,17 +38,8 @@ namespace SlackConnector.Models
         [JsonProperty(PropertyName = "image_url")]
         public string ImageUrl { get; set; }
 
-        [JsonProperty(PropertyName = "pretext")]
-        public string PreText { get; set; }
-
-        [JsonProperty(PropertyName = "text")]
-        public string Text { get; set; }
-
-        [JsonProperty(PropertyName = "title")]
-        public string Title { get; set; }
-
-        [JsonProperty(PropertyName = "title_link")]
-        public string TitleLink { get; set; }
+        [JsonProperty(PropertyName = "thumb_url")]
+        public string ThumbUrl { get; set; }
 
         public SlackAttachment()
         {

@@ -3,18 +3,23 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
+using WebSocketSharp;
 
 namespace SlackConnector.Connections.Sockets
 {
     internal class WebSocketClient : IWebSocketClient
     {
-        private readonly WebSocketSharp.WebSocket _webSocket;
-        private int _currentMessageId = 0;
+        private readonly IMessageInterpreter _interpreter;
+        private readonly WebSocket _webSocket;
+        private int _currentMessageId;
 
         public WebSocketClient(IMessageInterpreter interpreter, string url)
         {
-            _webSocket = new WebSocketSharp.WebSocket(url);
-            _webSocket.OnMessage += (sender, args) => OnMessage?.Invoke(sender, interpreter.InterpretMessage(args?.Data ?? ""));
+            _interpreter = interpreter;
+
+            _webSocket = new WebSocket(url);
+            _webSocket.Log.Level = SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors ? LogLevel.Fatal : LogLevel.Trace;
+            _webSocket.OnMessage += WebSocketOnMessage;
             _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
         }
 
@@ -27,8 +32,8 @@ namespace SlackConnector.Connections.Sockets
         {
             var taskSource = new TaskCompletionSource<bool>();
 
-            _webSocket.OnOpen += (sender, args) => { taskSource?.SetResult(true); };
-            _webSocket.OnError += (sender, args) => { taskSource?.SetException(args.Exception); };
+            _webSocket.OnOpen += (sender, args) => { taskSource.SetResult(true); };
+            _webSocket.OnError += (sender, args) => { taskSource.SetException(args.Exception); };
             _webSocket.Connect();
             await taskSource.Task;
         }
@@ -58,6 +63,13 @@ namespace SlackConnector.Connections.Sockets
         public void Close()
         {
             _webSocket.Close();
+        }
+
+        private void WebSocketOnMessage(object sender, MessageEventArgs args)
+        {
+            string messageJson = args?.Data ?? "";
+            InboundMessage inboundMessage = _interpreter.InterpretMessage(messageJson);
+            OnMessage?.Invoke(sender, inboundMessage);
         }
     }
 }
