@@ -64,6 +64,8 @@
     <Compile Include="Connections\Messaging\IChannelMessenger.cs" />
     <Compile Include="Connections\Messaging\IChatMessenger.cs" />
     <Compile Include="Connections\Messaging\ChatMessenger.cs" />
+    <Compile Include="Connections\Messaging\IResponseVerifier.cs" />
+    <Compile Include="Connections\Messaging\ResponseVerifier.cs" />
     <Compile Include="Connections\Models\Group.cs" />
     <Compile Include="Connections\Responses\JoinChannelResponse.cs" />
     <Compile Include="Connections\Models\Profile.cs" />
