@@ -33,7 +33,7 @@ namespace SlackConnector.Connections
 
         public IChannelMessenger CreateChannelMessenger()
         {
-            return new ChannelMessenger(_restSharpFactory);
+            return new ChannelMessenger(_restSharpFactory, _responseVerifier);
         }
     }
 }
