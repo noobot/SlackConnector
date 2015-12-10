@@ -153,6 +153,103 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
             }
         }
 
+        internal class given_handshake_response : SpecsFor<ResponseVerifier>
+        {
+            private IRestResponse _restResponse;
+            private HandshakeResponse Result { get; set; }
+
+            protected override void Given()
+            {
+                _restResponse = new RestResponse
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = Resources.ResourceManager.GetHandShakeResponseJson()
+                };
+            }
+
+            protected override void When()
+            {
+                Result = SUT.VerifyResponse<HandshakeResponse>(_restResponse);
+            }
+
+            [Test]
+            public void should_return_expected_channel_response()
+            {
+                var expected = new HandshakeResponse
+                {
+                    Ok = true,
+                    Self = new Detail
+                    {
+                        Id = "self-id",
+                        Name = "self-name"
+                    },
+                    Team = new Detail
+                    {
+                        Id = "team-id",
+                        Name = "team-name"
+                    },
+                    Channels = new[]
+                       {
+                        new Channel
+                        {
+                            Id = "channel-id",
+                            Name = "channel-name",
+                            IsChannel = true,
+                            IsArchived = true,
+                            IsMember = true
+                        }
+                    },
+                    Groups = new[]
+                       {
+                        new Group
+                        {
+                            Id = "group-id",
+                            Name = "group-name",
+                            IsGroup = true,
+                            IsArchived = true,
+                            IsOpen = true,
+                            Members = new []
+                            {
+                                "member1"
+                            }
+                        }
+                    },
+                    Ims = new[]
+                       {
+                        new Im
+                        {
+                            Id = "im-id",
+                            User = "im-user",
+                            IsIm = true,
+                            IsOpen = true
+                        }
+                    },
+                    Users = new[]
+                       {
+                        new User
+                        {
+                            Id = "user-id",
+                            Name = "user-name",
+                            Deleted = true,
+                            Profile = new Profile
+                            {
+                                FirstName = "first-name",
+                                LastName = "last-name",
+                                RealName = "real-name",
+                                RealNameNormalised = "real-name-normalized",
+                                Email = "email"
+                            },
+                            IsAdmin = true,
+                            IsBot = true
+                        }
+                    },
+                    WebSocketUrl = @"wss://ms331.slack-msgs.com/websocket/999"
+                };
+
+                Result.ShouldLookLike(expected);
+            }
+        }
+
         private class ExampleModel : StandardResponse
         {
             public string Value { get; set; }
