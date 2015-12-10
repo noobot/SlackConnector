@@ -3,6 +3,7 @@ using NUnit.Framework;
 using RestSharp;
 using Should;
 using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Exceptions;
 using SpecsFor;
@@ -106,6 +107,49 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
                 
                 exception.ShouldNotBeNull();
                 exception.Message.ShouldEqual("Error occured while posting message 'test error'");
+            }
+        }
+
+        internal class given_join_channel_response : SpecsFor<ResponseVerifier>
+        {
+            private IRestResponse _restResponse;
+            private JoinChannelResponse Result { get; set; }
+
+            protected override void Given()
+            {
+                _restResponse = new RestResponse
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = @"{
+                                    'ok':true, 
+                                    'channel': {
+                                        'id': 'my-id',
+                                        'name': 'my-name',
+                                    }
+                                }"
+                };
+            }
+
+            protected override void When()
+            {
+                Result = SUT.VerifyResponse<JoinChannelResponse>(_restResponse);
+            }
+
+            [Test]
+            public void should_return_expected_channel_response()
+            {
+                var expected = new JoinChannelResponse
+                {
+                    Ok = true,
+                    Error = null,
+                    Channel = new Channel
+                    {
+                        Id = "my-id",
+                        Name = "my-name"
+                    }
+                };
+
+                Result.ShouldLookLike(expected);
             }
         }
 
