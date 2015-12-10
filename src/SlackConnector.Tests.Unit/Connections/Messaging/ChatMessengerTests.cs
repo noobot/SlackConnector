@@ -9,6 +9,7 @@ using RestSharp;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Responses;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
@@ -29,8 +30,7 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
             {
                 RestStub = new RestClientStub
                 {
-                    ExecutePostTaskAsync_StatusCode = HttpStatusCode.OK,
-                    ExecutePostTaskAsync_Content = "{'ok':true}"
+                    ExecutePostTaskAsync_Response = new RestResponse()
                 };
 
                 GetMockFor<IRestSharpFactory>()
@@ -96,6 +96,13 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
                 request.Parameters.Count.ShouldEqual(4);
             }
+
+            [Test]
+            public void then_should_verify_response_with_verifier()
+            {
+                GetMockFor<IResponseVerifier>()
+                    .Verify(x => x.VerifyResponse<StandardResponse>(RestStub.ExecutePostTaskAsync_Response), Times.Once);
+            }
         }
 
         internal class given_valid_standard_setup_when_posting_message_with_attachments : SpecsFor<ChatMessenger>
@@ -147,78 +154,6 @@ namespace SlackConnector.Tests.Unit.Connections.Messaging
             {
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
                 request.Parameters.Count.ShouldEqual(5);
-            }
-        }
-
-        internal class given_error_occured_in_communications : SpecsFor<ChatMessenger>
-        {
-            private RestClientStub RestStub { get; set; }
-
-            protected override void Given()
-            {
-                RestStub = new RestClientStub
-                {
-                    ExecutePostTaskAsync_StatusCode = HttpStatusCode.BadGateway,
-                    ExecutePostTaskAsync_Content = "{'ok':true}"
-                };
-
-                GetMockFor<IRestSharpFactory>()
-                    .Setup(x => x.CreateClient("https://slack.com"))
-                    .Returns(RestStub);
-            }
-
-            [Test]
-            public void then_should_throw_exception()
-            {
-                CommunicationException exception = null;
-
-                try
-                {
-                    SUT.PostMessage("", "", "", null).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as CommunicationException;
-                }
-
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo($"Error occured while posting message '{RestStub.ExecutePostTaskAsync_StatusCode}'"));
-            }
-        }
-
-        internal class given_error_occured_in_response_json : SpecsFor<ChatMessenger>
-        {
-            private RestClientStub RestStub { get; set; }
-
-            protected override void Given()
-            {
-                RestStub = new RestClientStub
-                {
-                    ExecutePostTaskAsync_StatusCode = HttpStatusCode.OK,
-                    ExecutePostTaskAsync_Content = "{'ok':false,'error':'blooming error'}"
-                };
-
-                GetMockFor<IRestSharpFactory>()
-                    .Setup(x => x.CreateClient("https://slack.com"))
-                    .Returns(RestStub);
-            }
-
-            [Test]
-            public void then_should_throw_exception()
-            {
-                CommunicationException exception = null;
-
-                try
-                {
-                    SUT.PostMessage("", "", "", null).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as CommunicationException;
-                }
-
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo($"Error occured while posting message 'blooming error'"));
             }
         }
     }

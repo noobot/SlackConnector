@@ -8,10 +8,12 @@ namespace SlackConnector.Connections
     internal class ConnectionFactory : IConnectionFactory
     {
         private readonly IRestSharpFactory _restSharpFactory;
+        private readonly IResponseVerifier _responseVerifier;
 
         public ConnectionFactory()
         {
             _restSharpFactory = new RestSharpFactory();
+            _responseVerifier = new ResponseVerifier();
         }
 
         public IWebSocketClient CreateWebSocketClient(string url)
@@ -26,7 +28,7 @@ namespace SlackConnector.Connections
 
         public IChatMessenger CreateChatMessenger()
         {
-            return new ChatMessenger(_restSharpFactory);
+            return new ChatMessenger(_restSharpFactory, _responseVerifier);
         }
 
         public IChannelMessenger CreateChannelMessenger()

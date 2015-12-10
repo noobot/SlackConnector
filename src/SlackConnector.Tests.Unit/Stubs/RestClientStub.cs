@@ -14,6 +14,25 @@ namespace SlackConnector.Tests.Unit.Stubs
 {
     public class RestClientStub : IRestClient
     {
+        public string ExecutePostTaskAsync_Content { get; set; }
+        public HttpStatusCode ExecutePostTaskAsync_StatusCode { get; set; }
+        public IRestRequest ExecutePostTaskAsync_Request { get; private set; }
+        public IRestResponse ExecutePostTaskAsync_Response { get; set; }
+        public async Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request)
+        {
+            ExecutePostTaskAsync_Request = request;
+
+            var response = ExecutePostTaskAsync_Response ?? new RestResponse
+            {
+                Content = ExecutePostTaskAsync_Content,
+                StatusCode = ExecutePostTaskAsync_StatusCode
+            };
+
+            return await Task.FromResult(response);
+        }
+
+        #region Not Implemented
+
         public RestRequestAsyncHandle ExecuteAsync(IRestRequest request, Action<IRestResponse, RestRequestAsyncHandle> callback)
         {
             throw new NotImplementedException();
@@ -149,21 +168,6 @@ namespace SlackConnector.Tests.Unit.Stubs
             throw new NotImplementedException();
         }
 
-        public string ExecutePostTaskAsync_Content { get; set; }
-        public HttpStatusCode ExecutePostTaskAsync_StatusCode { get; set; }
-        public IRestRequest ExecutePostTaskAsync_Request { get; private set; }
-        public async Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request)
-        {
-            ExecutePostTaskAsync_Request = request;
-            var response = new RestResponse
-            {
-                Content = ExecutePostTaskAsync_Content,
-                StatusCode = ExecutePostTaskAsync_StatusCode
-            };
-
-            return await Task.FromResult(response);
-        }
-
         public Task<IRestResponse> ExecutePostTaskAsync(IRestRequest request, CancellationToken token)
         {
             throw new NotImplementedException();
@@ -184,5 +188,7 @@ namespace SlackConnector.Tests.Unit.Stubs
         public IWebProxy Proxy { get; set; }
         public RequestCachePolicy CachePolicy { get; set; }
         public bool FollowRedirects { get; set; }
+
+        #endregion
     }
 }
