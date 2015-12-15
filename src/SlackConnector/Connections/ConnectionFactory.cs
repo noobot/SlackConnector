@@ -30,9 +30,9 @@ namespace SlackConnector.Connections
             return new ChatMessenger(_restSharpFactory, _responseVerifier);
         }
 
-        public IChannelMessenger CreateChannelMessenger()
+        public IChannelClient CreateChannelMessenger()
         {
-            return new ChannelMessenger(_restSharpFactory, _responseVerifier);
+            return new ChannelClient(_restSharpFactory, _responseVerifier);
         }
     }
 }

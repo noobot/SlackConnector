@@ -11,9 +11,9 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients
 {
-    public static class ChannelMessengerTests
+    public static class ChannelClientTests
     {
-        internal class given_valid_standard_setup : SpecsFor<ChannelMessenger>
+        internal class given_valid_standard_setup : SpecsFor<ChannelClient>
         {
             private string _slackKey = "super-key";
             private string _user = "super-user";
@@ -67,7 +67,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             public void then_should_access_expected_path()
             {
                 IRestRequest request = _restStub.ExecutePostTaskAsync_Request;
-                request.Resource.ShouldEqual(ChannelMessenger.JOIN_DM_PATH);
+                request.Resource.ShouldEqual(ChannelClient.JOIN_DM_PATH);
             }
 
             [Test]

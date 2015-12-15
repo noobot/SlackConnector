@@ -84,7 +84,7 @@
     <Compile Include="BotHelpers\MentionDetectorTests.cs" />
     <Compile Include="BotHelpers\ChatHubInterpreterTests.cs" />
     <Compile Include="Connections\Clients\HandshakeClientTests.cs" />
-    <Compile Include="Connections\Clients\ChannelMessengerTests.cs" />
+    <Compile Include="Connections\Clients\ChannelClientTests.cs" />
     <Compile Include="Connections\Clients\ChatMessengerTests.cs" />
     <Compile Include="Connections\Clients\ResponseVerifierTests.cs" />
     <Compile Include="Models\SlackAttachmentSerialisationTests.cs" />

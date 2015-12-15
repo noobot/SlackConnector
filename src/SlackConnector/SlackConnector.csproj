@@ -60,8 +60,8 @@
     <Compile Include="Connections\ConnectionFactory.cs" />
     <Compile Include="Connections\Clients\HandshakeClient.cs" />
     <Compile Include="Connections\Clients\IHandshakeClient.cs" />
-    <Compile Include="Connections\Clients\ChannelMessenger.cs" />
-    <Compile Include="Connections\Clients\IChannelMessenger.cs" />
+    <Compile Include="Connections\Clients\ChannelClient.cs" />
+    <Compile Include="Connections\Clients\IChannelClient.cs" />
     <Compile Include="Connections\Clients\IChatMessenger.cs" />
     <Compile Include="Connections\Clients\ChatMessenger.cs" />
     <Compile Include="Connections\Clients\IResponseVerifier.cs" />

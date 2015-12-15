@@ -132,7 +132,7 @@ namespace SlackConnector
                 throw new ArgumentNullException(nameof(user));
             }
 
-            IChannelMessenger client = _connectionFactory.CreateChannelMessenger();
+            IChannelClient client = _connectionFactory.CreateChannelMessenger();
             Channel channel = await client.JoinDirectMessageChannel(SlackKey, user);
 
             return new SlackChatHub

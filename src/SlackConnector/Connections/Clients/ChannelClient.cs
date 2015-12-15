@@ -5,13 +5,13 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients
 {
-    internal class ChannelMessenger : IChannelMessenger
+    internal class ChannelClient : IChannelClient
     {
         internal const string JOIN_DM_PATH = "/api/im.open";
         private readonly IRestSharpFactory _restSharpFactory;
         private readonly IResponseVerifier _responseVerifier;
 
-        public ChannelMessenger(IRestSharpFactory restSharpFactory, IResponseVerifier responseVerifier)
+        public ChannelClient(IRestSharpFactory restSharpFactory, IResponseVerifier responseVerifier)
         {
             _restSharpFactory = restSharpFactory;
             _responseVerifier = responseVerifier;

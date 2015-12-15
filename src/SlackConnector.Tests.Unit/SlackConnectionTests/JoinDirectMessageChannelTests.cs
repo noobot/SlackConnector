@@ -28,9 +28,9 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChannelMessenger())
-                    .Returns(GetMockFor<IChannelMessenger>().Object);
+                    .Returns(GetMockFor<IChannelClient>().Object);
 
-                GetMockFor<IChannelMessenger>()
+                GetMockFor<IChannelClient>()
                     .Setup(x => x.JoinDirectMessageChannel(SlackKey, UserId))
                     .ReturnsAsync(ReturnChannel);
             }
