@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
@@ -28,8 +29,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 };
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChatMessenger())
-                    .Returns(GetMockFor<IChatMessenger>().Object);
+                    .Setup(x => x.CreateChatClient())
+                    .Returns(GetMockFor<IChatClient>().Object);
 
                 var connectionInfo = new ConnectionInformation
                 {
@@ -47,7 +48,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             [Test]
             public void then_should_call_messenger()
             {
-                GetMockFor<IChatMessenger>()
+                GetMockFor<IChatClient>()
                     .Verify(x => x.PostMessage(SlackKey, Message.ChatHub.Id, Message.Text, Message.Attachments), Times.Once);
             }
         }
@@ -57,8 +58,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             protected override void Given()
             {
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChatMessenger())
-                    .Returns(GetMockFor<IChatMessenger>().Object);
+                    .Setup(x => x.CreateChatClient())
+                    .Returns(GetMockFor<IChatClient>().Object);
             }
 
             [Test]

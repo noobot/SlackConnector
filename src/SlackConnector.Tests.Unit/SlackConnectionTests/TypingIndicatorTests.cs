@@ -3,7 +3,6 @@ using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.Models;

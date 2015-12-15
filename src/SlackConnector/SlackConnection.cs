@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
-using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.EventHandlers;
@@ -120,7 +119,7 @@ namespace SlackConnector
                 throw new MissingChannelException("When calling the Say() method, the message parameter must have its ChatHub property set.");
             }
 
-            var client = _connectionFactory.CreateChatMessenger();
+            var client = _connectionFactory.CreateChatClient();
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
         }
 
@@ -132,7 +131,7 @@ namespace SlackConnector
                 throw new ArgumentNullException(nameof(user));
             }
 
-            IChannelMessenger client = _connectionFactory.CreateChannelMessenger();
+            IChannelClient client = _connectionFactory.CreateChannelClient();
             Channel channel = await client.JoinDirectMessageChannel(SlackKey, user);
 
             return new SlackChatHub

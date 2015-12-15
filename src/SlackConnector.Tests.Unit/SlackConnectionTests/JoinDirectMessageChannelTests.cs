@@ -3,7 +3,8 @@ using System.Runtime.InteropServices;
 using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
@@ -27,10 +28,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 SUT.Initialise(connectionInfo);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChannelMessenger())
-                    .Returns(GetMockFor<IChannelMessenger>().Object);
+                    .Setup(x => x.CreateChannelClient())
+                    .Returns(GetMockFor<IChannelClient>().Object);
 
-                GetMockFor<IChannelMessenger>()
+                GetMockFor<IChannelClient>()
                     .Setup(x => x.JoinDirectMessageChannel(SlackKey, UserId))
                     .ReturnsAsync(ReturnChannel);
             }

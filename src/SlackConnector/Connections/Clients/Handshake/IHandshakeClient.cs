@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SlackConnector.Connections.Responses;
 
-namespace SlackConnector.Connections.Handshaking
+namespace SlackConnector.Connections.Clients.Handshake
 {
     internal interface IHandshakeClient
     {

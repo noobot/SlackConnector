@@ -1,7 +1,8 @@
-﻿using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Messaging;
+﻿using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Channel;
+using SlackConnector.Connections.Clients.Chat;
+using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Sockets;
-using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 
 namespace SlackConnector.Connections
@@ -9,10 +10,14 @@ namespace SlackConnector.Connections
     internal class ConnectionFactory : IConnectionFactory
     {
         private readonly IRestSharpFactory _restSharpFactory;
+        private readonly IResponseVerifier _responseVerifier;
+        private readonly IRequestExecutor _requestExecutor;
 
         public ConnectionFactory()
         {
             _restSharpFactory = new RestSharpFactory();
+            _responseVerifier = new ResponseVerifier();
+            _requestExecutor = new RequestExecutor(_restSharpFactory, _responseVerifier);
         }
 
         public IWebSocketClient CreateWebSocketClient(string url)
@@ -22,17 +27,17 @@ namespace SlackConnector.Connections
 
         public IHandshakeClient CreateHandshakeClient()
         {
-            return new HandshakeClient(_restSharpFactory);
+            return new HandshakeClient(_requestExecutor);
         }
 
-        public IChatMessenger CreateChatMessenger()
+        public IChatClient CreateChatClient()
         {
-            return new ChatMessenger(_restSharpFactory);
+            return new ChatClient(_requestExecutor);
         }
 
-        public IChannelMessenger CreateChannelMessenger()
+        public IChannelClient CreateChannelClient()
         {
-            return new ChannelMessenger(_restSharpFactory);
+            return new ChannelClient(_requestExecutor);
         }
     }
 }
