@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace SlackConnector.Connections.Clients
 {
-    internal class RequestExecutor
+    internal class RequestExecutor : IRequestExecutor
     {
         internal const string SLACK_URL = "https://slack.com";
 

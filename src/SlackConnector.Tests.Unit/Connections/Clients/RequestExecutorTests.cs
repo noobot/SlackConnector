@@ -5,7 +5,6 @@ using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Responses;
-using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients

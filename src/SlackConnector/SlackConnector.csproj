@@ -57,6 +57,7 @@
     <Compile Include="BotHelpers\ChatHubInterpreter.cs" />
     <Compile Include="BotHelpers\IMentionDetector.cs" />
     <Compile Include="BotHelpers\IChatHubInterpreter.cs" />
+    <Compile Include="Connections\Clients\IRequestExecutor.cs" />
     <Compile Include="Connections\Clients\RequestExecutor.cs" />
     <Compile Include="Connections\ConnectionFactory.cs" />
     <Compile Include="Connections\Clients\Handshake\HandshakeClient.cs" />
