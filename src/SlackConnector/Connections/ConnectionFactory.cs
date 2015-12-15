@@ -1,4 +1,7 @@
 ﻿using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Channel;
+using SlackConnector.Connections.Clients.Chat;
+using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 
@@ -25,12 +28,12 @@ namespace SlackConnector.Connections
             return new HandshakeClient(_restSharpFactory, _responseVerifier);
         }
 
-        public IChatClient CreateChatMessenger()
+        public IChatClient CreateChatClient()
         {
             return new ChatClient(_restSharpFactory, _responseVerifier);
         }
 
-        public IChannelClient CreateChannelMessenger()
+        public IChannelClient CreateChannelClient()
         {
             return new ChannelClient(_restSharpFactory, _responseVerifier);
         }

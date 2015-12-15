@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
@@ -28,7 +29,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 };
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChatMessenger())
+                    .Setup(x => x.CreateChatClient())
                     .Returns(GetMockFor<IChatClient>().Object);
 
                 var connectionInfo = new ConnectionInformation
@@ -57,7 +58,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             protected override void Given()
             {
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChatMessenger())
+                    .Setup(x => x.CreateChatClient())
                     .Returns(GetMockFor<IChatClient>().Object);
             }
 

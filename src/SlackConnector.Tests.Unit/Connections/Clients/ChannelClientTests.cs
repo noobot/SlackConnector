@@ -4,6 +4,7 @@ using RestSharp;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Tests.Unit.Stubs;

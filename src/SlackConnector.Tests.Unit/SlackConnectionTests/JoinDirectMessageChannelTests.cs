@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
@@ -27,7 +28,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 SUT.Initialise(connectionInfo);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChannelMessenger())
+                    .Setup(x => x.CreateChannelClient())
                     .Returns(GetMockFor<IChannelClient>().Object);
 
                 GetMockFor<IChannelClient>()

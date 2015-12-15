@@ -2,7 +2,7 @@
 using RestSharp;
 using SlackConnector.Connections.Responses;
 
-namespace SlackConnector.Connections.Clients
+namespace SlackConnector.Connections.Clients.Handshake
 {
     internal class HandshakeClient : IHandshakeClient
     {

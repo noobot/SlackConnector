@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using RestSharp;
-using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 
-namespace SlackConnector.Connections.Clients
+namespace SlackConnector.Connections.Clients.Channel
 {
     internal class ChannelClient : IChannelClient
     {
@@ -17,7 +16,7 @@ namespace SlackConnector.Connections.Clients
             _responseVerifier = responseVerifier;
         }
 
-        public async Task<Channel> JoinDirectMessageChannel(string slackKey, string user)
+        public async Task<Models.Channel> JoinDirectMessageChannel(string slackKey, string user)
         {
             var client = _restSharpFactory.CreateClient("https://slack.com");
 

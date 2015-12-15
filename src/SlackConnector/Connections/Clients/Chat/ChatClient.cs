@@ -6,7 +6,7 @@ using RestSharp;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Models;
 
-namespace SlackConnector.Connections.Clients
+namespace SlackConnector.Connections.Clients.Chat
 {
     internal class ChatClient : IChatClient
     {

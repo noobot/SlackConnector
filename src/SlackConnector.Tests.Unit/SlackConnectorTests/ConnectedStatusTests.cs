@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Connections.Sockets;

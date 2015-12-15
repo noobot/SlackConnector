@@ -8,6 +8,7 @@ using RestSharp;
 using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
