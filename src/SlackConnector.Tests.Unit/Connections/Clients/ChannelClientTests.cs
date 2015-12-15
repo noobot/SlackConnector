@@ -2,8 +2,6 @@
 using NUnit.Framework;
 using RestSharp;
 using Should;
-using SlackConnector.Connections;
-using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
@@ -18,25 +16,24 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
         {
             private string _slackKey = "super-key";
             private string _user = "super-user";
-            private RestClientStub _restStub;
-            private JoinChannelResponse _verifierResponse;
+            private RequestExecutorStub _requestExecutorStub;
+            private JoinChannelResponse _executorResponse;
             private Channel Result { get; set; }
+
+            protected override void InitializeClassUnderTest()
+            {
+                _requestExecutorStub = new RequestExecutorStub();
+                SUT = new ChannelClient(_requestExecutorStub);
+            }
 
             protected override void Given()
             {
-                _restStub = new RestClientStub
+                _executorResponse = new JoinChannelResponse
                 {
-                    ExecutePostTaskAsync_Response = new RestResponse()
+                    Channel = new Channel()
                 };
-
-                GetMockFor<IRestSharpFactory>()
-                    .Setup(x => x.CreateClient("https://slack.com"))
-                    .Returns(_restStub);
-
-                _verifierResponse = new JoinChannelResponse { Channel = new Channel() };
-                GetMockFor<IResponseVerifier>()
-                    .Setup(x => x.VerifyResponse<JoinChannelResponse>(_restStub.ExecutePostTaskAsync_Response))
-                    .Returns(_verifierResponse);
+                
+                _requestExecutorStub.Execute_Value = _executorResponse;
             }
 
             protected override void When()
@@ -47,7 +44,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_key()
             {
-                IRestRequest request = _restStub.ExecutePostTaskAsync_Request;
+                IRestRequest request = _requestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("token"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -57,7 +54,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_channel()
             {
-                IRestRequest request = _restStub.ExecutePostTaskAsync_Request;
+                IRestRequest request = _requestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("user"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -67,21 +64,21 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_access_expected_path()
             {
-                IRestRequest request = _restStub.ExecutePostTaskAsync_Request;
+                IRestRequest request = _requestExecutorStub.Execute_Request;
                 request.Resource.ShouldEqual(ChannelClient.JOIN_DM_PATH);
             }
 
             [Test]
             public void then_should_have_2_params()
             {
-                IRestRequest request = _restStub.ExecutePostTaskAsync_Request;
+                IRestRequest request = _requestExecutorStub.Execute_Request;
                 request.Parameters.Count.ShouldEqual(2);
             }
 
             [Test]
             public void then_should_return_expected_channel()
             {
-                Result.ShouldEqual(_verifierResponse.Channel);
+                Result.ShouldEqual(_executorResponse.Channel);
             }
         }
     }

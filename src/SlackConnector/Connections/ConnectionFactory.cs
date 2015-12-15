@@ -11,11 +11,13 @@ namespace SlackConnector.Connections
     {
         private readonly IRestSharpFactory _restSharpFactory;
         private readonly IResponseVerifier _responseVerifier;
+        private readonly IRequestExecutor _requestExecutor;
 
         public ConnectionFactory()
         {
             _restSharpFactory = new RestSharpFactory();
             _responseVerifier = new ResponseVerifier();
+            _requestExecutor = new RequestExecutor(_restSharpFactory, _responseVerifier);
         }
 
         public IWebSocketClient CreateWebSocketClient(string url)
@@ -35,7 +37,7 @@ namespace SlackConnector.Connections
 
         public IChannelClient CreateChannelClient()
         {
-            return new ChannelClient(_restSharpFactory, _responseVerifier);
+            return new ChannelClient(_requestExecutor);
         }
     }
 }

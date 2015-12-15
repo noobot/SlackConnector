@@ -100,6 +100,7 @@
     <Compile Include="SlackConnectionTests\JoinDirectMessageChannelTests.cs" />
     <Compile Include="SlackConnectionTests\SayTests.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreterTests.cs" />
+    <Compile Include="Stubs\RequestExecutorStub.cs" />
     <Compile Include="Stubs\RestClientStub.cs" />
     <Compile Include="Stubs\SlackConnectionFactoryStub.cs" />
     <Compile Include="Stubs\SlackConnectionStub.cs" />
