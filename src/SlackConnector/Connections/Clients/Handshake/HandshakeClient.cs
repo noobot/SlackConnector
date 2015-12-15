@@ -6,14 +6,12 @@ namespace SlackConnector.Connections.Clients.Handshake
 {
     internal class HandshakeClient : IHandshakeClient
     {
+        private readonly IRequestExecutor _requestExecutor;
         internal const string HANDSHAKE_PATH = "/api/rtm.start";
-        private readonly IRestSharpFactory _restSharpFactory;
-        private readonly IResponseVerifier _responseVerifier;
 
-        public HandshakeClient(IRestSharpFactory restSharpFactory, IResponseVerifier responseVerifier)
+        public HandshakeClient(IRequestExecutor requestExecutor)
         {
-            _restSharpFactory = restSharpFactory;
-            _responseVerifier = responseVerifier;
+            _requestExecutor = requestExecutor;
         }
 
         public async Task<HandshakeResponse> FirmShake(string slackKey)
@@ -21,10 +19,7 @@ namespace SlackConnector.Connections.Clients.Handshake
             var request = new RestRequest(HANDSHAKE_PATH);
             request.AddParameter("token", slackKey);
 
-            IRestClient client = _restSharpFactory.CreateClient("https://slack.com");
-            IRestResponse response = await client.ExecutePostTaskAsync(request);
-
-            return _responseVerifier.VerifyResponse<HandshakeResponse>(response);
+            return await _requestExecutor.Execute<HandshakeResponse>(request);
         }
     }
 }
