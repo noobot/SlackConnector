@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Moq;
@@ -8,14 +7,13 @@ using NUnit.Framework;
 using RestSharp;
 using Should;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Responses;
-using SlackConnector.Exceptions;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
-namespace SlackConnector.Tests.Unit.Connections.Messaging
+namespace SlackConnector.Tests.Unit.Connections.Clients
 {
     public static class ChatMessengerTests
     {

@@ -1,12 +1,9 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
 using RestSharp;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
-using SlackConnector.Exceptions;
 
-namespace SlackConnector.Connections.Messaging
+namespace SlackConnector.Connections.Clients
 {
     internal class ChannelMessenger : IChannelMessenger
     {

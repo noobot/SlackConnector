@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Models;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;

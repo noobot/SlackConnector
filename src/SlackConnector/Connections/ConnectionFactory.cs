@@ -1,4 +1,4 @@
-﻿using SlackConnector.Connections.Messaging;
+﻿using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 

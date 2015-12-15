@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SlackConnector.Models;
 
-namespace SlackConnector.Connections.Messaging
+namespace SlackConnector.Connections.Clients
 {
     internal interface IChatMessenger
     {

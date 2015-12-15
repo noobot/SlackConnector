@@ -2,14 +2,14 @@
 using NUnit.Framework;
 using RestSharp;
 using Should;
-using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Exceptions;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
-namespace SlackConnector.Tests.Unit.Connections.Messaging
+namespace SlackConnector.Tests.Unit.Connections.Clients
 {
     public static class ResponseVerifierTests
     {

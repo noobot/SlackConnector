@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
 using SlackConnector.Connections.Responses;
-using SlackConnector.Exceptions;
 using SlackConnector.Models;
 
-namespace SlackConnector.Connections.Messaging
+namespace SlackConnector.Connections.Clients
 {
     internal class ChatMessenger : IChatMessenger
     {

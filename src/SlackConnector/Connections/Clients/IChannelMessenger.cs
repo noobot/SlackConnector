@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SlackConnector.Connections.Models;
 
-namespace SlackConnector.Connections.Messaging
+namespace SlackConnector.Connections.Clients
 {
     internal interface IChannelMessenger
     {

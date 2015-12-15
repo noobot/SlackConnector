@@ -1,6 +1,6 @@
 ﻿using RestSharp;
 
-namespace SlackConnector.Connections.Messaging
+namespace SlackConnector.Connections.Clients
 {
     internal interface IResponseVerifier
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Messaging;
+using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;

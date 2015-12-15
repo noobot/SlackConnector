@@ -4,7 +4,7 @@ using RestSharp;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Exceptions;
 
-namespace SlackConnector.Connections.Messaging
+namespace SlackConnector.Connections.Clients
 {
     internal class ResponseVerifier : IResponseVerifier
     {
