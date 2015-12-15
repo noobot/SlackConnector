@@ -86,6 +86,7 @@
     <Compile Include="Connections\Clients\HandshakeClientTests.cs" />
     <Compile Include="Connections\Clients\ChannelClientTests.cs" />
     <Compile Include="Connections\Clients\ChatClientTests.cs" />
+    <Compile Include="Connections\Clients\RequestExecutorTests.cs" />
     <Compile Include="Connections\Clients\ResponseVerifierTests.cs" />
     <Compile Include="Models\SlackAttachmentSerialisationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
