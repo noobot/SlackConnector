@@ -32,7 +32,6 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
                 {
                     Channel = new Channel()
                 };
-                
                 _requestExecutorStub.Execute_Value = _executorResponse;
             }
 

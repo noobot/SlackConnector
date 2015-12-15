@@ -32,7 +32,7 @@ namespace SlackConnector.Connections
 
         public IChatClient CreateChatClient()
         {
-            return new ChatClient(_restSharpFactory, _responseVerifier);
+            return new ChatClient(_requestExecutor);
         }
 
         public IChannelClient CreateChannelClient()

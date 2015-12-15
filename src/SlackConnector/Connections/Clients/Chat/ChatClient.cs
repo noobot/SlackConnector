@@ -10,20 +10,16 @@ namespace SlackConnector.Connections.Clients.Chat
 {
     internal class ChatClient : IChatClient
     {
+        private readonly IRequestExecutor _requestExecutor;
         internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
-        private readonly IRestSharpFactory _restSharpFactory;
-        private readonly IResponseVerifier _responseVerifier;
 
-        public ChatClient(IRestSharpFactory restSharpFactory, IResponseVerifier responseVerifier)
+        public ChatClient(IRequestExecutor requestExecutor)
         {
-            _restSharpFactory = restSharpFactory;
-            _responseVerifier = responseVerifier;
+            _requestExecutor = requestExecutor;
         }
 
         public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
         {
-            IRestClient client = _restSharpFactory.CreateClient("https://slack.com");
-
             var request = new RestRequest(SEND_MESSAGE_PATH);
             request.AddParameter("token", slackKey);
             request.AddParameter("channel", channel);
@@ -35,8 +31,7 @@ namespace SlackConnector.Connections.Clients.Chat
                 request.AddParameter("attachments", JsonConvert.SerializeObject(attachments));
             }
 
-            IRestResponse response = await client.ExecutePostTaskAsync(request);
-            _responseVerifier.VerifyResponse<StandardResponse>(response);
+            await _requestExecutor.Execute<StandardResponse>(request);
         }
     }
 }
