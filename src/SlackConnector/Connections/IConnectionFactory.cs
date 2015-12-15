@@ -7,7 +7,7 @@ namespace SlackConnector.Connections
     {
         IWebSocketClient CreateWebSocketClient(string url);
         IHandshakeClient CreateHandshakeClient();
-        IChatMessenger CreateChatMessenger();
+        IChatClient CreateChatMessenger();
         IChannelClient CreateChannelMessenger();
     }
 }

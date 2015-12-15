@@ -15,9 +15,9 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients
 {
-    public static class ChatMessengerTests
+    public static class ChatClientTests
     {
-        internal class given_valid_standard_setup_when_posting_message_without_attachments : SpecsFor<ChatMessenger>
+        internal class given_valid_standard_setup_when_posting_message_without_attachments : SpecsFor<ChatClient>
         {
             private string _slackKey = "super-key";
             private string _channel = "super-channel";
@@ -85,7 +85,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             public void then_should_access_expected_path()
             {
                 IRestRequest request = RestStub.ExecutePostTaskAsync_Request;
-                request.Resource.ShouldEqual(ChatMessenger.SEND_MESSAGE_PATH);
+                request.Resource.ShouldEqual(ChatClient.SEND_MESSAGE_PATH);
             }
 
             [Test]
@@ -103,7 +103,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             }
         }
 
-        internal class given_valid_standard_setup_when_posting_message_with_attachments : SpecsFor<ChatMessenger>
+        internal class given_valid_standard_setup_when_posting_message_with_attachments : SpecsFor<ChatClient>
         {
             private List<SlackAttachment> _attachments;
             private RestClientStub RestStub { get; set; }

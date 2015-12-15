@@ -29,7 +29,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChatMessenger())
-                    .Returns(GetMockFor<IChatMessenger>().Object);
+                    .Returns(GetMockFor<IChatClient>().Object);
 
                 var connectionInfo = new ConnectionInformation
                 {
@@ -47,7 +47,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             [Test]
             public void then_should_call_messenger()
             {
-                GetMockFor<IChatMessenger>()
+                GetMockFor<IChatClient>()
                     .Verify(x => x.PostMessage(SlackKey, Message.ChatHub.Id, Message.Text, Message.Attachments), Times.Once);
             }
         }
@@ -58,7 +58,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             {
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChatMessenger())
-                    .Returns(GetMockFor<IChatMessenger>().Object);
+                    .Returns(GetMockFor<IChatClient>().Object);
             }
 
             [Test]

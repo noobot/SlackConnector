@@ -4,7 +4,7 @@ using SlackConnector.Models;
 
 namespace SlackConnector.Connections.Clients
 {
-    internal interface IChatMessenger
+    internal interface IChatClient
     {
         Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments);
     }
