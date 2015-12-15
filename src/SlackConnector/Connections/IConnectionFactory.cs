@@ -1,5 +1,4 @@
-﻿using SlackConnector.Connections.Handshaking;
-using SlackConnector.Connections.Messaging;
+﻿using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Sockets;
 
 namespace SlackConnector.Connections

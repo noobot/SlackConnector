@@ -1,11 +1,8 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
 using RestSharp;
-using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Responses;
 
-namespace SlackConnector.Connections.Handshaking
+namespace SlackConnector.Connections.Messaging
 {
     internal class HandshakeClient : IHandshakeClient
     {
@@ -27,12 +24,7 @@ namespace SlackConnector.Connections.Handshaking
             IRestClient client = _restSharpFactory.CreateClient("https://slack.com");
             IRestResponse response = await client.ExecutePostTaskAsync(request);
 
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new WebException($"An error occured while attemping to handshake with Slack. HttpStatus: {response.StatusCode}", response.ErrorException);
-            }
-
-            return JsonConvert.DeserializeObject<HandshakeResponse>(response.Content);
+            return _responseVerifier.VerifyResponse<HandshakeResponse>(response);
         }
     }
 }

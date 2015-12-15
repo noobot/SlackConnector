@@ -83,7 +83,7 @@
   <ItemGroup>
     <Compile Include="BotHelpers\MentionDetectorTests.cs" />
     <Compile Include="BotHelpers\ChatHubInterpreterTests.cs" />
-    <Compile Include="Connections\Handshaking\HandshakeClientTests.cs" />
+    <Compile Include="Connections\Messaging\HandshakeClientTests.cs" />
     <Compile Include="Connections\Messaging\ChannelMessengerTests.cs" />
     <Compile Include="Connections\Messaging\ChatMessengerTests.cs" />
     <Compile Include="Connections\Messaging\ResponseVerifierTests.cs" />

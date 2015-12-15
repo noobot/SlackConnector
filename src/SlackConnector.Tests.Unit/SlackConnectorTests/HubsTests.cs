@@ -3,7 +3,7 @@ using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Handshaking;
+using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Connections.Sockets;

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Linq;
 using NUnit.Framework;
 using RestSharp;
 using Should;
@@ -8,7 +6,6 @@ using SlackConnector.Connections;
 using SlackConnector.Connections.Messaging;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
-using SlackConnector.Exceptions;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
