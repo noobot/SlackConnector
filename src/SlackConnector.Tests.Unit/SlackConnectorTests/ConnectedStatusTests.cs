@@ -281,7 +281,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     .Setup(x => x.CreateHandshakeClient())
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
-                ProxySettings = new ProxySettings("", "", "");
+                ProxySettings = new ProxySettings("hi", "you", "ok?");
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, ProxySettings))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
