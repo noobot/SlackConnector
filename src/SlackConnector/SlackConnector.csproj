@@ -69,6 +69,7 @@
     <Compile Include="Connections\Clients\IResponseVerifier.cs" />
     <Compile Include="Connections\Clients\ResponseVerifier.cs" />
     <Compile Include="Connections\Models\Group.cs" />
+    <Compile Include="Connections\ProxySettings.cs" />
     <Compile Include="Connections\Responses\JoinChannelResponse.cs" />
     <Compile Include="Connections\Models\Profile.cs" />
     <Compile Include="Connections\IConnectionFactory.cs" />

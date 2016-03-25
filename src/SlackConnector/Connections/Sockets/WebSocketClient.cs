@@ -13,14 +13,19 @@ namespace SlackConnector.Connections.Sockets
         private readonly WebSocket _webSocket;
         private int _currentMessageId;
 
-        public WebSocketClient(IMessageInterpreter interpreter, string url)
+        public WebSocketClient(IMessageInterpreter interpreter, string url, ProxySettings proxySettings)
         {
             _interpreter = interpreter;
 
             _webSocket = new WebSocket(url);
-            _webSocket.Log.Level = SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors ? LogLevel.Fatal : LogLevel.Trace;
             _webSocket.OnMessage += WebSocketOnMessage;
             _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
+            _webSocket.Log.Level = SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors ? LogLevel.Fatal : LogLevel.Trace;
+
+            if (proxySettings != null)
+            {
+                _webSocket.SetProxy(proxySettings.Url, proxySettings.Username, proxySettings.Password);
+            }
         }
 
         public bool IsAlive => _webSocket.IsAlive;

@@ -9,20 +9,18 @@ namespace SlackConnector.Connections
 {
     internal class ConnectionFactory : IConnectionFactory
     {
-        private readonly IRestSharpFactory _restSharpFactory;
-        private readonly IResponseVerifier _responseVerifier;
         private readonly IRequestExecutor _requestExecutor;
 
         public ConnectionFactory()
         {
-            _restSharpFactory = new RestSharpFactory();
-            _responseVerifier = new ResponseVerifier();
-            _requestExecutor = new RequestExecutor(_restSharpFactory, _responseVerifier);
+            IRestSharpFactory restSharpFactory = new RestSharpFactory();
+            IResponseVerifier responseVerifier = new ResponseVerifier();
+            _requestExecutor = new RequestExecutor(restSharpFactory, responseVerifier);
         }
 
-        public IWebSocketClient CreateWebSocketClient(string url)
+        public IWebSocketClient CreateWebSocketClient(string url, ProxySettings proxySettings)
         {
-            return new WebSocketClient(new MessageInterpreter(), url);
+            return new WebSocketClient(new MessageInterpreter(), url, proxySettings);
         }
 
         public IHandshakeClient CreateHandshakeClient()

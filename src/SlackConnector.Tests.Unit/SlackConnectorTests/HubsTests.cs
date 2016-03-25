@@ -59,7 +59,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -111,7 +111,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -164,7 +164,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -219,7 +219,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 
@@ -278,7 +278,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     .Returns(GetMockFor<IHandshakeClient>().Object);
 
                 GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl))
+                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
                     .Returns(GetMockFor<IWebSocketClient>().Object);
             }
 

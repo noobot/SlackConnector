@@ -27,7 +27,7 @@ namespace SlackConnector
             _slackConnectionFactory = slackConnectionFactory;
         }
 
-        public async Task<ISlackConnection> Connect(string slackKey)
+        public async Task<ISlackConnection> Connect(string slackKey, ProxySettings proxySettings = null)
         {
             if (string.IsNullOrEmpty(slackKey))
             {
@@ -49,15 +49,15 @@ namespace SlackConnector
                 Team = new ContactDetails { Id = handshakeResponse.Team.Id, Name = handshakeResponse.Team.Name },
                 Users = GenerateUsers(handshakeResponse.Users),
                 SlackChatHubs = GetChatHubs(handshakeResponse),
-                WebSocket = await GetWebSocket(handshakeResponse)
+                WebSocket = await GetWebSocket(handshakeResponse, proxySettings)
             };
 
             return _slackConnectionFactory.Create(connectionInfo);
         }
 
-        private async Task<IWebSocketClient> GetWebSocket(HandshakeResponse handshakeResponse)
+        private async Task<IWebSocketClient> GetWebSocket(HandshakeResponse handshakeResponse, ProxySettings proxySettings)
         {
-            var webSocketClient = _connectionFactory.CreateWebSocketClient(handshakeResponse.WebSocketUrl);
+            var webSocketClient = _connectionFactory.CreateWebSocketClient(handshakeResponse.WebSocketUrl, proxySettings);
             await webSocketClient.Connect();
             return webSocketClient;
         }
