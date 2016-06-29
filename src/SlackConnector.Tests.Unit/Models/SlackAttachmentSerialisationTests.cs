@@ -29,6 +29,7 @@ namespace SlackConnector.Tests.Unit.Models
                     Title = "Slack API Documentation",
                     TitleLink = "https://api.slack.com/",
                     Text = "Optional text that appears within the attachment",
+                    CallbackId = "mycallbackid",
                     Fields = new[]
                     {
                         new SlackAttachmentField
@@ -36,6 +37,22 @@ namespace SlackConnector.Tests.Unit.Models
                             IsShort = true,
                             Title = "Priority",
                             Value = "High"
+                        }
+                    },
+                    Actions = new[]
+                    {
+                        new SlackAttachmentAction
+                        {
+                            Name = "yes",
+                            Value = "yep",
+                            Text = "Yes",
+                            Style = SlackAttachmentActionStyle.primary
+                        },
+                        new SlackAttachmentAction
+                        {
+                            Name = "no",
+                            Value = "nop",
+                            Text = "No"
                         }
                     },
                     ImageUrl = "http://my-website.com/path/to/image.jpg",
@@ -49,5 +66,5 @@ namespace SlackConnector.Tests.Unit.Models
             // then
             resultJson.ShouldEqual(expectedJson);
         }
-    }
+   }
 }
