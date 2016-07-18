@@ -15,6 +15,22 @@
             "value": "High"
         }
     ],
+    "callback_id":  "mycallbackid",
+    "actions": [
+        {
+            "name": "yes",
+            "text": "Yes",
+            "style":  "primary",
+            "type": "button",
+            "value": "yep"
+        },
+        {
+            "name": "no",
+            "text": "No",
+            "type": "button",
+            "value": "nop"
+        }
+    ],
     "image_url": "http://my-website.com/path/to/image.jpg",
     "thumb_url": "http://example.com/path/to/thumb.png"
 }

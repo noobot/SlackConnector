@@ -35,6 +35,12 @@ namespace SlackConnector.Models
         [JsonProperty(PropertyName = "fields")]
         public IList<SlackAttachmentField> Fields { get; set; }
 
+        [JsonProperty(PropertyName = "callback_id")]
+        public string CallbackId { get; set; }
+
+        [JsonProperty(PropertyName = "actions")]
+        public IList<SlackAttachmentAction> Actions { get; set; }
+
         [JsonProperty(PropertyName = "image_url")]
         public string ImageUrl { get; set; }
 
