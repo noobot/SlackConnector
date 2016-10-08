@@ -62,9 +62,10 @@ namespace SlackConnector
             return webSocketClient;
         }
 
-        private Dictionary<string, string> GenerateUsers(User[] users)
+        private Dictionary<string, SlackUser> GenerateUsers(User[] users)
         {
-            return users.ToDictionary(user => user.Id, user => user.Name);
+            return users.ToDictionary(user => user.Id, user => new SlackUser()
+            { Id = user.Id, Name = user.Name, TimeZoneOffset = user.TimeZoneOffset});
         }
 
         private Dictionary<string, SlackChatHub> GetChatHubs(HandshakeResponse handshakeResponse)

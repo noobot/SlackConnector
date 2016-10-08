@@ -25,8 +25,8 @@ namespace SlackConnector
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
-        private Dictionary<string, string> _userNameCache { get; set; }
-        public IReadOnlyDictionary<string, string> UserNameCache => _userNameCache;
+        private Dictionary<string, SlackUser> _userNameCache { get; set; }
+        public IReadOnlyDictionary<string, SlackUser> UserNameCache => _userNameCache;
 
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
@@ -78,11 +78,8 @@ namespace SlackConnector
 
             var message = new SlackMessage
             {
-                User = new SlackUser
-                {
-                    Id = inboundMessage.User,
-                    Name = GetMessageUsername(inboundMessage),
-                },
+                User = GetMessageUser(inboundMessage.User),
+                TimeStamp = inboundMessage.TimeStamp,
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
                 RawData = inboundMessage.RawData,
@@ -92,16 +89,9 @@ namespace SlackConnector
             await RaiseMessageReceived(message);
         }
 
-        private string GetMessageUsername(InboundMessage inboundMessage)
+        private SlackUser GetMessageUser(string userId)
         {
-            string username = string.Empty;
-
-            if (!string.IsNullOrEmpty(inboundMessage.User) && UserNameCache.ContainsKey(inboundMessage.User))
-            {
-                username = UserNameCache[inboundMessage.User];
-            }
-
-            return username;
+            return UserNameCache[userId];
         }
 
         public void Disconnect()

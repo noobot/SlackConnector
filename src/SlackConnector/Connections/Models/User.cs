@@ -8,6 +8,9 @@ namespace SlackConnector.Connections.Models
 
         public Profile Profile { get; set; }
 
+        [JsonProperty("tz_offset")]
+        public long TimeZoneOffset { get; set; }
+
         [JsonProperty("is_admin")]
         public bool IsAdmin { get; set; }
 

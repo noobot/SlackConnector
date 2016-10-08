@@ -1,25 +1,27 @@
 ﻿namespace SlackConnector.Models
 {
-    public class SlackUser
+  public class SlackUser
+  {
+    public string Id { get; set; }
+    public string Name { get; set; }
+
+    public string FormattedUserId
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-
-        public string FormattedUserId
+      get
+      {
+        if (!string.IsNullOrEmpty(Id))
         {
-            get
-            {
-                if (!string.IsNullOrEmpty(Id))
-                {
-                    return "<@" + Id + ">";
-                }
-                return string.Empty;
-            }
+          return "<@" + Id + ">";
         }
-
-        //public bool IsSlackbot
-        //{
-        //    get { return Id == "USLACKBOT"; }
-        //}
+        return string.Empty;
+      }
     }
+
+    public long TimeZoneOffset { get; set; }
+
+    //public bool IsSlackbot
+    //{
+    //    get { return Id == "USLACKBOT"; }
+    //}
+  }
 }

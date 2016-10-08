@@ -18,7 +18,7 @@ namespace SlackConnector
         /// <summary>
         /// UserId => UserName cache.
         /// </summary>
-        IReadOnlyDictionary<string, string> UserNameCache { get; }
+        IReadOnlyDictionary<string, SlackUser> UserNameCache { get; }
 
         /// <summary>
         /// Is the RealTimeConnection currently open?
