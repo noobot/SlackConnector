@@ -92,7 +92,9 @@ namespace SlackConnector
 
         private SlackUser GetMessageUser(string userId)
         {
-            return UserNameCache.ContainsKey(userId) ? UserNameCache[userId] : new SlackUser() { Id = userId, Name = string.Empty };
+            return UserNameCache.ContainsKey(userId) ? 
+                UserNameCache[userId] : 
+                new SlackUser() { Id = userId, Name = string.Empty };
         }
 
         public void Disconnect()
@@ -123,6 +125,14 @@ namespace SlackConnector
             var fromChannels = channels.Select(c => c.ToChatHub());
             var fromGroups = groups.Select(g => g.ToChatHub());
             return fromChannels.Concat(fromGroups);
+        }
+
+        public async Task<IEnumerable<SlackUser>> GetUsers()
+        {
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            var users = await client.GetUsers(SlackKey);
+
+            return users.Select(u => u.ToSlackUser());
         }
 
         //TODO: Cache newly created channel, and return if already exists

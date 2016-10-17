@@ -45,5 +45,21 @@ namespace SlackConnector
             };
             return newGroup;
         }
+
+        internal static SlackUser ToSlackUser(this User user)
+        {
+            var slackUser = new SlackUser()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                TimeZoneOffset = user.TimeZoneOffset,
+                IsBot = user.IsBot
+            };
+            if (!string.IsNullOrWhiteSpace(user.Presence))
+            {
+                slackUser.Online = user.Presence == "active";
+            }
+            return slackUser;
+        }
     }
 }

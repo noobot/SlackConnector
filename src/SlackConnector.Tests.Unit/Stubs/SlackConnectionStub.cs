@@ -39,6 +39,11 @@ namespace SlackConnector.Tests.Unit.Stubs
           throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<SlackUser>> GetUsers()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<SlackChatHub> JoinDirectMessageChannel(string user)
         {
             throw new NotImplementedException();

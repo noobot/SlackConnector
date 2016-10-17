@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using RestSharp;
+using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.Channel
@@ -9,6 +10,7 @@ namespace SlackConnector.Connections.Clients.Channel
         internal const string JOIN_DM_PATH = "/api/im.open";
         internal const string CHANNELS_LIST_PATH = "/api/channels.list";
         internal const string GROUPS_LIST_PATH = "/api/groups.list";
+        internal const string USERS_LIST_PATH = "/api/users.list";
         private readonly IRequestExecutor _requestExecutor;
 
         public ChannelClient(IRequestExecutor requestExecutor)
@@ -42,6 +44,16 @@ namespace SlackConnector.Connections.Clients.Channel
 
             var response = await _requestExecutor.Execute<GroupsResponse>(request);
             return response.Groups;
+        }
+
+        public async Task<User[]> GetUsers(string slackKey)
+        {
+            var request = new RestRequest(USERS_LIST_PATH);
+            request.AddParameter("token", slackKey);
+            request.AddParameter("presence", "1");
+
+            var response = await _requestExecutor.Execute<UsersResponse>(request);
+            return response.Members;
         }
     }
 }

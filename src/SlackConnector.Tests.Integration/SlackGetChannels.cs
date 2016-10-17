@@ -25,6 +25,21 @@ namespace SlackConnector.Tests.Integration
                 // then
                 Assert.That(channels.Any(), Is.True);
             }
+
+            [Test]
+            public async void should_connect_and_get_users()
+            {
+                // given
+                var config = new ConfigReader().GetConfig();
+                var slackConnector = new SlackConnector();
+
+                // when
+                var connection = await slackConnector.Connect(config.Slack.ApiToken);
+                var users = await connection.GetUsers();
+
+                // then
+                Assert.That(users.Any(u => u.Online == true), Is.True);
+            }
         }
     }
 }

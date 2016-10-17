@@ -64,8 +64,7 @@ namespace SlackConnector
 
         private Dictionary<string, SlackUser> GenerateUsers(User[] users)
         {
-            return users.ToDictionary(user => user.Id, user => new SlackUser()
-            { Id = user.Id, Name = user.Name, TimeZoneOffset = user.TimeZoneOffset});
+            return users.ToDictionary(user => user.Id, user => user.ToSlackUser());
         }
 
         private Dictionary<string, SlackChatHub> GetChatHubs(HandshakeResponse handshakeResponse)

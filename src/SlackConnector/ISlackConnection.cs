@@ -65,6 +65,12 @@ namespace SlackConnector
         Task<IEnumerable<SlackChatHub>> GetChannels();
 
         /// <summary>
+        /// Get users with online status.
+        /// </summary>
+        /// <returns>Users.</returns>
+        Task<IEnumerable<SlackUser>> GetUsers();
+
+            /// <summary>
         /// Opens a DM channel to a user. Required to PM someone.
         /// </summary>
         Task<SlackChatHub> JoinDirectMessageChannel(string user);
