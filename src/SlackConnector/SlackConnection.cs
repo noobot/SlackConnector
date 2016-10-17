@@ -92,7 +92,7 @@ namespace SlackConnector
 
         private SlackUser GetMessageUser(string userId)
         {
-            return UserNameCache.ContainsKey(userId) ? UserNameCache[userId] : new SlackUser() { Id = userId };
+            return UserNameCache.ContainsKey(userId) ? UserNameCache[userId] : new SlackUser() { Id = userId, Name = string.Empty };
         }
 
         public void Disconnect()
