@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
@@ -91,7 +92,7 @@ namespace SlackConnector
 
         private SlackUser GetMessageUser(string userId)
         {
-            return UserNameCache[userId];
+            return UserNameCache.ContainsKey(userId) ? UserNameCache[userId] : new SlackUser() { Id = userId };
         }
 
         public void Disconnect()
@@ -111,6 +112,29 @@ namespace SlackConnector
 
             var client = _connectionFactory.CreateChatClient();
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+        }
+
+        public async Task<IEnumerable<SlackChatHub>> GetChannels()
+        {
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            var channels = await client.GetChannels(SlackKey);
+            var groups = await client.GetGroups(SlackKey);
+
+            var fromChannels = channels.Select(c => new SlackChatHub()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Type = SlackChatHubType.Channel,
+                Members = c.Members
+            });
+            var fromGroups = groups.Select(g => new SlackChatHub()
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Type = SlackChatHubType.Group,
+                Members = g.Members
+            });
+            return fromChannels.Concat(fromGroups);
         }
 
         //TODO: Cache newly created channel, and return if already exists

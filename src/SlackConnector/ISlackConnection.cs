@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SlackConnector.Connections.Models;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 
@@ -56,6 +57,12 @@ namespace SlackConnector
         /// Send message to Slack channel.
         /// </summary>
         Task Say(BotMessage message);
+
+        /// <summary>
+        /// Get all channels and groups info.
+        /// </summary>
+        /// <returns>Channels and groups.</returns>
+        Task<IEnumerable<SlackChatHub>> GetChannels();
 
         /// <summary>
         /// Opens a DM channel to a user. Required to PM someone.
