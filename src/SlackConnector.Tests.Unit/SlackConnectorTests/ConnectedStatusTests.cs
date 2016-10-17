@@ -111,11 +111,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             [Test]
             public void then_should_pass_expected_users()
             {
-                Dictionary<string, string> users = SlackFactoryStub.Create_ConnectionInformation.Users;
+                var users = SlackFactoryStub.Create_ConnectionInformation.Users;
                 users.ShouldNotBeNull();
                 users.Count.ShouldEqual(2);
-                users[HandshakeResponse.Users[0].Id].ShouldEqual(HandshakeResponse.Users[0].Name);
-                users[HandshakeResponse.Users[1].Id].ShouldEqual(HandshakeResponse.Users[1].Name);
+                users[HandshakeResponse.Users[0].Id].Name.ShouldEqual(HandshakeResponse.Users[0].Name);
+                users[HandshakeResponse.Users[1].Id].Name.ShouldEqual(HandshakeResponse.Users[1].Name);
             }
 
             [Test]

@@ -13,7 +13,7 @@ namespace SlackConnector.Tests.Unit.Stubs
         public IEnumerable<SlackChatHub> ConnectedChannels { get; }
         public IEnumerable<SlackChatHub> ConnectedGroups { get; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
-        public IReadOnlyDictionary<string, string> UserNameCache { get; }
+        public IReadOnlyDictionary<string, SlackUser> UserNameCache { get; }
         public bool IsConnected { get; }
         public DateTime? ConnectedSince { get; }
         public string SlackKey { get; }
@@ -32,6 +32,11 @@ namespace SlackConnector.Tests.Unit.Stubs
         public Task Say(BotMessage message)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<SlackChatHub>> GetChannels()
+        {
+          throw new NotImplementedException();
         }
 
         public Task<SlackChatHub> JoinDirectMessageChannel(string user)

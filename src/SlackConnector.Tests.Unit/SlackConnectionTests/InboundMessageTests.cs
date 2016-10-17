@@ -49,7 +49,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             {
                 base.Given();
 
-                ConnectionInfo.Users.Add("userABC", "i-have-a-name");
+                ConnectionInfo.Users.Add("userABC", new SlackUser() {Id = "userABC", Name = "i-have-a-name" });
 
                 InboundMessage = new InboundMessage
                 {
