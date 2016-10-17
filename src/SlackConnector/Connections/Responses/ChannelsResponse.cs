@@ -4,6 +4,6 @@ namespace SlackConnector.Connections.Responses
 {
     internal class ChannelsResponse : StandardResponse
     {
-         internal Channel[] Channels { get; set; }
+         public Channel[] Channels { get; set; }
     }
 }

@@ -4,6 +4,6 @@ namespace SlackConnector.Connections.Responses
 {
     internal class GroupsResponse : StandardResponse
     {
-         internal Group[] Groups { get; set; }
+         public Group[] Groups { get; set; }
     }
 }
