@@ -76,13 +76,7 @@ namespace SlackConnector
             {
                 if (channel.IsMember)
                 {
-                    var newChannel = new SlackChatHub
-                    {
-                        Id = channel.Id,
-                        Name = "#" + channel.Name,
-                        Type = SlackChatHubType.Channel
-                    };
-
+                    var newChannel = channel.ToChatHub();
                     hubs.Add(channel.Id, newChannel);
                 }
             }
@@ -91,13 +85,7 @@ namespace SlackConnector
             {
                 if (group.Members.Any(x => x == handshakeResponse.Self.Id))
                 {
-                    var newGroup = new SlackChatHub
-                    {
-                        Id = group.Id,
-                        Name = "#" + group.Name,
-                        Type = SlackChatHubType.Group
-                    };
-
+                    var newGroup = group.ToChatHub();
                     hubs.Add(group.Id, newGroup);
                 }
             }

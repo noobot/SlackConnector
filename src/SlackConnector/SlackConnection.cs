@@ -120,20 +120,8 @@ namespace SlackConnector
             var channels = await client.GetChannels(SlackKey);
             var groups = await client.GetGroups(SlackKey);
 
-            var fromChannels = channels.Select(c => new SlackChatHub()
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Type = SlackChatHubType.Channel,
-                Members = c.Members
-            });
-            var fromGroups = groups.Select(g => new SlackChatHub()
-            {
-                Id = g.Id,
-                Name = g.Name,
-                Type = SlackChatHubType.Group,
-                Members = g.Members
-            });
+            var fromChannels = channels.Select(c => c.ToChatHub());
+            var fromGroups = groups.Select(g => g.ToChatHub());
             return fromChannels.Concat(fromGroups);
         }
 

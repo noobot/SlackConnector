@@ -13,6 +13,7 @@ namespace SlackConnector.Connections.Models
         [JsonProperty("is_member")]
         public bool IsMember { get; set; }
 
+        [JsonProperty("members")]
         public string[] Members { get; set; }
     }
 }
