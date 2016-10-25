@@ -62,9 +62,9 @@ namespace SlackConnector
             return webSocketClient;
         }
 
-        private Dictionary<string, string> GenerateUsers(User[] users)
+        private Dictionary<string, SlackUser> GenerateUsers(User[] users)
         {
-            return users.ToDictionary(user => user.Id, user => user.Name);
+            return users.ToDictionary(user => user.Id, user => user.ToSlackUser());
         }
 
         private Dictionary<string, SlackChatHub> GetChatHubs(HandshakeResponse handshakeResponse)
@@ -75,13 +75,7 @@ namespace SlackConnector
             {
                 if (channel.IsMember)
                 {
-                    var newChannel = new SlackChatHub
-                    {
-                        Id = channel.Id,
-                        Name = "#" + channel.Name,
-                        Type = SlackChatHubType.Channel
-                    };
-
+                    var newChannel = channel.ToChatHub();
                     hubs.Add(channel.Id, newChannel);
                 }
             }
@@ -90,13 +84,7 @@ namespace SlackConnector
             {
                 if (group.Members.Any(x => x == handshakeResponse.Self.Id))
                 {
-                    var newGroup = new SlackChatHub
-                    {
-                        Id = group.Id,
-                        Name = "#" + group.Name,
-                        Type = SlackChatHubType.Group
-                    };
-
+                    var newGroup = group.ToChatHub();
                     hubs.Add(group.Id, newGroup);
                 }
             }

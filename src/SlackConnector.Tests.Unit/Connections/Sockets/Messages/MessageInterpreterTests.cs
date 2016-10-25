@@ -41,7 +41,8 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 User = "<myUser>",
                 Text = "hi, my name is <noobot>",
                 Team = "<myTeam>",
-                RawData = Json
+                RawData = Json,
+                TimeStamp = 1445366603.000002
             };
 
             Result.ShouldLookLike(expected);

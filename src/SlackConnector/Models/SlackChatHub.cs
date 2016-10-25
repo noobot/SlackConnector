@@ -8,5 +8,6 @@
         public string Id { get; set; }
         public string Name { get; set; }
         public SlackChatHubType Type { get; set; }
+        public string[] Members { get; set; }
     }
 }

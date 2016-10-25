@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SlackConnector.Connections.Models;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 
@@ -18,7 +19,7 @@ namespace SlackConnector
         /// <summary>
         /// UserId => UserName cache.
         /// </summary>
-        IReadOnlyDictionary<string, string> UserNameCache { get; }
+        IReadOnlyDictionary<string, SlackUser> UserNameCache { get; }
 
         /// <summary>
         /// Is the RealTimeConnection currently open?
@@ -58,6 +59,18 @@ namespace SlackConnector
         Task Say(BotMessage message);
 
         /// <summary>
+        /// Get all channels and groups info.
+        /// </summary>
+        /// <returns>Channels and groups.</returns>
+        Task<IEnumerable<SlackChatHub>> GetChannels();
+
+        /// <summary>
+        /// Get users with online status.
+        /// </summary>
+        /// <returns>Users.</returns>
+        Task<IEnumerable<SlackUser>> GetUsers();
+
+            /// <summary>
         /// Opens a DM channel to a user. Required to PM someone.
         /// </summary>
         Task<SlackChatHub> JoinDirectMessageChannel(string user);

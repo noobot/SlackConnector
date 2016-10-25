@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
@@ -25,8 +26,8 @@ namespace SlackConnector
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
-        private Dictionary<string, string> _userNameCache { get; set; }
-        public IReadOnlyDictionary<string, string> UserNameCache => _userNameCache;
+        private Dictionary<string, SlackUser> _userNameCache { get; set; }
+        public IReadOnlyDictionary<string, SlackUser> UserNameCache => _userNameCache;
 
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
@@ -78,11 +79,8 @@ namespace SlackConnector
 
             var message = new SlackMessage
             {
-                User = new SlackUser
-                {
-                    Id = inboundMessage.User,
-                    Name = GetMessageUsername(inboundMessage),
-                },
+                User = GetMessageUser(inboundMessage.User),
+                TimeStamp = inboundMessage.TimeStamp,
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
                 RawData = inboundMessage.RawData,
@@ -92,16 +90,11 @@ namespace SlackConnector
             await RaiseMessageReceived(message);
         }
 
-        private string GetMessageUsername(InboundMessage inboundMessage)
+        private SlackUser GetMessageUser(string userId)
         {
-            string username = string.Empty;
-
-            if (!string.IsNullOrEmpty(inboundMessage.User) && UserNameCache.ContainsKey(inboundMessage.User))
-            {
-                username = UserNameCache[inboundMessage.User];
-            }
-
-            return username;
+            return UserNameCache.ContainsKey(userId) ? 
+                UserNameCache[userId] : 
+                new SlackUser() { Id = userId, Name = string.Empty };
         }
 
         public void Disconnect()
@@ -121,6 +114,25 @@ namespace SlackConnector
 
             var client = _connectionFactory.CreateChatClient();
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+        }
+
+        public async Task<IEnumerable<SlackChatHub>> GetChannels()
+        {
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            var channels = await client.GetChannels(SlackKey);
+            var groups = await client.GetGroups(SlackKey);
+
+            var fromChannels = channels.Select(c => c.ToChatHub());
+            var fromGroups = groups.Select(g => g.ToChatHub());
+            return fromChannels.Concat(fromGroups);
+        }
+
+        public async Task<IEnumerable<SlackUser>> GetUsers()
+        {
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            var users = await client.GetUsers(SlackKey);
+
+            return users.Select(u => u.ToSlackUser());
         }
 
         //TODO: Cache newly created channel, and return if already exists
