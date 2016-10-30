@@ -18,6 +18,7 @@ namespace SlackConnector.Connections.Sockets
             _interpreter = interpreter;
 
             _webSocket = new WebSocket(url);
+            _webSocket.EmitOnPing = true;
             _webSocket.OnMessage += WebSocketOnMessage;
             _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
             _webSocket.Log.Level = SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors ? LogLevel.Fatal : LogLevel.Trace;
@@ -32,18 +33,20 @@ namespace SlackConnector.Connections.Sockets
 
         public event EventHandler<InboundMessage> OnMessage;
         public event EventHandler OnClose;
-        
-        public async Task Connect()
+
+        public Task Connect()
         {
             var taskSource = new TaskCompletionSource<bool>();
+            EventHandler<ErrorEventArgs> onError = (sender, args) => { taskSource.TrySetException(args.Exception); };
 
-            _webSocket.OnOpen += (sender, args) => { taskSource.SetResult(true); };
-            _webSocket.OnError += (sender, args) => { taskSource.SetException(args.Exception); };
+            _webSocket.OnOpen += (sender, args) => { taskSource.SetResult(true); _webSocket.OnError -= onError; };
+            _webSocket.OnError += onError;
             _webSocket.Connect();
-            await taskSource.Task;
+
+            return taskSource.Task;
         }
 
-        public async Task SendMessage(BaseMessage message)
+        public Task SendMessage(BaseMessage message)
         {
             _currentMessageId++;
             message.Id = _currentMessageId;
@@ -58,11 +61,11 @@ namespace SlackConnector.Connections.Sockets
                 }
                 else
                 {
-                    taskSource.SetException(new Exception("Error occured while sending message"));
+                    taskSource.TrySetException(new Exception("Error occured while sending message"));
                 }
             });
-            
-            await taskSource.Task;
+
+            return taskSource.Task;
         }
 
         public void Close()

@@ -54,6 +54,11 @@ namespace SlackConnector.Tests.Unit.Stubs
             throw new NotImplementedException();
         }
 
+        public Task Ping()
+        {
+            throw new NotImplementedException();
+        }
+
         public event DisconnectEventHandler OnDisconnect;
         public void RaiseOnDisconnect()
         {

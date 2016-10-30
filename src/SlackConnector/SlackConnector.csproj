@@ -81,6 +81,7 @@
     <Compile Include="Connections\Responses\UsersResponse.cs" />
     <Compile Include="Connections\RestSharpFactory.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\BaseMessage.cs" />
+    <Compile Include="Connections\Sockets\Messages\Outbound\PingMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\TypingIndicatorMessage.cs" />
     <Compile Include="ConsoleLoggingLevel.cs" />
     <Compile Include="EventHandlers\DisconnectEventHandler.cs" />
