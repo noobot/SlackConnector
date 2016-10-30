@@ -45,7 +45,7 @@ namespace SlackConnector.Connections.Sockets
 
         public async Task SendMessage(BaseMessage message)
         {
-            _currentMessageId++;
+            System.Threading.Interlocked.Increment(ref _currentMessageId);
             message.Id = _currentMessageId;
             string json = JsonConvert.SerializeObject(message);
 
