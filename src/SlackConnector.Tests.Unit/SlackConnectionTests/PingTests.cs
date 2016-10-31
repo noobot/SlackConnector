@@ -7,9 +7,9 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class TypingIndicatorTests
+    public static class PingTests
     {
-        internal class given_valid_bot_message : SpecsFor<SlackConnection>
+        internal class given_valid_connection_when_initiating_a_ping : SpecsFor<SlackConnection>
         {
             private string SlackKey = "doobeedoo";
             private SlackChatHub _chatHub;
@@ -30,16 +30,16 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 
             protected override void When()
             {
-                SUT.IndicateTyping(_chatHub).Wait();
+                SUT.Ping().Wait();
             }
 
             [Test]
-            public void then_should_pass_expected_message_object()
+            public void then_should_send_ping_message_with_expected_type()
             {
-                var typingMessage = _webSocketClient.SendMessage_Message as TypingIndicatorMessage;
+                var typingMessage = _webSocketClient.SendMessage_Message as PingMessage;
                 typingMessage.ShouldNotBeNull();
-                typingMessage.Channel.ShouldEqual(_chatHub.Id);
-                typingMessage.Type.ShouldEqual("typing");
+
+                typingMessage.Type.ShouldEqual("ping");
             }
         }
 
