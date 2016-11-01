@@ -63,19 +63,25 @@ namespace SlackConnector
             ConnectedSince = DateTime.Now;
         }
 
-        private async Task ListenTo(InboundMessage inboundMessage)
+        private Task ListenTo(InboundMessage inboundMessage)
         {
-            if (inboundMessage?.MessageType != MessageType.Message)
-                return;
-            if (string.IsNullOrEmpty(inboundMessage.User))
-                return;
-            if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
-                return;
+            if (inboundMessage == null) Task.FromResult(false);
 
-            if (inboundMessage.Channel != null && !_connectedHubs.ContainsKey(inboundMessage.Channel))
+            switch (inboundMessage.MessageType)
             {
-                _connectedHubs[inboundMessage.Channel] = _chatHubInterpreter.FromId(inboundMessage.Channel);
+                case MessageType.Message: return HandleMessage((ChatMessage)inboundMessage);
+                case MessageType.Group_Joined: return HandleGroupJoined((GroupJoinedMessage)inboundMessage);
+                case MessageType.Channel_Joined: return HandleChannelJoined((ChannelJoinedMessage)inboundMessage);
             }
+
+            return Task.FromResult(false);
+        }
+
+        private Task HandleMessage(ChatMessage inboundMessage)
+        {
+            if (string.IsNullOrEmpty(inboundMessage.User)
+                || (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id))
+                return Task.FromResult(false);
 
             var message = new SlackMessage
             {
@@ -87,13 +93,35 @@ namespace SlackConnector
                 MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text)
             };
 
-            await RaiseMessageReceived(message);
+            return RaiseMessageReceived(message);
+        }
+
+        private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
+        {
+            var channelId = inboundMessage?.Channel?.Id;
+            if (channelId == null) return Task.FromResult(false);
+
+            var hub = inboundMessage.Channel.ToChatHub();
+            _connectedHubs[channelId] = hub;
+
+            return RaiseChatHubJoined(hub);
+        }
+
+        private Task HandleChannelJoined(ChannelJoinedMessage inboundMessage)
+        {
+            var channelId = inboundMessage?.Channel?.Id;
+            if (channelId == null) return Task.FromResult(false);
+
+            var hub = inboundMessage.Channel.ToChatHub();
+            _connectedHubs[channelId] = hub;
+
+            return RaiseChatHubJoined(hub);
         }
 
         private SlackUser GetMessageUser(string userId)
         {
-            return UserNameCache.ContainsKey(userId) ? 
-                UserNameCache[userId] : 
+            return UserNameCache.ContainsKey(userId) ?
+                UserNameCache[userId] :
                 new SlackUser() { Id = userId, Name = string.Empty };
         }
 
@@ -184,15 +212,33 @@ namespace SlackConnector
         public event MessageReceivedEventHandler OnMessageReceived;
         private async Task RaiseMessageReceived(SlackMessage message)
         {
-            if (OnMessageReceived != null)
+            var e = OnMessageReceived;
+            if (e != null)
             {
                 try
                 {
-                    await OnMessageReceived(message);
+                    await e(message);
                 }
                 catch (Exception)
                 {
 
+                }
+            }
+        }
+
+        public event ChatHubJoinedEventHandler OnChatHubJoined;
+        private async Task RaiseChatHubJoined(SlackChatHub hub)
+        {
+            var e = OnChatHubJoined;
+
+            if (e != null)
+            {
+                try
+                {
+                    await e(hub);
+                }
+                catch
+                {
                 }
             }
         }

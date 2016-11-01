@@ -3,6 +3,8 @@
     internal enum MessageType
     {
         Unknown = 0,
-        Message
+        Message,
+        Group_Joined,
+        Channel_Joined,
     }
 }
