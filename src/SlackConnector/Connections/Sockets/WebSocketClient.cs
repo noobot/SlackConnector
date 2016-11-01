@@ -73,7 +73,7 @@ namespace SlackConnector.Connections.Sockets
         private void WebSocketOnMessage(object sender, MessageEventArgs args)
         {
             string messageJson = args?.Data ?? "";
-            InboundMessage inboundMessage = _interpreter.InterpretMessage(messageJson);
+            var inboundMessage = _interpreter.InterpretMessage(messageJson);
             OnMessage?.Invoke(sender, inboundMessage);
         }
     }

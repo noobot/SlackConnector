@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Should;
 using SlackConnector.BotHelpers;
+using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
@@ -16,9 +17,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
     public static class InboundMessageTests
     {
-        internal class BaseTest : SpecsFor<SlackConnection>
+        internal class BaseTest<TMessage> : SpecsFor<SlackConnection>
+            where TMessage : InboundMessage
         {
-            protected InboundMessage InboundMessage { get; set; }
+            protected TMessage InboundMessage { get; set; }
             protected bool MessageRaised { get; set; }
             protected SlackMessage Result { get; set; }
             protected ConnectionInformation ConnectionInfo { get; set; }
@@ -43,15 +45,32 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_connector_is_setup_when_inbound_message_arrives : BaseTest
+        internal class ChatMessageTest : BaseTest<ChatMessage>
+        {
+            protected override void When()
+            {
+                SUT.Initialise(ConnectionInfo);
+
+                if (!String.IsNullOrEmpty(InboundMessage?.Channel))
+                {
+                    GetMockFor<IWebSocketClient>()
+                        .Raise(x => x.OnMessage += null, null, new ChannelJoinedMessage { Channel = new Channel { Id = InboundMessage.Channel } });
+                }
+
+                GetMockFor<IWebSocketClient>()
+                    .Raise(x => x.OnMessage += null, null, InboundMessage);
+            }
+        }
+
+        internal class given_connector_is_setup_when_inbound_message_arrives : ChatMessageTest
         {
             protected override void Given()
             {
                 base.Given();
 
-                ConnectionInfo.Users.Add("userABC", new SlackUser() {Id = "userABC", Name = "i-have-a-name" });
+                ConnectionInfo.Users.Add("userABC", new SlackUser() { Id = "userABC", Name = "i-have-a-name" });
 
-                InboundMessage = new InboundMessage
+                InboundMessage = new ChatMessage
                 {
                     User = "userABC",
                     MessageType = MessageType.Message,
@@ -84,13 +103,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_connector_is_missing_use_when_inbound_message_arrives : BaseTest
+        internal class given_connector_is_missing_use_when_inbound_message_arrives : ChatMessageTest
         {
             protected override void Given()
             {
                 base.Given();
 
-                InboundMessage = new InboundMessage
+                InboundMessage = new ChatMessage
                 {
                     User = "userABC",
                     MessageType = MessageType.Message
@@ -113,11 +132,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_connector_is_setup_when_inbound_message_arrives_that_isnt_message_type : BaseTest
+        internal class given_connector_is_setup_when_inbound_message_arrives_that_isnt_message_type : ChatMessageTest
         {
             protected override void Given()
             {
-                InboundMessage = new InboundMessage
+                InboundMessage = new ChatMessage
                 {
                     MessageType = MessageType.Unknown
                 };
@@ -132,7 +151,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_null_message_when_inbound_message_arrives : BaseTest
+        internal class given_null_message_when_inbound_message_arrives : ChatMessageTest
         {
             protected override void Given()
             {
@@ -148,7 +167,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_channel_already_defined_when_inbound_message_arrives_with_channel : BaseTest
+        internal class given_channel_already_defined_when_inbound_message_arrives_with_channel : ChatMessageTest
         {
             protected override void Given()
             {
@@ -156,7 +175,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 
                 ConnectionInfo.SlackChatHubs.Add("channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" });
 
-                InboundMessage = new InboundMessage
+                InboundMessage = new ChatMessage
                 {
                     Channel = ConnectionInfo.SlackChatHubs.First().Key,
                     MessageType = MessageType.Message,
@@ -172,50 +191,92 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_channel_undefined_when_inbound_message_arrives_with_channel : BaseTest
+        internal class given_channel_undefined_when_bot_joins_group : BaseTest<GroupJoinedMessage>
         {
             private readonly string _hubId = "Woozah";
             private readonly SlackChatHub _expectedChatHub = new SlackChatHub();
+            private SlackChatHub _lastHub;
 
             protected override void Given()
             {
                 base.Given();
 
-                GetMockFor<IChatHubInterpreter>()
-                    .Setup(x => x.FromId(_hubId))
-                    .Returns(_expectedChatHub);
-
-                InboundMessage = new InboundMessage
+                SUT.OnChatHubJoined += hub =>
                 {
-                    Channel = _hubId,
-                    MessageType = MessageType.Message,
-                    User = "something else"
+                    _lastHub = hub;
+
+                    return Task.FromResult(false);
+                };
+
+                InboundMessage = new GroupJoinedMessage
+                {
+                    Channel = new Group { Id = _hubId }
                 };
             }
 
             [Test]
             public void then_should_return_expected_channel_information()
             {
-                Result.ChatHub.ShouldEqual(_expectedChatHub);
+                _lastHub.Id.ShouldEqual(_hubId);
+                _lastHub.Type.ShouldEqual(SlackChatHubType.Group);
             }
 
             [Test]
             public void then_should_add_channel_to_connected_hubs()
             {
                 SUT.ConnectedHubs.ContainsKey(_hubId).ShouldBeTrue();
-                SUT.ConnectedHubs[_hubId].ShouldEqual(_expectedChatHub);
+                SUT.ConnectedHubs[_hubId].ShouldEqual(_lastHub);
             }
         }
 
-        internal class given_bot_was_mentioned_in_text : BaseTest
+        internal class given_channel_undefined_when_bot_joins_channel : BaseTest<ChannelJoinedMessage>
+        {
+            private readonly string _hubId = "Woozah";
+            private readonly SlackChatHub _expectedChatHub = new SlackChatHub();
+            private SlackChatHub _lastHub;
+
+            protected override void Given()
+            {
+                base.Given();
+
+                SUT.OnChatHubJoined += hub =>
+                {
+                    _lastHub = hub;
+
+                    return Task.FromResult(false);
+                };
+
+                InboundMessage = new ChannelJoinedMessage
+                {
+                    Channel = new Channel { Id = _hubId }
+                };
+            }
+
+            [Test]
+            public void then_should_return_expected_channel_information()
+            {
+                _lastHub.Id.ShouldEqual(_hubId);
+                _lastHub.Type.ShouldEqual(SlackChatHubType.Channel);
+            }
+
+            [Test]
+            public void then_should_add_channel_to_connected_hubs()
+            {
+                SUT.ConnectedHubs.ContainsKey(_hubId).ShouldBeTrue();
+                SUT.ConnectedHubs[_hubId].ShouldEqual(_lastHub);
+            }
+        }
+
+
+        internal class given_bot_was_mentioned_in_text : ChatMessageTest
         {
             protected override void Given()
             {
                 base.Given();
 
                 ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
-                
-                InboundMessage = new InboundMessage
+
+                InboundMessage = new ChatMessage
                 {
                     Channel = "idy",
                     MessageType = MessageType.Message,
@@ -235,15 +296,15 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_message_is_from_self : BaseTest
+        internal class given_message_is_from_self : ChatMessageTest
         {
             protected override void Given()
             {
                 base.Given();
 
                 ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
-                
-                InboundMessage = new InboundMessage
+
+                InboundMessage = new ChatMessage
                 {
                     MessageType = MessageType.Message,
                     User = ConnectionInfo.Self.Id
@@ -257,13 +318,13 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             }
         }
 
-        internal class given_message_is_missing_user_information : BaseTest
+        internal class given_message_is_missing_user_information : ChatMessageTest
         {
             protected override void Given()
             {
                 base.Given();
 
-                InboundMessage = new InboundMessage
+                InboundMessage = new ChatMessage
                 {
                     MessageType = MessageType.Message,
                     User = null
@@ -278,7 +339,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
         }
 
         [TestFixture]
-        internal class given_exception_thrown_when_handling_inbound_message : BaseTest
+        internal class given_exception_thrown_when_handling_inbound_message : ChatMessageTest
         {
             private WebSocketClientStub WebSocket { get; set; }
 
@@ -298,7 +359,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             [Test]
             public void should_not_throw_exception_when_error_is_thrown()
             {
-                var message = new InboundMessage
+                var message = new ChatMessage
                 {
                     User = "something",
                     MessageType = MessageType.Message

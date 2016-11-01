@@ -89,5 +89,7 @@ namespace SlackConnector
         /// Raised when real-time messages are received.
         /// </summary>
         event MessageReceivedEventHandler OnMessageReceived;
+
+        event ChatHubJoinedEventHandler OnChatHubJoined;
     }
 }
