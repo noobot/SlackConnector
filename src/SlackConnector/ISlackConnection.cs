@@ -81,6 +81,12 @@ namespace SlackConnector
         Task IndicateTyping(SlackChatHub chatHub);
 
         /// <summary>
+        /// Sends a Ping message to the server to detect if the client is disconnected
+        /// </summary>
+        /// <returns></returns>
+        Task Ping();
+
+        /// <summary>
         /// Raised when the websocket disconnects from the mothership.
         /// </summary>
         event DisconnectEventHandler OnDisconnect;

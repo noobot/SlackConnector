@@ -84,6 +84,7 @@
     <Compile Include="Connections\Sockets\Messages\Inbound\GroupJoinedMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Inbound\InboundMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\BaseMessage.cs" />
+    <Compile Include="Connections\Sockets\Messages\Outbound\PingMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\TypingIndicatorMessage.cs" />
     <Compile Include="ConsoleLoggingLevel.cs" />
     <Compile Include="EventHandlers\ChatHubJoinedEventHandler.cs" />
