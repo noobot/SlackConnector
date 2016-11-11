@@ -25,7 +25,7 @@ Install-Package SlackConnector
 ISlackConnector connector = new SlackConnector.SlackConnector();
 ISlackConnection connection = await connector.Connect(slackKey);
 connection.OnMessageReceived += MessageReceived;
-connection.OnConnectionStatusChanged += ConnectionStatusChanged;
+connection.OnDisconnect += Disconnected;
 ```
 
 ##Features

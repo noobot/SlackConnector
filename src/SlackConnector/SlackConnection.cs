@@ -165,6 +165,16 @@ namespace SlackConnector
             await _webSocketClient.SendMessage(message);
         }
 
+        public async Task Ping()
+        {
+            var message = new PingMessage
+            {
+                Type = "ping"
+            };
+
+            await _webSocketClient.SendMessage(message);
+        }
+
         public event DisconnectEventHandler OnDisconnect;
         private void RaiseOnDisconnect()
         {
