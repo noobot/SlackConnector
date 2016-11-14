@@ -65,7 +65,7 @@ namespace SlackConnector
 
         private Task ListenTo(InboundMessage inboundMessage)
         {
-            if (inboundMessage == null) Task.FromResult(false);
+            if (inboundMessage == null) return Task.FromResult(false);
 
             switch (inboundMessage.MessageType)
             {
@@ -79,10 +79,12 @@ namespace SlackConnector
 
         private Task HandleMessage(ChatMessage inboundMessage)
         {
-            if (string.IsNullOrEmpty(inboundMessage.User)
-                || (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id))
+            if (string.IsNullOrEmpty(inboundMessage.User))
                 return Task.FromResult(false);
 
+            if(!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
+                return Task.FromResult(false);
+            
             var message = new SlackMessage
             {
                 User = GetMessageUser(inboundMessage.User),

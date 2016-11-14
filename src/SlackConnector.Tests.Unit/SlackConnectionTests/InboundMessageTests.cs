@@ -51,7 +51,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             {
                 SUT.Initialise(ConnectionInfo);
 
-                if (!String.IsNullOrEmpty(InboundMessage?.Channel))
+                if (!string.IsNullOrEmpty(InboundMessage?.Channel))
                 {
                     GetMockFor<IWebSocketClient>()
                         .Raise(x => x.OnMessage += null, null, new ChannelJoinedMessage { Channel = new Channel { Id = InboundMessage.Channel } });

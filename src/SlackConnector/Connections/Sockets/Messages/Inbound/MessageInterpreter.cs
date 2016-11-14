@@ -11,9 +11,12 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         {
             try
             {
-                var message = JsonConvert.DeserializeObject<InboundMessage>(json);
+                MessageType messageType = ParseMessageType(json);
 
-                switch (message.MessageType)
+                //var message = JsonConvert.DeserializeObject<InboundMessage>(json);
+
+                InboundMessage message;
+                switch (messageType)
                 {
                     case MessageType.Group_Joined:
                         message = JsonConvert.DeserializeObject<GroupJoinedMessage>(json);
@@ -22,7 +25,7 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                         message = JsonConvert.DeserializeObject<ChannelJoinedMessage>(json);
                         break;
                     default:
-                        message = GetInboundMessage(json);
+                        message = GetChatMessage(json);
                         break;
                 }
 
@@ -42,7 +45,18 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
             return null;
         }
 
-        private static ChatMessage GetInboundMessage(string json)
+        private static MessageType ParseMessageType(string json)
+        {
+            var messageJobject = JObject.Parse(json);
+            MessageType messageType;
+            if (!Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType))
+            {
+                messageType = MessageType.Unknown;
+            }
+            return messageType;
+        }
+
+        private static ChatMessage GetChatMessage(string json)
         {
             var message = JsonConvert.DeserializeObject<ChatMessage>(json);
 
