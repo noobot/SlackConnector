@@ -109,13 +109,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="SlackConnectionTests\DisconnectTests.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\BaseTest.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\ChannelJoinedTests.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\ChatMessageTests.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\GroupJoinedTests.cs" />
     <Compile Include="SlackConnectionTests\InitialiseTests.cs" />
     <Compile Include="SlackConnectionTests\PingTests.cs" />
     <Compile Include="SlackConnectionTests\TypingIndicatorTests.cs" />
     <Compile Include="SlackConnectionTests\WebSocketTests.cs" />
     <Compile Include="SlackConnectorTests\ConnectedStatusTests.cs" />
     <Compile Include="SlackConnectorTests\HubsTests.cs" />
-    <Compile Include="SlackConnectionTests\InboundMessageTests.cs" />
     <Compile Include="SlackConnectionTests\JoinDirectMessageChannelTests.cs" />
     <Compile Include="SlackConnectionTests\SayTests.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreterTests.cs" />
