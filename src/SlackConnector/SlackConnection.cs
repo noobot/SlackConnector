@@ -101,7 +101,7 @@ namespace SlackConnector
 
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
         {
-            var channelId = inboundMessage?.Channel?.Id;
+            string channelId = inboundMessage?.Channel?.Id;
             if (channelId == null) return Task.FromResult(false);
 
             var hub = inboundMessage.Channel.ToChatHub();
@@ -112,7 +112,7 @@ namespace SlackConnector
 
         private Task HandleChannelJoined(ChannelJoinedMessage inboundMessage)
         {
-            var channelId = inboundMessage?.Channel?.Id;
+            string channelId = inboundMessage?.Channel?.Id;
             if (channelId == null) return Task.FromResult(false);
 
             var hub = inboundMessage.Channel.ToChatHub();
@@ -125,7 +125,7 @@ namespace SlackConnector
         {
             return UserCache.ContainsKey(userId) ?
                 UserCache[userId] :
-                new SlackUser() { Id = userId, Name = string.Empty };
+                new SlackUser { Id = userId, Name = string.Empty };
         }
 
         public void Disconnect()

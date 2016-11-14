@@ -108,6 +108,7 @@
     <Compile Include="Models\SlackAttachmentSerialisationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
+    <Compile Include="SlackConnectionTests\DisconnectTests.cs" />
     <Compile Include="SlackConnectionTests\InitialiseTests.cs" />
     <Compile Include="SlackConnectionTests\PingTests.cs" />
     <Compile Include="SlackConnectionTests\TypingIndicatorTests.cs" />
