@@ -48,7 +48,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             Result.ShouldLookLike(expected);
         }
     }
-    
+
     internal class given_group_joined_message_when_processing_message : SpecsFor<MessageInterpreter>
     {
         private string Json { get; set; }
@@ -82,6 +82,47 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 {
                     Id = "test-group",
                     IsGroup = true
+                },
+                RawData = Json,
+            };
+
+            Result.ShouldLookLike(expected);
+        }
+    }
+
+    internal class given_channel_joined_message_when_processing_message : SpecsFor<MessageInterpreter>
+    {
+        private string Json { get; set; }
+        private InboundMessage Result { get; set; }
+
+        protected override void Given()
+        {
+            Json = @"
+                {
+                  'type': 'channel_joined',
+                  'channel': {
+                    id: 'test-channel',
+                    is_channel: true
+                  }
+                }
+            ";
+        }
+
+        protected override void When()
+        {
+            Result = SUT.InterpretMessage(Json);
+        }
+
+        [Test]
+        public void then_should_look_like_expected()
+        {
+            var expected = new ChannelJoinedMessage
+            {
+                MessageType = MessageType.Channel_Joined,
+                Channel = new Channel
+                {
+                    Id = "test-channel",
+                    IsChannel = true
                 },
                 RawData = Json,
             };

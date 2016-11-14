@@ -12,9 +12,7 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
             try
             {
                 MessageType messageType = ParseMessageType(json);
-
-                //var message = JsonConvert.DeserializeObject<InboundMessage>(json);
-
+                
                 InboundMessage message;
                 switch (messageType)
                 {
