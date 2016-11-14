@@ -7,6 +7,7 @@ using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
+using SlackConnector.Extensions;
 using SlackConnector.Models;
 
 namespace SlackConnector

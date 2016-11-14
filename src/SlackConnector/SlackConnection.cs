@@ -11,6 +11,7 @@ using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
+using SlackConnector.Extensions;
 using SlackConnector.Models;
 
 namespace SlackConnector

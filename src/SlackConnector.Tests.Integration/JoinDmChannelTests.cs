@@ -25,7 +25,7 @@ namespace SlackConnector.Tests.Integration
             Assert.That(result, Is.Not.Null);
 
             List<SlackChatHub> dms = connection.ConnectedDMs().ToList();
-            
+            Assert.That(dms.Count, Is.GreaterThan(1));
         }
     }
 }
