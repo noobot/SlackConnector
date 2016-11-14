@@ -19,7 +19,13 @@ namespace SlackConnector
         /// <summary>
         /// UserId => UserName cache.
         /// </summary>
+        [Obsolete("Please use UserCache", true)]
         IReadOnlyDictionary<string, SlackUser> UserNameCache { get; }
+
+        /// <summary>
+        /// UserId => User object.
+        /// </summary>
+        IReadOnlyDictionary<string, SlackUser> UserCache { get; }
 
         /// <summary>
         /// Is the RealTimeConnection currently open?

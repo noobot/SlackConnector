@@ -14,6 +14,7 @@ namespace SlackConnector.Tests.Unit.Stubs
         public IEnumerable<SlackChatHub> ConnectedGroups { get; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
         public IReadOnlyDictionary<string, SlackUser> UserNameCache { get; }
+        public IReadOnlyDictionary<string, SlackUser> UserCache { get; }
         public bool IsConnected { get; }
         public DateTime? ConnectedSince { get; }
         public string SlackKey { get; }

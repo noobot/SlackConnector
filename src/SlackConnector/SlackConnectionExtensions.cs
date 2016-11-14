@@ -43,6 +43,7 @@ namespace SlackConnector
                 Type = SlackChatHubType.Group,
                 Members = group.Members
             };
+
             return newGroup;
         }
 
@@ -55,10 +56,12 @@ namespace SlackConnector
                 TimeZoneOffset = user.TimeZoneOffset,
                 IsBot = user.IsBot
             };
+
             if (!string.IsNullOrWhiteSpace(user.Presence))
             {
                 slackUser.Online = user.Presence == "active";
             }
+
             return slackUser;
         }
     }

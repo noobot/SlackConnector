@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
@@ -19,15 +18,17 @@ namespace SlackConnector
     internal class SlackConnection : ISlackConnection
     {
         private readonly IConnectionFactory _connectionFactory;
-        private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
 
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
-        private Dictionary<string, SlackUser> _userNameCache { get; set; }
-        public IReadOnlyDictionary<string, SlackUser> UserNameCache => _userNameCache;
+        private Dictionary<string, SlackUser> _userCache { get; set; }
+        public IReadOnlyDictionary<string, SlackUser> UserCache => _userCache;
+
+        [Obsolete("Please use UserCache", true)]
+        public IReadOnlyDictionary<string, SlackUser> UserNameCache { get; set; }
 
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
@@ -36,10 +37,9 @@ namespace SlackConnector
         public ContactDetails Team { get; private set; }
         public ContactDetails Self { get; private set; }
 
-        public SlackConnection(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IMentionDetector mentionDetector)
+        public SlackConnection(IConnectionFactory connectionFactory, IMentionDetector mentionDetector)
         {
             _connectionFactory = connectionFactory;
-            _chatHubInterpreter = chatHubInterpreter;
             _mentionDetector = mentionDetector;
         }
 
@@ -48,7 +48,7 @@ namespace SlackConnector
             SlackKey = connectionInformation.SlackKey;
             Team = connectionInformation.Team;
             Self = connectionInformation.Self;
-            _userNameCache = connectionInformation.Users;
+            _userCache = connectionInformation.Users;
             _connectedHubs = connectionInformation.SlackChatHubs;
 
             _webSocketClient = connectionInformation.WebSocket;
@@ -122,8 +122,8 @@ namespace SlackConnector
 
         private SlackUser GetMessageUser(string userId)
         {
-            return UserNameCache.ContainsKey(userId) ?
-                UserNameCache[userId] :
+            return UserCache.ContainsKey(userId) ?
+                UserCache[userId] :
                 new SlackUser() { Id = userId, Name = string.Empty };
         }
 

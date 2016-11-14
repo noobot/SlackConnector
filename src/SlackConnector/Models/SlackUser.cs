@@ -22,10 +22,5 @@
         public bool? Online { get; set; }
 
         public bool IsBot { get; set; }
-
-        //public bool IsSlackbot
-        //{
-        //    get { return Id == "USLACKBOT"; }
-        //}
     }
 }

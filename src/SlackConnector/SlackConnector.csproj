@@ -89,7 +89,6 @@
     <Compile Include="ConsoleLoggingLevel.cs" />
     <Compile Include="EventHandlers\ChatHubJoinedEventHandler.cs" />
     <Compile Include="EventHandlers\DisconnectEventHandler.cs" />
-    <Compile Include="Exceptions\AlreadyConnectedException.cs" />
     <Compile Include="Exceptions\CommunicationException.cs" />
     <Compile Include="Exceptions\HandshakeException.cs" />
     <Compile Include="Exceptions\MissingChannelException.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Models\SlackAttachmentAction.cs" />
     <Compile Include="Models\SlackAttachmentActionStyle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\ResponseContext.cs" />
     <Compile Include="Models\SlackAttachment.cs" />
     <Compile Include="Models\SlackAttachmentField.cs" />
     <Compile Include="Models\SlackChatHub.cs" />

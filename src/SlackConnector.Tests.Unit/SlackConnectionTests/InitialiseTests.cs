@@ -45,7 +45,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             [Test]
             public void then_should_populate_users()
             {
-                SUT.UserNameCache.ShouldEqual(Info.Users);
+                SUT.UserCache.ShouldEqual(Info.Users);
             }
 
             [Test]
