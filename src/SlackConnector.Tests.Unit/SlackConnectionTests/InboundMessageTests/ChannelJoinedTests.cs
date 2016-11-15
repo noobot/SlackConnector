@@ -10,7 +10,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
     internal class given_bot_joins_channel : BaseTest<ChannelJoinedMessage>
     {
         private readonly string _hubId = "Woozah";
-        private readonly SlackChatHub _expectedChatHub = new SlackChatHub();
         private SlackChatHub _lastHub;
 
         protected override void Given()
