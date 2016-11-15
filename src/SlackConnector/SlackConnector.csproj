@@ -105,7 +105,6 @@
     <Compile Include="Connections\Models\Detail.cs" />
     <Compile Include="Connections\Models\Im.cs" />
     <Compile Include="Connections\Models\User.cs" />
-    <Compile Include="Connections\Models\UserProfile.cs" />
     <Compile Include="Models\ConnectionInformation.cs" />
     <Compile Include="Models\ContactDetails.cs" />
     <Compile Include="Models\SlackAttachmentAction.cs" />
