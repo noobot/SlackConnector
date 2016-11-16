@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
@@ -12,6 +11,7 @@ using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
+using SlackConnector.Extensions;
 using SlackConnector.Models;
 
 namespace SlackConnector
@@ -19,15 +19,17 @@ namespace SlackConnector
     internal class SlackConnection : ISlackConnection
     {
         private readonly IConnectionFactory _connectionFactory;
-        private readonly IChatHubInterpreter _chatHubInterpreter;
         private readonly IMentionDetector _mentionDetector;
         private IWebSocketClient _webSocketClient;
 
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
-        private Dictionary<string, SlackUser> _userNameCache { get; set; }
-        public IReadOnlyDictionary<string, SlackUser> UserNameCache => _userNameCache;
+        private Dictionary<string, SlackUser> _userCache { get; set; }
+        public IReadOnlyDictionary<string, SlackUser> UserCache => _userCache;
+
+        [Obsolete("Please use UserCache", true)]
+        public IReadOnlyDictionary<string, SlackUser> UserNameCache { get; set; }
 
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
@@ -36,10 +38,9 @@ namespace SlackConnector
         public ContactDetails Team { get; private set; }
         public ContactDetails Self { get; private set; }
 
-        public SlackConnection(IConnectionFactory connectionFactory, IChatHubInterpreter chatHubInterpreter, IMentionDetector mentionDetector)
+        public SlackConnection(IConnectionFactory connectionFactory, IMentionDetector mentionDetector)
         {
             _connectionFactory = connectionFactory;
-            _chatHubInterpreter = chatHubInterpreter;
             _mentionDetector = mentionDetector;
         }
 
@@ -48,7 +49,7 @@ namespace SlackConnector
             SlackKey = connectionInformation.SlackKey;
             Team = connectionInformation.Team;
             Self = connectionInformation.Self;
-            _userNameCache = connectionInformation.Users;
+            _userCache = connectionInformation.Users;
             _connectedHubs = connectionInformation.SlackChatHubs;
 
             _webSocketClient = connectionInformation.WebSocket;
@@ -65,7 +66,7 @@ namespace SlackConnector
 
         private Task ListenTo(InboundMessage inboundMessage)
         {
-            if (inboundMessage == null) Task.FromResult(false);
+            if (inboundMessage == null) return Task.FromResult(false);
 
             switch (inboundMessage.MessageType)
             {
@@ -79,10 +80,12 @@ namespace SlackConnector
 
         private Task HandleMessage(ChatMessage inboundMessage)
         {
-            if (string.IsNullOrEmpty(inboundMessage.User)
-                || (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id))
+            if (string.IsNullOrEmpty(inboundMessage.User))
                 return Task.FromResult(false);
 
+            if(!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
+                return Task.FromResult(false);
+            
             var message = new SlackMessage
             {
                 User = GetMessageUser(inboundMessage.User),
@@ -98,7 +101,7 @@ namespace SlackConnector
 
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
         {
-            var channelId = inboundMessage?.Channel?.Id;
+            string channelId = inboundMessage?.Channel?.Id;
             if (channelId == null) return Task.FromResult(false);
 
             var hub = inboundMessage.Channel.ToChatHub();
@@ -109,7 +112,7 @@ namespace SlackConnector
 
         private Task HandleChannelJoined(ChannelJoinedMessage inboundMessage)
         {
-            var channelId = inboundMessage?.Channel?.Id;
+            string channelId = inboundMessage?.Channel?.Id;
             if (channelId == null) return Task.FromResult(false);
 
             var hub = inboundMessage.Channel.ToChatHub();
@@ -120,9 +123,9 @@ namespace SlackConnector
 
         private SlackUser GetMessageUser(string userId)
         {
-            return UserNameCache.ContainsKey(userId) ?
-                UserNameCache[userId] :
-                new SlackUser() { Id = userId, Name = string.Empty };
+            return UserCache.ContainsKey(userId) ?
+                UserCache[userId] :
+                new SlackUser { Id = userId, Name = string.Empty };
         }
 
         public void Disconnect()
@@ -231,6 +234,14 @@ namespace SlackConnector
         {
             var e = OnChatHubJoined;
 
+                }
+            }
+        }
+
+        public event ChatHubJoinedEventHandler OnChatHubJoined;
+        private async Task RaiseChatHubJoined(SlackChatHub hub)
+        {
+            var e = OnChatHubJoined;
             if (e != null)
             {
                 try

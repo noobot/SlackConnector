@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using NUnit.Framework;
-using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
 
 namespace SlackConnector.Tests.Integration

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -89,10 +90,12 @@
     <Compile Include="ConsoleLoggingLevel.cs" />
     <Compile Include="EventHandlers\ChatHubJoinedEventHandler.cs" />
     <Compile Include="EventHandlers\DisconnectEventHandler.cs" />
-    <Compile Include="Exceptions\AlreadyConnectedException.cs" />
     <Compile Include="Exceptions\CommunicationException.cs" />
     <Compile Include="Exceptions\HandshakeException.cs" />
     <Compile Include="Exceptions\MissingChannelException.cs" />
+    <Compile Include="Extensions\ChannelExtensions.cs" />
+    <Compile Include="Extensions\GroupExtensions.cs" />
+    <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="ISlackConnectionFactory.cs" />
     <Compile Include="ISlackConnector.cs" />
     <Compile Include="Models\BotMessage.cs" />
@@ -103,13 +106,11 @@
     <Compile Include="Connections\Models\Detail.cs" />
     <Compile Include="Connections\Models\Im.cs" />
     <Compile Include="Connections\Models\User.cs" />
-    <Compile Include="Connections\Models\UserProfile.cs" />
     <Compile Include="Models\ConnectionInformation.cs" />
     <Compile Include="Models\ContactDetails.cs" />
     <Compile Include="Models\SlackAttachmentAction.cs" />
     <Compile Include="Models\SlackAttachmentActionStyle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\ResponseContext.cs" />
     <Compile Include="Models\SlackAttachment.cs" />
     <Compile Include="Models\SlackAttachmentField.cs" />
     <Compile Include="Models\SlackChatHub.cs" />

@@ -3,7 +3,8 @@ using SlackConnector.Serialising;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
-    internal class InboundMessage
+    //TOOD: Turn into interface?
+    internal abstract class InboundMessage
     {
         [JsonProperty("type")]
         [JsonConverter(typeof(EnumConverter))]
