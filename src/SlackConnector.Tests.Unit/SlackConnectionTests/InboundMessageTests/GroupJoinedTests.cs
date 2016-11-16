@@ -45,7 +45,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 
     internal class given_missing_channel_info_when_bot_joins_a_group : BaseTest<GroupJoinedMessage>
     {
-        private readonly string _hubId = "Woozah";
         private SlackChatHub _lastHub;
 
         protected override void Given()

@@ -81,7 +81,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
     internal class given_exception_in_event : BaseTest<ChannelJoinedMessage>
     {
         private readonly string _hubId = "Woozah";
-        private SlackChatHub _lastHub;
 
         protected override void Given()
         {
