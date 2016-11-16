@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 
@@ -73,6 +75,41 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
         public void then_should_not_modify_connect_hubs()
         {
             SUT.ConnectedHubs.ShouldBeEmpty();
+        }
+    }
+
+    internal class given_exception_in_event : BaseTest<ChannelJoinedMessage>
+    {
+        private readonly string _hubId = "Woozah";
+        private SlackChatHub _lastHub;
+
+        protected override void Given()
+        {
+            base.Given();
+
+            SUT.OnChatHubJoined += hub =>
+            {
+                throw new NotImplementedException("THIS SHOULDN'T BUBBLE UP");
+            };
+
+            InboundMessage = new ChannelJoinedMessage
+            {
+                Channel = new Channel { Id = _hubId }
+            };
+        }
+
+        protected override void When()
+        {
+            SUT.Initialise(ConnectionInfo);
+        }
+
+        [Test]
+        public void then_shouldnt_bubble_exception()
+        {
+            Assert.DoesNotThrow(() => {
+                GetMockFor<IWebSocketClient>()
+                    .Raise(x => x.OnMessage += null, null, InboundMessage);
+            });
         }
     }
 }

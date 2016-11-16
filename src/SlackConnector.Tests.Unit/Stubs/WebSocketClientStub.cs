@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SlackConnector.Connections.Sockets;
-using SlackConnector.Connections.Sockets.Messages;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 
