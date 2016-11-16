@@ -34,7 +34,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         [Test]
         public void then_should_look_like_expected()
         {
-            var expected = new InboundMessage
+            var expected = new ChatMessage
             {
                 MessageType = MessageType.Message,
                 Channel = "<myChannel>",
@@ -67,7 +67,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         [Test]
         public void then_should_look_like_expected()
         {
-            var expected = new InboundMessage
+            var expected = new ChatMessage
             {
                 MessageType = MessageType.Unknown,
                 RawData = Json
