@@ -234,14 +234,6 @@ namespace SlackConnector
         {
             var e = OnChatHubJoined;
 
-                }
-            }
-        }
-
-        public event ChatHubJoinedEventHandler OnChatHubJoined;
-        private async Task RaiseChatHubJoined(SlackChatHub hub)
-        {
-            var e = OnChatHubJoined;
             if (e != null)
             {
                 try
