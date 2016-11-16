@@ -19,7 +19,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             SUT.OnChatHubJoined += hub =>
             {
                 _lastHub = hub;
-
                 return Task.FromResult(false);
             };
 
@@ -30,7 +29,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
         }
 
         [Test]
-        public void then_should_return_expected_channel_information()
+        public void then_should_raised_event_with_expected_channel_information()
         {
             _lastHub.Id.ShouldEqual(_hubId);
             _lastHub.Type.ShouldEqual(SlackChatHubType.Group);
@@ -41,6 +40,40 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
         {
             SUT.ConnectedHubs.ContainsKey(_hubId).ShouldBeTrue();
             SUT.ConnectedHubs[_hubId].ShouldEqual(_lastHub);
+        }
+    }
+
+    internal class given_missing_channel_info_when_bot_joins_a_group : BaseTest<GroupJoinedMessage>
+    {
+        private readonly string _hubId = "Woozah";
+        private SlackChatHub _lastHub;
+
+        protected override void Given()
+        {
+            base.Given();
+
+            SUT.OnChatHubJoined += hub =>
+            {
+                _lastHub = hub;
+                return Task.FromResult(false);
+            };
+
+            InboundMessage = new GroupJoinedMessage
+            {
+                Channel = null
+            };
+        }
+
+        [Test]
+        public void then_should_not_raise_evnet()
+        {
+            _lastHub.ShouldBeNull();
+        }
+
+        [Test]
+        public void then_should_not_modify_connect_hubs()
+        {
+            SUT.ConnectedHubs.ShouldBeEmpty();
         }
     }
 }
