@@ -9,34 +9,37 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
     {
         public InboundMessage InterpretMessage(string json)
         {
-            try
+            if (!string.IsNullOrEmpty(json))
             {
-                MessageType messageType = ParseMessageType(json);
-                
-                InboundMessage message;
-                switch (messageType)
+                try
                 {
-                    case MessageType.Group_Joined:
-                        message = JsonConvert.DeserializeObject<GroupJoinedMessage>(json);
-                        break;
-                    case MessageType.Channel_Joined:
-                        message = JsonConvert.DeserializeObject<ChannelJoinedMessage>(json);
-                        break;
-                    default:
-                        message = GetChatMessage(json);
-                        break;
+                    MessageType messageType = ParseMessageType(json);
+
+                    InboundMessage message;
+                    switch (messageType)
+                    {
+                        case MessageType.Group_Joined:
+                            message = JsonConvert.DeserializeObject<GroupJoinedMessage>(json);
+                            break;
+                        case MessageType.Channel_Joined:
+                            message = JsonConvert.DeserializeObject<ChannelJoinedMessage>(json);
+                            break;
+                        default:
+                            message = GetChatMessage(json);
+                            break;
+                    }
+
+                    message.RawData = json;
+
+                    return message;
                 }
-
-                message.RawData = json;
-
-                return message;
-            }
-            catch (Exception ex)
-            {
-                if (SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors)
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"Unable to parse message: {json}");
-                    Console.WriteLine(ex);
+                    if (SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors)
+                    {
+                        Console.WriteLine($"Unable to parse message: '{json}'");
+                        Console.WriteLine(ex);
+                    }
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
@@ -220,6 +221,29 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             };
 
             Result.ShouldLookLike(expected);
+        }
+    }
+    
+    internal class given_no_data_when_processing_message : SpecsFor<MessageInterpreter>
+    {
+        private string Json { get; set; }
+        private InboundMessage Result { get; set; }
+
+        protected override void Given()
+        {
+            Console.
+            Json = null;
+        }
+
+        protected override void When()
+        {
+            Result = SUT.InterpretMessage(Json);
+        }
+
+        [Test]
+        public void then_should_return_null()
+        {
+            Result.ShouldBeNull();
         }
     }
 }
