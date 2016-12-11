@@ -30,6 +30,7 @@ namespace SlackConnector.Tests.Unit.Models
                     TitleLink = "https://api.slack.com/",
                     Text = "Optional text that appears within the attachment",
                     CallbackId = "mycallbackid",
+                    MarkdownIn = SlackAttachment.GetAllMarkdownInTypes(),
                     Fields = new[]
                     {
                         new SlackAttachmentField
