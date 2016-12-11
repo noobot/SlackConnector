@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SlackConnector.Models
 {
-    public class SlackAttachment
+    public partial class SlackAttachment
     {
         [JsonProperty(PropertyName = "fallback")]
         public string Fallback { get; set; }
@@ -47,6 +47,9 @@ namespace SlackConnector.Models
         [JsonProperty(PropertyName = "thumb_url")]
         public string ThumbUrl { get; set; }
 
+        [JsonProperty(PropertyName = "mrkdwn_in")]
+        public List<string> MarkdownIn { get; set; }
+        
         public SlackAttachment()
         {
             Fields = new List<SlackAttachmentField>();

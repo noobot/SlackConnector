@@ -32,5 +32,6 @@
         }
     ],
     "image_url": "http://my-website.com/path/to/image.jpg",
-    "thumb_url": "http://example.com/path/to/thumb.png"
+    "thumb_url": "http://example.com/path/to/thumb.png",
+    "mrkdwn_in": ["fields","pretext","text"]
 }

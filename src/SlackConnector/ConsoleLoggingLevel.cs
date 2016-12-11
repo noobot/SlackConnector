@@ -2,7 +2,8 @@
 {
     public enum ConsoleLoggingLevel
     {
-        All,
-        FatalErrors
+        None = 0,
+        FatalErrors,
+        All
     }
 }

@@ -14,7 +14,7 @@ namespace SlackConnector.Tests.Integration
         {
             // given
             var config = new ConfigReader().GetConfig();
-            
+
             var slackConnector = new SlackConnector();
             var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
             var message = new BotMessage

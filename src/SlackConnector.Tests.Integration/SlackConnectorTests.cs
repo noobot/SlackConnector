@@ -13,6 +13,7 @@ namespace SlackConnector.Tests.Integration
         {
             // given
             var config = new ConfigReader().GetConfig();
+
             var slackConnector = new SlackConnector();
 
             // when

@@ -4,6 +4,7 @@ using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
+using SlackConnector.Logging;
 
 namespace SlackConnector.Connections
 {
@@ -20,7 +21,7 @@ namespace SlackConnector.Connections
 
         public IWebSocketClient CreateWebSocketClient(string url, ProxySettings proxySettings)
         {
-            return new WebSocketClient(new MessageInterpreter(), url, proxySettings);
+            return new WebSocketClient(new MessageInterpreter(new Logger()), url, proxySettings);
         }
 
         public IHandshakeClient CreateHandshakeClient()

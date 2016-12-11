@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using Should;
@@ -15,7 +14,7 @@ namespace SlackConnector.Tests.Unit.Models
         {
             // given
             string expectedJson = Resources.ResourceManager.GetAttachmentsJson();
-            expectedJson = Regex.Replace(expectedJson, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+            expectedJson = RemoveLinesAndStuffFromJson(expectedJson);
 
             var attachment =
                 new SlackAttachment
@@ -30,6 +29,7 @@ namespace SlackConnector.Tests.Unit.Models
                     TitleLink = "https://api.slack.com/",
                     Text = "Optional text that appears within the attachment",
                     CallbackId = "mycallbackid",
+                    MarkdownIn = SlackAttachment.GetAllMarkdownInTypes(),
                     Fields = new[]
                     {
                         new SlackAttachmentField
@@ -61,10 +61,15 @@ namespace SlackConnector.Tests.Unit.Models
 
             // when
             string resultJson = JsonConvert.SerializeObject(attachment);
-            resultJson = Regex.Replace(resultJson, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+            resultJson = RemoveLinesAndStuffFromJson(resultJson);
 
             // then
             resultJson.ShouldEqual(expectedJson);
         }
-   }
+
+        private static string RemoveLinesAndStuffFromJson(string json)
+        {
+            return Regex.Replace(json, @"(""(?:[^""\\]|\\.)*"")|\s+", "$1");
+        }
+    }
 }

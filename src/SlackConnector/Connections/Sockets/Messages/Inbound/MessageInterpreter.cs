@@ -2,17 +2,25 @@
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SlackConnector.Logging;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
     internal class MessageInterpreter : IMessageInterpreter
     {
+        private readonly ILogger _logger;
+
+        public MessageInterpreter(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public InboundMessage InterpretMessage(string json)
         {
             try
             {
                 MessageType messageType = ParseMessageType(json);
-                
+
                 InboundMessage message;
                 switch (messageType)
                 {
@@ -33,10 +41,10 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
             }
             catch (Exception ex)
             {
-                if (SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors)
+                if (SlackConnector.LoggingLevel > ConsoleLoggingLevel.None)
                 {
-                    Console.WriteLine($"Unable to parse message: {json}");
-                    Console.WriteLine(ex);
+                    _logger.LogError($"Unable to parse message: '{json}'");
+                    _logger.LogError(ex.ToString());
                 }
             }
 
@@ -45,12 +53,14 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
 
         private static MessageType ParseMessageType(string json)
         {
-            var messageJobject = JObject.Parse(json);
-            MessageType messageType;
-            if (!Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType))
+            MessageType messageType = MessageType.Unknown;
+
+            if (!string.IsNullOrWhiteSpace(json))
             {
-                messageType = MessageType.Unknown;
+                JObject messageJobject = JObject.Parse(json);
+                Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType);
             }
+
             return messageType;
         }
 
