@@ -1,8 +1,10 @@
 ﻿using System;
+using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
+using SlackConnector.Logging;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
@@ -223,16 +225,16 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             Result.ShouldLookLike(expected);
         }
     }
-    
-    internal class given_no_data_when_processing_message : SpecsFor<MessageInterpreter>
+
+    internal class given_no_data_when_processing_message_with_log_level_of_none : SpecsFor<MessageInterpreter>
     {
         private string Json { get; set; }
         private InboundMessage Result { get; set; }
 
         protected override void Given()
         {
-            Console.
             Json = null;
+            SlackConnector.LoggingLevel = ConsoleLoggingLevel.None;
         }
 
         protected override void When()
@@ -244,6 +246,45 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         public void then_should_return_null()
         {
             Result.ShouldBeNull();
+        }
+
+
+        [Test]
+        public void then_shouldnt_log_anything()
+        {
+            GetMockFor<ILogger>()
+                .Verify(x => x.LogError(It.IsAny<string>()), Times.Never);
+        }
+    }
+
+    internal class given_no_data_when_processing_message_with_log_level_of_greater_than_none: SpecsFor<MessageInterpreter>
+    {
+        private string Json { get; set; }
+        private InboundMessage Result { get; set; }
+
+        protected override void Given()
+        {
+            Json = null;
+            SlackConnector.LoggingLevel = ConsoleLoggingLevel.All;
+        }
+
+        protected override void When()
+        {
+            Result = SUT.InterpretMessage(Json);
+        }
+
+        [Test]
+        public void then_should_return_null()
+        {
+            Result.ShouldBeNull();
+        }
+
+
+        [Test]
+        public void then_should_log_something()
+        {
+            GetMockFor<ILogger>()
+                .Verify(x => x.LogError(It.IsAny<string>()), Times.AtLeastOnce);
         }
     }
 }

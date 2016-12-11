@@ -2,44 +2,49 @@
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SlackConnector.Logging;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
     internal class MessageInterpreter : IMessageInterpreter
     {
+        private readonly ILogger _logger;
+
+        public MessageInterpreter(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public InboundMessage InterpretMessage(string json)
         {
-            if (!string.IsNullOrEmpty(json))
+            try
             {
-                try
+                MessageType messageType = ParseMessageType(json);
+
+                InboundMessage message;
+                switch (messageType)
                 {
-                    MessageType messageType = ParseMessageType(json);
-
-                    InboundMessage message;
-                    switch (messageType)
-                    {
-                        case MessageType.Group_Joined:
-                            message = JsonConvert.DeserializeObject<GroupJoinedMessage>(json);
-                            break;
-                        case MessageType.Channel_Joined:
-                            message = JsonConvert.DeserializeObject<ChannelJoinedMessage>(json);
-                            break;
-                        default:
-                            message = GetChatMessage(json);
-                            break;
-                    }
-
-                    message.RawData = json;
-
-                    return message;
+                    case MessageType.Group_Joined:
+                        message = JsonConvert.DeserializeObject<GroupJoinedMessage>(json);
+                        break;
+                    case MessageType.Channel_Joined:
+                        message = JsonConvert.DeserializeObject<ChannelJoinedMessage>(json);
+                        break;
+                    default:
+                        message = GetChatMessage(json);
+                        break;
                 }
-                catch (Exception ex)
+
+                message.RawData = json;
+
+                return message;
+            }
+            catch (Exception ex)
+            {
+                if (SlackConnector.LoggingLevel > ConsoleLoggingLevel.None)
                 {
-                    if (SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors)
-                    {
-                        Console.WriteLine($"Unable to parse message: '{json}'");
-                        Console.WriteLine(ex);
-                    }
+                    _logger.LogError($"Unable to parse message: '{json}'");
+                    _logger.LogError(ex.ToString());
                 }
             }
 
@@ -48,17 +53,14 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
 
         private static MessageType ParseMessageType(string json)
         {
-            if (string.IsNullOrWhiteSpace(json))
+            MessageType messageType = MessageType.Unknown;
+
+            if (!string.IsNullOrWhiteSpace(json))
             {
-                return MessageType.Unknown;
+                JObject messageJobject = JObject.Parse(json);
+                Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType);
             }
 
-            var messageJobject = JObject.Parse(json);
-            MessageType messageType;
-            if (!Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType))
-            {
-                messageType = MessageType.Unknown;
-            }
             return messageType;
         }
 

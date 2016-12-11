@@ -98,6 +98,8 @@
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="ISlackConnectionFactory.cs" />
     <Compile Include="ISlackConnector.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnection.cs" />

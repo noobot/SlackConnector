@@ -18,10 +18,10 @@ namespace SlackConnector.Connections.Sockets
             _interpreter = interpreter;
 
             _webSocket = new WebSocket(url);
-            _webSocket.EmitOnPing = true;
             _webSocket.OnMessage += WebSocketOnMessage;
             _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
-            _webSocket.Log.Level = SlackConnector.LoggingLevel == ConsoleLoggingLevel.FatalErrors ? LogLevel.Fatal : LogLevel.Trace;
+            _webSocket.Log.Level = GetLoggingLevel();
+            _webSocket.EmitOnPing = true;
 
             if (proxySettings != null)
             {
@@ -78,6 +78,17 @@ namespace SlackConnector.Connections.Sockets
             string messageJson = args?.Data ?? "";
             var inboundMessage = _interpreter.InterpretMessage(messageJson);
             OnMessage?.Invoke(sender, inboundMessage);
+        }
+
+        private static LogLevel GetLoggingLevel()
+        {
+            switch (SlackConnector.LoggingLevel)
+            {
+                case ConsoleLoggingLevel.All:
+                    return LogLevel.Trace;
+                default:
+                    return LogLevel.Fatal;
+            }
         }
     }
 }
