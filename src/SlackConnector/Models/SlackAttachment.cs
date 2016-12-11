@@ -52,7 +52,7 @@ namespace SlackConnector.Models
 
         public const string MARKDOWN_IN_PRETEXT = "pretext";
         public const string MARKDOWN_IN_TEXT = "text";
-        public const string MARKDOWN_IN_FIELDS = "pretext";
+        public const string MARKDOWN_IN_FIELDS = "fields";
 
         public static List<string> GetAllMarkdownInTypes()
         {
