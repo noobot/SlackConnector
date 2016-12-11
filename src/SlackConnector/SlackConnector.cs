@@ -14,7 +14,7 @@ namespace SlackConnector
 {
     public class SlackConnector : ISlackConnector
     {
-        public static ConsoleLoggingLevel LoggingLevel = ConsoleLoggingLevel.FatalErrors;
+        public static ConsoleLoggingLevel LoggingLevel = ConsoleLoggingLevel.None;
 
         private readonly IConnectionFactory _connectionFactory;
         private readonly ISlackConnectionFactory _slackConnectionFactory;
