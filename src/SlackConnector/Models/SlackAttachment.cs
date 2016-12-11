@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SlackConnector.Models
 {
-    public class SlackAttachment
+    public partial class SlackAttachment
     {
         [JsonProperty(PropertyName = "fallback")]
         public string Fallback { get; set; }
@@ -49,21 +49,7 @@ namespace SlackConnector.Models
 
         [JsonProperty(PropertyName = "mrkdwn_in")]
         public List<string> MarkdownIn { get; set; }
-
-        public const string MARKDOWN_IN_PRETEXT = "pretext";
-        public const string MARKDOWN_IN_TEXT = "text";
-        public const string MARKDOWN_IN_FIELDS = "fields";
-
-        public static List<string> GetAllMarkdownInTypes()
-        {
-            return new List<string>
-            {
-                MARKDOWN_IN_FIELDS,
-                MARKDOWN_IN_PRETEXT,
-                MARKDOWN_IN_TEXT
-            };
-        }
-
+        
         public SlackAttachment()
         {
             Fields = new List<SlackAttachmentField>();
