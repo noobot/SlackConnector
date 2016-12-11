@@ -47,6 +47,23 @@ namespace SlackConnector.Models
         [JsonProperty(PropertyName = "thumb_url")]
         public string ThumbUrl { get; set; }
 
+        [JsonProperty(PropertyName = "mrkdwn_in")]
+        public List<string> MarkdownIn { get; set; }
+
+        public const string MARKDOWN_IN_PRETEXT = "pretext";
+        public const string MARKDOWN_IN_TEXT = "text";
+        public const string MARKDOWN_IN_FIELDS = "pretext";
+
+        public static List<string> GetAllMarkdownInTypes()
+        {
+            return new List<string>
+            {
+                MARKDOWN_IN_FIELDS,
+                MARKDOWN_IN_PRETEXT,
+                MARKDOWN_IN_TEXT
+            };
+        }
+
         public SlackAttachment()
         {
             Fields = new List<SlackAttachmentField>();

@@ -45,6 +45,11 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
 
         private static MessageType ParseMessageType(string json)
         {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return MessageType.Unknown;
+            }
+
             var messageJobject = JObject.Parse(json);
             MessageType messageType;
             if (!Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType))
