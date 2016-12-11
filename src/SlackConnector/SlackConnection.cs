@@ -66,7 +66,10 @@ namespace SlackConnector
 
         private Task ListenTo(InboundMessage inboundMessage)
         {
-            if (inboundMessage == null) return Task.FromResult(false);
+            if (inboundMessage == null)
+            {
+                return Task.CompletedTask;
+            }
 
             switch (inboundMessage.MessageType)
             {
@@ -75,16 +78,16 @@ namespace SlackConnector
                 case MessageType.Channel_Joined: return HandleChannelJoined((ChannelJoinedMessage)inboundMessage);
             }
 
-            return Task.FromResult(false);
+            return Task.CompletedTask;
         }
 
         private Task HandleMessage(ChatMessage inboundMessage)
         {
             if (string.IsNullOrEmpty(inboundMessage.User))
-                return Task.FromResult(false);
+                return Task.CompletedTask;
 
             if(!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
-                return Task.FromResult(false);
+                return Task.CompletedTask;
             
             var message = new SlackMessage
             {
@@ -102,7 +105,7 @@ namespace SlackConnector
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
         {
             string channelId = inboundMessage?.Channel?.Id;
-            if (channelId == null) return Task.FromResult(false);
+            if (channelId == null) return Task.CompletedTask;
 
             var hub = inboundMessage.Channel.ToChatHub();
             _connectedHubs[channelId] = hub;
@@ -113,7 +116,7 @@ namespace SlackConnector
         private Task HandleChannelJoined(ChannelJoinedMessage inboundMessage)
         {
             string channelId = inboundMessage?.Channel?.Id;
-            if (channelId == null) return Task.FromResult(false);
+            if (channelId == null) return Task.CompletedTask;
 
             var hub = inboundMessage.Channel.ToChatHub();
             _connectedHubs[channelId] = hub;
