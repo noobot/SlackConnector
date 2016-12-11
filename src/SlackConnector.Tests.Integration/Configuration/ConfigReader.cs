@@ -28,6 +28,11 @@ namespace SlackConnector.Tests.Integration.Configuration
                 Current = JsonConvert.DeserializeObject<Config>(json);
             }
 
+            if (string.IsNullOrEmpty(Current?.Slack?.ApiToken))
+            {
+                Assert.Inconclusive("Slack API is missing");
+            }
+
             return Current;
         }
     }

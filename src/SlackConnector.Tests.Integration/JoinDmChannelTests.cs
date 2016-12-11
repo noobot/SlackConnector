@@ -14,7 +14,10 @@ namespace SlackConnector.Tests.Integration
         {
             // given
             var config = new ConfigReader().GetConfig();
-            if (config.IsConfigured == false) { Assert.Ignore();}
+            if (string.IsNullOrEmpty(config.Slack.TestUserId))
+            {
+                Assert.Inconclusive("TestUserId is missing from config");
+            }
 
             var slackConnector = new SlackConnector();
             var connection = slackConnector.Connect(config.Slack.ApiToken).Result;

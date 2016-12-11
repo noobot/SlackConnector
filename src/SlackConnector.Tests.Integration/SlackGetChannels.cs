@@ -14,7 +14,6 @@ namespace SlackConnector.Tests.Integration
             {
                 // given
                 var config = new ConfigReader().GetConfig();
-                if (config.IsConfigured == false) { Assert.Ignore(); }
 
                 var slackConnector = new SlackConnector();
 
@@ -31,7 +30,6 @@ namespace SlackConnector.Tests.Integration
             {
                 // given
                 var config = new ConfigReader().GetConfig();
-                if (config.IsConfigured == false) { Assert.Ignore(); }
 
                 var slackConnector = new SlackConnector();
 
