@@ -65,7 +65,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Configuration\config.default.json" />
-    <None Include="Configuration\config.json" />
+    <None Include="Configuration\config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -78,7 +80,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Configuration\UploadTest.txt" />
+    <Content Include="Configuration\UploadTest.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
