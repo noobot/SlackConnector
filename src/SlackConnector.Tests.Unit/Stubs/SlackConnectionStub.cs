@@ -35,6 +35,11 @@ namespace SlackConnector.Tests.Unit.Stubs
             throw new NotImplementedException();
         }
 
+        public Task Upload(BotFileUpload upload)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<SlackChatHub>> GetChannels()
         {
           throw new NotImplementedException();

@@ -147,6 +147,12 @@ namespace SlackConnector
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
         }
 
+        public async Task Upload(BotFileUpload fileUpload)
+        {
+            var client = _connectionFactory.CreateChatClient();
+            await client.PostFile(SlackKey, fileUpload.ChatHub.Id, fileUpload.File);
+        }
+
         public async Task<IEnumerable<SlackChatHub>> GetChannels()
         {
             IChannelClient client = _connectionFactory.CreateChannelClient();

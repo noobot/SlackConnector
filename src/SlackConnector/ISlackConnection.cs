@@ -63,7 +63,12 @@ namespace SlackConnector
         /// Send message to Slack channel.
         /// </summary>
         Task Say(BotMessage message);
-
+        
+        /// <summary>
+        /// Uploads file to a Slack channel
+        /// </summary>
+        Task Upload(BotFileUpload fileupload);
+        
         /// <summary>
         /// Get all channels and groups info.
         /// </summary>
