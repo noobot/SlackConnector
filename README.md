@@ -23,7 +23,7 @@ Install-Package SlackConnector
 
 ``` cs
 ISlackConnector connector = new SlackConnector.SlackConnector();
-ISlackConnection connection = await connector.Connect(slackKey);
+ISlackConnection connection = await connector.Connect(botAccessToken);
 connection.OnMessageReceived += MessageReceived;
 connection.OnDisconnect += Disconnected;
 ```
