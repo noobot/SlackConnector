@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 using NUnit.Framework;
 using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
@@ -7,24 +8,24 @@ using SlackConnector.Tests.Integration.Configuration;
 namespace SlackConnector.Tests.Integration
 {
     [TestFixture]
-    public class SayTests
+    class FileUploadTests
     {
         [Test]
-        public void should_say_something_on_channel()
+        public void should_upload_to_channel()
         {
             // given
             var config = new ConfigReader().GetConfig();
 
             var slackConnector = new SlackConnector();
             var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
-            var message = new BotMessage
+            var fileupload = new BotFileUpload
             {
-                Text = "Test text for INT test",
+                File = Directory.GetCurrentDirectory() + "\\UploadTest.txt",
                 ChatHub = connection.ConnectedChannels().First(x => x.Name.Equals(config.Slack.TestChannel, StringComparison.InvariantCultureIgnoreCase))
             };
-            
+
             // when
-            connection.Say(message).Wait();
+            connection.Upload(fileupload).Wait();
 
             // then
         }
