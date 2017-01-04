@@ -6,5 +6,6 @@
         Message,
         Group_Joined,
         Channel_Joined,
+        Team_Join
     }
 }

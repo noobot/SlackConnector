@@ -1,5 +1,4 @@
-﻿using System;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Models;
@@ -126,6 +125,58 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 {
                     Id = "test-channel",
                     IsChannel = true
+                },
+                RawData = Json,
+            };
+
+            Result.ShouldLookLike(expected);
+        }
+    }
+
+    internal class given_user_joined_message_when_processing_message : SpecsFor<MessageInterpreter>
+    {
+        private string Json { get; set; }
+        private InboundMessage Result { get; set; }
+
+        protected override void Given()
+        {
+            Json = @"
+                {  
+                   'type':'team_join',
+                   'user':{  
+                      'id':'U3339999',
+                      'name':'tmp',
+                      'profile':{  
+                         'real_name':'temp-name'
+                      },
+                      'is_admin':false,
+                      'is_bot':true
+                   }
+                }
+            ";
+        }
+
+        protected override void When()
+        {
+            Result = SUT.InterpretMessage(Json);
+        }
+
+        [Test]
+        public void then_should_look_like_expected()
+        {
+            var expected = new UserJoinedMessage
+            {
+                MessageType = MessageType.Team_Join,
+                User = new User
+                {
+                    Id = "U3339999",
+                    Name = "tmp",
+                    IsAdmin = false,
+                    IsBot = true,
+                    Profile = new Profile
+                    {
+                        RealName = "temp-name"
+                    }
                 },
                 RawData = Json,
             };
