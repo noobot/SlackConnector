@@ -70,6 +70,7 @@ namespace SlackConnector
                 case MessageType.Message: return HandleMessage((ChatMessage)inboundMessage);
                 case MessageType.Group_Joined: return HandleGroupJoined((GroupJoinedMessage)inboundMessage);
                 case MessageType.Channel_Joined: return HandleChannelJoined((ChannelJoinedMessage)inboundMessage);
+                case MessageType.Im_Created: return HandleDmJoined((DmChannelJoinedMessage)inboundMessage);
                 case MessageType.Team_Join: return HandleUserJoined((UserJoinedMessage)inboundMessage);
             }
 
@@ -116,6 +117,17 @@ namespace SlackConnector
             if (channelId == null) return Task.FromResult(false);
 
             var hub = inboundMessage.Channel.ToChatHub();
+            _connectedHubs[channelId] = hub;
+
+            return RaiseChatHubJoined(hub);
+        }
+
+        private Task HandleDmJoined(DmChannelJoinedMessage inboundMessage)
+        {
+            string channelId = inboundMessage?.Channel?.Id;
+            if (channelId == null) return Task.FromResult(false);
+
+            var hub = inboundMessage.Channel.ToChatHub(_userCache.Values.ToArray());
             _connectedHubs[channelId] = hub;
 
             return RaiseChatHubJoined(hub);
