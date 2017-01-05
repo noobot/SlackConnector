@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
@@ -8,6 +10,8 @@ namespace SlackConnector.Tests.Integration
     [TestFixture]
     public class SlackConnectorTests
     {
+        private ISlackConnection _slackConnection; 
+
         [Test]
         public void should_connect_and_stuff()
         {
@@ -17,12 +21,12 @@ namespace SlackConnector.Tests.Integration
             var slackConnector = new SlackConnector();
 
             // when
-            var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
-            connection.OnDisconnect += SlackConnector_OnDisconnect;
-            connection.OnMessageReceived += SlackConnectorOnOnMessageReceived;
-
+            _slackConnection = slackConnector.Connect(config.Slack.ApiToken).Result;
+            _slackConnection.OnDisconnect += SlackConnector_OnDisconnect;
+            _slackConnection.OnMessageReceived += SlackConnectorOnMessageReceived;
+            
             // then
-            Assert.That(connection.IsConnected, Is.True);
+            Assert.That(_slackConnection.IsConnected, Is.True);
         }
 
         private void SlackConnector_OnDisconnect()
@@ -30,7 +34,7 @@ namespace SlackConnector.Tests.Integration
 
         }
 
-        private Task SlackConnectorOnOnMessageReceived(SlackMessage message)
+        private Task SlackConnectorOnMessageReceived(SlackMessage message)
         {
             return new Task(() => { });
         }

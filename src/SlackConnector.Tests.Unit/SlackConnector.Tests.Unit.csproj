@@ -112,6 +112,7 @@
     <Compile Include="Serialising\EnumConverterTests.cs" />
     <Compile Include="SlackConnectionTests\DisconnectTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\BaseTest.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\UserJoinedTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\ChannelJoinedTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\ChatMessageTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\GroupJoinedTests.cs" />
