@@ -33,6 +33,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                     case MessageType.Team_Join:
                         message = JsonConvert.DeserializeObject<UserJoinedMessage>(json);
                         break;
+                    case MessageType.Im_Created:
+                        message = JsonConvert.DeserializeObject<DmChannelJoinedMessage>(json);
+                        break;
                     default:
                         message = GetChatMessage(json);
                         break;

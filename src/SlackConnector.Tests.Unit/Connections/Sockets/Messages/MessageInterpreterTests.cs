@@ -133,6 +133,51 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
     }
 
+    internal class given_dm_channel_joined_message_when_processing_message : SpecsFor<MessageInterpreter>
+    {
+        private string Json { get; set; }
+        private InboundMessage Result { get; set; }
+
+        protected override void Given()
+        {
+            Json = @"
+                {
+                   'type':'im_created',
+                   'channel':{
+                      'id':'D99999',
+                      'user':'U99999',
+                      'is_im':true,
+                      'is_open':true
+                   }
+                }
+            ";
+        }
+
+        protected override void When()
+        {
+            Result = SUT.InterpretMessage(Json);
+        }
+
+        [Test]
+        public void then_should_look_like_expected()
+        {
+            var expected = new DmChannelJoinedMessage
+            {
+                MessageType = MessageType.Im_Created,
+                Channel = new Im
+                {
+                    Id = "D99999",
+                    User = "U99999",
+                    IsIm = true,
+                    IsOpen = true
+                },
+                RawData = Json,
+            };
+
+            Result.ShouldLookLike(expected);
+        }
+    }
+
     internal class given_user_joined_message_when_processing_message : SpecsFor<MessageInterpreter>
     {
         private string Json { get; set; }
