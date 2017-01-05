@@ -24,8 +24,6 @@ namespace SlackConnector.Tests.Integration
             _slackConnection = slackConnector.Connect(config.Slack.ApiToken).Result;
             _slackConnection.OnDisconnect += SlackConnector_OnDisconnect;
             _slackConnection.OnMessageReceived += SlackConnectorOnMessageReceived;
-            
-            Thread.Sleep(TimeSpan.FromMinutes(30));
 
             // then
             Assert.That(_slackConnection.IsConnected, Is.True);
