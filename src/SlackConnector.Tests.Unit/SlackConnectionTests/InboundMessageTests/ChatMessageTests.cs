@@ -70,6 +70,47 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
         }
     }
 
+    internal class given_connector_is_setup_when_inbound_direct_message_arrives_from_a_user_for_the_first_time : ChatMessageTest
+    {
+        protected override void Given()
+        {
+            base.Given();
+
+            ConnectionInfo.Users.Add("userABC", new SlackUser() { Id = "userABC", Name = "i-have-a-name" });
+
+            InboundMessage = new ChatMessage
+            {
+                User = "userABC",
+                MessageType = MessageType.Message,
+                Text = "amazing-text",
+                RawData = "I am raw data yo"
+            };
+        }
+
+        [Test]
+        public void then_should_raise_event()
+        {
+            MessageRaised.ShouldBeTrue();
+        }
+
+        [Test]
+        public void then_should_pass_through_expected_message()
+        {
+            var expected = new SlackMessage
+            {
+                Text = "amazing-text",
+                User = new SlackUser
+                {
+                    Id = "userABC",
+                    Name = "i-have-a-name"
+                },
+                RawData = InboundMessage.RawData
+            };
+
+            Result.ShouldLookLike(expected);
+        }
+    }
+
     internal class given_connector_is_missing_use_when_inbound_message_arrives : ChatMessageTest
     {
         protected override void Given()
