@@ -2,6 +2,7 @@
   "slack": {
     "apiToken": "",
     "testUserId": "",
-    "testChannel": ""
+    "testChannel": "",
+    "testFile":  "" 
   }
 }

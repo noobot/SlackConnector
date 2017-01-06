@@ -34,6 +34,11 @@ namespace SlackConnector.Connections
             return new ChatClient(_requestExecutor);
         }
 
+        public IFileClient CreateFileClient()
+        {
+            return new FileClient(_requestExecutor);
+        }
+
         public IChannelClient CreateChannelClient()
         {
             return new ChannelClient(_requestExecutor);

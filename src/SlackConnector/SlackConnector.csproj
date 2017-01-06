@@ -59,6 +59,8 @@
     <Compile Include="BotHelpers\ChatHubInterpreter.cs" />
     <Compile Include="BotHelpers\IMentionDetector.cs" />
     <Compile Include="BotHelpers\IChatHubInterpreter.cs" />
+    <Compile Include="Connections\Clients\Chat\FileClient.cs" />
+    <Compile Include="Connections\Clients\Chat\IFileClient.cs" />
     <Compile Include="Connections\Clients\IRequestExecutor.cs" />
     <Compile Include="Connections\Clients\RequestExecutor.cs" />
     <Compile Include="Connections\ConnectionFactory.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Connections\Models\Detail.cs" />
     <Compile Include="Connections\Models\Im.cs" />
     <Compile Include="Connections\Models\User.cs" />
+    <Compile Include="Models\BotStreamUpload.cs" />
     <Compile Include="Models\ConnectionInformation.cs" />
     <Compile Include="Models\ContactDetails.cs" />
     <Compile Include="Models\SlackAttachmentAction.cs" />

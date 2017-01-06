@@ -10,6 +10,7 @@ namespace SlackConnector.Connections
         IWebSocketClient CreateWebSocketClient(string url, ProxySettings proxySettings);
         IHandshakeClient CreateHandshakeClient();
         IChatClient CreateChatClient();
+        IFileClient CreateFileClient();
         IChannelClient CreateChannelClient();
     }
 }

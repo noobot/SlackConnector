@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NUnit.Core;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 
@@ -36,6 +37,11 @@ namespace SlackConnector.Tests.Unit.Stubs
         }
 
         public Task Upload(BotFileUpload upload)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Upload(BotStreamUpload upload)
         {
             throw new NotImplementedException();
         }

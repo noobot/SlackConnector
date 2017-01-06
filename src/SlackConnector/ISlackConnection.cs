@@ -68,7 +68,12 @@ namespace SlackConnector
         /// Uploads file to a Slack channel
         /// </summary>
         Task Upload(BotFileUpload fileupload);
-        
+
+        /// <summary>
+        /// Uploads a stream to a Slack channel as a file
+        /// </summary>
+        Task Upload(BotStreamUpload streamUpload);
+
         /// <summary>
         /// Get all channels and groups info.
         /// </summary>
