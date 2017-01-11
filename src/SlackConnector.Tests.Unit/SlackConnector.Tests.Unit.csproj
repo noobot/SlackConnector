@@ -120,6 +120,7 @@
     <Compile Include="SlackConnectionTests\InitialiseTests.cs" />
     <Compile Include="SlackConnectionTests\PingTests.cs" />
     <Compile Include="SlackConnectionTests\TypingIndicatorTests.cs" />
+    <Compile Include="SlackConnectionTests\UploadFileTests.cs" />
     <Compile Include="SlackConnectionTests\WebSocketTests.cs" />
     <Compile Include="SlackConnectorTests\ConnectedStatusTests.cs" />
     <Compile Include="SlackConnectorTests\HubsTests.cs" />

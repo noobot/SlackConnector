@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
@@ -58,14 +59,14 @@ namespace SlackConnector
         Task Say(BotMessage message);
         
         /// <summary>
-        /// Uploads file to a Slack channel
+        /// Uploads a file from to a Slack channel
         /// </summary>
-        Task Upload(BotFileUpload fileupload);
+        Task Upload(SlackChatHub chatHub, string filePath);
 
         /// <summary>
         /// Uploads a stream to a Slack channel as a file
         /// </summary>
-        Task Upload(BotStreamUpload streamUpload);
+        Task Upload(SlackChatHub chatHub, Stream stream, string fileName);
 
         /// <summary>
         /// Get all channels and groups info.

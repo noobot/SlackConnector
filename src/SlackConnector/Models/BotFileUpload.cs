@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SlackConnector.Models
+﻿namespace SlackConnector.Models
 {
     public class BotFileUpload
     {

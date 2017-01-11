@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using NUnit.Core;
 using SlackConnector.EventHandlers;
@@ -93,6 +94,16 @@ namespace SlackConnector.Tests.Unit.Stubs
         public void RaiseOnUserJoined()
         {
             OnUserJoined?.Invoke(null);
+        }
+
+        public Task Upload(SlackChatHub chatHub, string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Upload(SlackChatHub chatHub, Stream stream, string fileName)
+        {
+            throw new NotImplementedException();
         }
     }
 }
