@@ -88,5 +88,11 @@ namespace SlackConnector.Tests.Unit.Stubs
         {
             OnChatHubJoined?.Invoke(null);
         }
+
+        public event UserJoinedEventHandler OnUserJoined;
+        public void RaiseOnUserJoined()
+        {
+            OnUserJoined?.Invoke(null);
+        }
     }
 }
