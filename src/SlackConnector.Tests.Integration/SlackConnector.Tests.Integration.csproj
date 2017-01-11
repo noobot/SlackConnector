@@ -55,6 +55,7 @@
     <Compile Include="Configuration\IConfigReader.cs" />
     <Compile Include="Configuration\SlackConfig.cs" />
     <Compile Include="FileUploadTests.cs" />
+    <Compile Include="Resources\EmbeddedResourceFileReader.cs" />
     <Compile Include="SayTests.cs" />
     <Compile Include="JoinDmChannelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,9 +81,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Configuration\UploadTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Resources\UploadTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

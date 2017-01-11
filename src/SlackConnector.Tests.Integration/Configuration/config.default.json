@@ -2,7 +2,7 @@
   "slack": {
     "apiToken": "",
     "testUserId": "",
-    "testChannel": "",
-    "testFile":  "" 
+    "testChannel": "#general",
+    "testFile":  "Configuration\\UploadTest.txt" 
   }
 }

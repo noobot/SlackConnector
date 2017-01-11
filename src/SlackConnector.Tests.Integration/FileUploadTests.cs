@@ -1,27 +1,41 @@
-﻿using System;
-using System.Linq;
-using System.IO;
+﻿using System.IO;
 using NUnit.Framework;
 using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
+using SlackConnector.Tests.Integration.Resources;
 
 namespace SlackConnector.Tests.Integration
 {
     [TestFixture]
-    class FileUploadTests
+    public class FileUploadTests
     {
+        private string _fileName;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _fileName = Path.GetTempFileName();
+            File.WriteAllText(_fileName, EmbeddedResourceFileReader.ReadEmbeddedFileAsText("UploadTest.txt"));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            File.Delete(_fileName);
+        }
+
         [Test]
         public void should_upload_to_channel_from_file_system()
         {
             // given
             var config = new ConfigReader().GetConfig();
-
             var slackConnector = new SlackConnector();
             var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
+
             var fileupload = new BotFileUpload
             {
-                File = Directory.GetCurrentDirectory() + "\\" + config.Slack.TestFile,
-                ChatHub = connection.ConnectedChannels().First(x => x.Name.Equals(config.Slack.TestChannel, StringComparison.InvariantCultureIgnoreCase))
+                File = "slackconnector-test-file-upload.txt",
+                ChatHub = connection.ConnectedChannel(config.Slack.TestChannel)
             };
 
             // when
@@ -38,23 +52,20 @@ namespace SlackConnector.Tests.Integration
 
             var slackConnector = new SlackConnector();
             var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
-            var filePath = Directory.GetCurrentDirectory() + "\\" + config.Slack.TestFile;
-            using (var fileStream = File.Open(filePath, FileMode.Open))
+
+            using (var fileStream = EmbeddedResourceFileReader.ReadEmbeddedFile("UploadTest.txt"))
             {
                 var fileupload = new BotStreamUpload()
                 {
-                    FileName = config.Slack.TestFile,
+                    FileName = "slackconnector-test-stream-upload.txt",
                     Stream = fileStream,
-                    ChatHub =
-                        connection.ConnectedChannels()
-                            .First(
-                                x =>
-                                    x.Name.Equals(config.Slack.TestChannel, StringComparison.InvariantCultureIgnoreCase))
+                    ChatHub = connection.ConnectedChannel(config.Slack.TestChannel)
                 };
 
                 // when
                 connection.Upload(fileupload).Wait();
             }
+
             // then
         }
 
