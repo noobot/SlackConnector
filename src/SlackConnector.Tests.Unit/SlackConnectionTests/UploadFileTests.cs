@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using Moq;
 using NUnit.Framework;
-using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Chat;
+using SlackConnector.Connections.Clients.File;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;

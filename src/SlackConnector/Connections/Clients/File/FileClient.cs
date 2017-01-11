@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using RestSharp;
 using SlackConnector.Connections.Responses;
 
-namespace SlackConnector.Connections.Clients.Chat
+namespace SlackConnector.Connections.Clients.File
 {
     class FileClient : IFileClient
     {

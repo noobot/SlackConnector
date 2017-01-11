@@ -1,6 +1,7 @@
 ﻿using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Clients.Chat;
+using SlackConnector.Connections.Clients.File;
 using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
