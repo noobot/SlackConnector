@@ -5,7 +5,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.File
 {
-    class FileClient : IFileClient
+    internal class FileClient : IFileClient
     {
         private readonly IRequestExecutor _requestExecutor;
         internal const string FILE_UPLOAD_PATH = "/api/files.upload";
@@ -22,6 +22,7 @@ namespace SlackConnector.Connections.Clients.File
             request.AddParameter("channels", channel);
             request.AddParameter("filename", Path.GetFileName(file));
             request.AddFile("file", file);
+
             await _requestExecutor.Execute<StandardResponse>(request);
         }
 
@@ -34,6 +35,7 @@ namespace SlackConnector.Connections.Clients.File
             request.AddParameter("channels", channel);
             request.AddParameter("filename", fileName);
             request.AddFile("file", data, fileName);
+
             await _requestExecutor.Execute<StandardResponse>(request);
         }
     }
