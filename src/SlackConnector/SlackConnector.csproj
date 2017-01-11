@@ -106,7 +106,6 @@
     <Compile Include="ISlackConnector.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Models\BotFileUpload.cs" />
     <Compile Include="Models\BotMessage.cs" />
     <Compile Include="EventHandlers\MessageReceivedEventHandler.cs" />
     <Compile Include="ISlackConnection.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="Connections\Models\Detail.cs" />
     <Compile Include="Connections\Models\Im.cs" />
     <Compile Include="Connections\Models\User.cs" />
-    <Compile Include="Models\BotStreamUpload.cs" />
     <Compile Include="Models\ConnectionInformation.cs" />
     <Compile Include="Models\ContactDetails.cs" />
     <Compile Include="Models\SlackAttachmentAction.cs" />
