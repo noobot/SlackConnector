@@ -29,14 +29,29 @@ namespace SlackConnector.Connections.Clients.File
         public async Task PostFile(string slackKey, string channel, Stream stream, string fileName)
         {
             var request = new RestRequest(FILE_UPLOAD_PATH);
-            byte[] data = new byte[stream.Length];
-            stream.Read(data, 0, data.Length);
             request.AddParameter("token", slackKey);
             request.AddParameter("channels", channel);
             request.AddParameter("filename", fileName);
+
+            byte[] data = await ReadByteArray(stream);
             request.AddFile("file", data, fileName);
 
             await _requestExecutor.Execute<StandardResponse>(request);
+        }
+
+        private async Task<byte[]> ReadByteArray(Stream stream)
+        {
+            var memoryStream = stream as MemoryStream;
+            if (memoryStream != null)
+            {
+                return memoryStream.ToArray();
+            }
+
+            using (memoryStream = new MemoryStream())
+            {
+                await stream.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
         }
     }
 }
