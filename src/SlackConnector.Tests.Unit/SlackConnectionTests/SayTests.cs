@@ -37,6 +37,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     SlackKey = SlackKey,
                     WebSocket = GetMockFor<IWebSocketClient>().Object
                 };
+
                 SUT.Initialise(connectionInfo);
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
@@ -165,6 +166,18 @@ namespace SlackConnector
 
             var client = _connectionFactory.CreateChatClient();
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+        }
+
+        public async Task Upload(SlackChatHub chatHub, string filePath)
+        {
+            var client = _connectionFactory.CreateFileClient();
+            await client.PostFile(SlackKey, chatHub.Id, filePath);
+        }
+
+        public async Task Upload(SlackChatHub chatHub, Stream stream, string fileName)
+        {
+            var client = _connectionFactory.CreateFileClient();
+            await client.PostFile(SlackKey, chatHub.Id, stream, fileName);
         }
 
         public async Task<IEnumerable<SlackChatHub>> GetChannels()
