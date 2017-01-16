@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Tests.Integration.Configuration;
 using SlackConnector.Tests.Integration.Resources;
@@ -30,19 +31,19 @@ namespace SlackConnector.Tests.Integration
         }
 
         [Test]
-        public void should_upload_to_channel_from_file_system()
+        public async Task should_upload_to_channel_from_file_system()
         {
             // given
             var chatHub = _slackConnection.ConnectedChannel(_config.Slack.TestChannel);
 
             // when
-            _slackConnection.Upload(chatHub, _filePath).Wait();
+            await _slackConnection.Upload(chatHub, _filePath);
 
             // then
         }
 
         [Test]
-        public void should_upload_to_channel_from_stream()
+        public async Task should_upload_to_channel_from_stream()
         {
             // given
             var chatHub = _slackConnection.ConnectedChannel(_config.Slack.TestChannel);
@@ -51,7 +52,7 @@ namespace SlackConnector.Tests.Integration
             // when
             using (var fileStream = EmbeddedResourceFileReader.ReadEmbeddedFile("UploadTest.txt"))
             {
-                _slackConnection.Upload(chatHub, fileStream, fileName).Wait();
+                await _slackConnection.Upload(chatHub, fileStream, fileName);
             }
 
             // then

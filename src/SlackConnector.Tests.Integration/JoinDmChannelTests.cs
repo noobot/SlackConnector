@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
@@ -10,26 +11,29 @@ namespace SlackConnector.Tests.Integration
     public class JoinDmChannelTests
     {
         [Test]
-        public void should_join_channel()
+        public async Task should_join_channel()
         {
             // given
             var config = new ConfigReader().GetConfig();
-            if (string.IsNullOrEmpty(config.Slack.TestUserId))
+            if (string.IsNullOrEmpty(config.Slack.TestUserName))
             {
-                Assert.Inconclusive("TestUserId is missing from config");
+                Assert.Inconclusive("TestUserName is missing from config");
             }
 
             var slackConnector = new SlackConnector();
-            var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
+            var connection = await slackConnector.Connect(config.Slack.ApiToken);
+            var users = await connection.GetUsers();
+            string userId = users.First(x => x.Name.Equals(config.Slack.TestUserName, StringComparison.InvariantCultureIgnoreCase)).Id;
 
             // when
-            SlackChatHub result = connection.JoinDirectMessageChannel(config.Slack.TestUserId).Result;
+            SlackChatHub result = await connection.JoinDirectMessageChannel(userId);
 
             // then
             Assert.That(result, Is.Not.Null);
 
-            List<SlackChatHub> dms = connection.ConnectedDMs().ToList();
-            Assert.That(dms.Count, Is.GreaterThan(1));
+            var dmChannel = connection.ConnectedDM($"@{config.Slack.TestUserName}");
+            Assert.That(dmChannel, Is.Not.Null);
+            await connection.Say(new BotMessage{ChatHub = dmChannel, Text = "Wuzzup - testing in da haus"});
         }
     }
 }

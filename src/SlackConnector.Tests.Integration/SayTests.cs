@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Models;
 using SlackConnector.Tests.Integration.Configuration;
@@ -10,13 +9,13 @@ namespace SlackConnector.Tests.Integration
     public class SayTests
     {
         [Test]
-        public void should_say_something_on_channel()
+        public async Task should_say_something_on_channel()
         {
             // given
             var config = new ConfigReader().GetConfig();
 
             var slackConnector = new SlackConnector();
-            var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
+            var connection = await slackConnector.Connect(config.Slack.ApiToken);
             var message = new BotMessage
             {
                 Text = "Test text for INT test",
@@ -24,7 +23,7 @@ namespace SlackConnector.Tests.Integration
             };
             
             // when
-            connection.Say(message).Wait();
+            await connection.Say(message);
 
             // then
         }

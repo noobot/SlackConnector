@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Tests.Integration.Configuration;
 
@@ -10,7 +11,7 @@ namespace SlackConnector.Tests.Integration
         public class SlackConnectorTests
         {
             [Test]
-            public async void should_connect_and_get_channels()
+            public async Task should_connect_and_get_channels()
             {
                 // given
                 var config = new ConfigReader().GetConfig();
@@ -26,7 +27,7 @@ namespace SlackConnector.Tests.Integration
             }
 
             [Test]
-            public async void should_connect_and_get_users()
+            public async Task should_connect_and_get_users()
             {
                 // given
                 var config = new ConfigReader().GetConfig();
