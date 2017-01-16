@@ -100,6 +100,7 @@
   <ItemGroup>
     <Compile Include="BotHelpers\MentionDetectorTests.cs" />
     <Compile Include="BotHelpers\ChatHubInterpreterTests.cs" />
+    <Compile Include="Connections\Clients\FileClientTests.cs" />
     <Compile Include="Connections\Clients\HandshakeClientTests.cs" />
     <Compile Include="Connections\Clients\ChannelClientTests.cs" />
     <Compile Include="Connections\Clients\ChatClientTests.cs" />
@@ -112,12 +113,15 @@
     <Compile Include="Serialising\EnumConverterTests.cs" />
     <Compile Include="SlackConnectionTests\DisconnectTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\BaseTest.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\GroupJoinedTests.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\UserJoinedTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\ChannelJoinedTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\ChatMessageTests.cs" />
-    <Compile Include="SlackConnectionTests\InboundMessageTests\GroupJoinedTests.cs" />
+    <Compile Include="SlackConnectionTests\InboundMessageTests\DmJoinedTests.cs" />
     <Compile Include="SlackConnectionTests\InitialiseTests.cs" />
     <Compile Include="SlackConnectionTests\PingTests.cs" />
     <Compile Include="SlackConnectionTests\TypingIndicatorTests.cs" />
+    <Compile Include="SlackConnectionTests\UploadFileTests.cs" />
     <Compile Include="SlackConnectionTests\WebSocketTests.cs" />
     <Compile Include="SlackConnectorTests\ConnectedStatusTests.cs" />
     <Compile Include="SlackConnectorTests\HubsTests.cs" />

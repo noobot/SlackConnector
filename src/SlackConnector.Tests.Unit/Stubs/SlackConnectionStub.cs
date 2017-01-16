@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using NUnit.Core;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 
@@ -34,7 +36,7 @@ namespace SlackConnector.Tests.Unit.Stubs
         {
             throw new NotImplementedException();
         }
-
+        
         public Task<IEnumerable<SlackChatHub>> GetChannels()
         {
           throw new NotImplementedException();
@@ -76,6 +78,22 @@ namespace SlackConnector.Tests.Unit.Stubs
         public void RaiseOnChatHubJoined()
         {
             OnChatHubJoined?.Invoke(null);
+        }
+
+        public event UserJoinedEventHandler OnUserJoined;
+        public void RaiseOnUserJoined()
+        {
+            OnUserJoined?.Invoke(null);
+        }
+
+        public Task Upload(SlackChatHub chatHub, string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Upload(SlackChatHub chatHub, Stream stream, string fileName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

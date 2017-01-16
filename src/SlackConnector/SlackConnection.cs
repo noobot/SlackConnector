@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SlackConnector.BotHelpers;
@@ -27,10 +28,7 @@ namespace SlackConnector
 
         private Dictionary<string, SlackUser> _userCache { get; set; }
         public IReadOnlyDictionary<string, SlackUser> UserCache => _userCache;
-
-        [Obsolete("Please use UserCache", true)]
-        public IReadOnlyDictionary<string, SlackUser> UserNameCache { get; set; }
-
+        
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
         public string SlackKey { get; private set; }
@@ -76,6 +74,8 @@ namespace SlackConnector
                 case MessageType.Message: return HandleMessage((ChatMessage)inboundMessage);
                 case MessageType.Group_Joined: return HandleGroupJoined((GroupJoinedMessage)inboundMessage);
                 case MessageType.Channel_Joined: return HandleChannelJoined((ChannelJoinedMessage)inboundMessage);
+                case MessageType.Im_Created: return HandleDmJoined((DmChannelJoinedMessage)inboundMessage);
+                case MessageType.Team_Join: return HandleUserJoined((UserJoinedMessage)inboundMessage);
             }
 
             return Task.CompletedTask;
@@ -88,7 +88,9 @@ namespace SlackConnector
 
             if(!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return Task.CompletedTask;
-            
+
+            //TODO: Insert into connectedHubs when DM is missing
+
             var message = new SlackMessage
             {
                 User = GetMessageUser(inboundMessage.User),
@@ -124,6 +126,25 @@ namespace SlackConnector
             return RaiseChatHubJoined(hub);
         }
 
+        private Task HandleDmJoined(DmChannelJoinedMessage inboundMessage)
+        {
+            string channelId = inboundMessage?.Channel?.Id;
+            if (channelId == null) return Task.FromResult(false);
+
+            var hub = inboundMessage.Channel.ToChatHub(_userCache.Values.ToArray());
+            _connectedHubs[channelId] = hub;
+
+            return RaiseChatHubJoined(hub);
+        }
+
+        private Task HandleUserJoined(UserJoinedMessage inboundMessage)
+        {
+            SlackUser slackUser = inboundMessage.User.ToSlackUser();
+            _userCache[slackUser.Id] = slackUser;
+
+            return RaiseUserJoined(slackUser);
+        }
+
         private SlackUser GetMessageUser(string userId)
         {
             return UserCache.ContainsKey(userId) ?
@@ -150,6 +171,18 @@ namespace SlackConnector
             await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
         }
 
+        public async Task Upload(SlackChatHub chatHub, string filePath)
+        {
+            var client = _connectionFactory.CreateFileClient();
+            await client.PostFile(SlackKey, chatHub.Id, filePath);
+        }
+
+        public async Task Upload(SlackChatHub chatHub, Stream stream, string fileName)
+        {
+            var client = _connectionFactory.CreateFileClient();
+            await client.PostFile(SlackKey, chatHub.Id, stream, fileName);
+        }
+
         public async Task<IEnumerable<SlackChatHub>> GetChannels()
         {
             IChannelClient client = _connectionFactory.CreateChannelClient();
@@ -166,6 +199,7 @@ namespace SlackConnector
             IChannelClient client = _connectionFactory.CreateChannelClient();
             var users = await client.GetUsers(SlackKey);
 
+            //TODO: Update user cache
             return users.Select(u => u.ToSlackUser());
         }
 
@@ -192,8 +226,7 @@ namespace SlackConnector
         {
             var message = new TypingIndicatorMessage
             {
-                Channel = chatHub.Id,
-                Type = "typing"
+                Channel = chatHub.Id
             };
 
             await _webSocketClient.SendMessage(message);
@@ -201,12 +234,7 @@ namespace SlackConnector
 
         public async Task Ping()
         {
-            var message = new PingMessage
-            {
-                Type = "ping"
-            };
-
-            await _webSocketClient.SendMessage(message);
+            await _webSocketClient.SendMessage(new PingMessage());
         }
 
         public event DisconnectEventHandler OnDisconnect;
@@ -248,5 +276,18 @@ namespace SlackConnector
                 }
             }
         }
+
+        public event UserJoinedEventHandler OnUserJoined;
+        private async Task RaiseUserJoined(SlackUser user)
+        {
+            var e = OnUserJoined;
+
+            if (e != null)
+            {
+                await e(user);
+            }
+        }
+
+        //TODO: USER JOINED EVENT HANDLING
     }
 }

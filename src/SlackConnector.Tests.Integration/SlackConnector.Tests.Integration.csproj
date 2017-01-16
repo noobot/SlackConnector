@@ -54,6 +54,8 @@
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\IConfigReader.cs" />
     <Compile Include="Configuration\SlackConfig.cs" />
+    <Compile Include="FileUploadTests.cs" />
+    <Compile Include="Resources\EmbeddedResourceFileReader.cs" />
     <Compile Include="SayTests.cs" />
     <Compile Include="JoinDmChannelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,7 +80,14 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\UploadTest.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -43,13 +43,15 @@ namespace SlackConnector
                 throw new HandshakeException(handshakeResponse.Error);
             }
 
+            Dictionary<string, SlackUser> users = GenerateUsers(handshakeResponse.Users);
+
             var connectionInfo = new ConnectionInformation
             {
                 SlackKey = slackKey,
                 Self = new ContactDetails { Id = handshakeResponse.Self.Id, Name = handshakeResponse.Self.Name },
                 Team = new ContactDetails { Id = handshakeResponse.Team.Id, Name = handshakeResponse.Team.Name },
-                Users = GenerateUsers(handshakeResponse.Users),
-                SlackChatHubs = GetChatHubs(handshakeResponse),
+                Users = users,
+                SlackChatHubs = GetChatHubs(handshakeResponse, users.Values.ToArray()),
                 WebSocket = await GetWebSocket(handshakeResponse, proxySettings)
             };
 
@@ -68,7 +70,7 @@ namespace SlackConnector
             return users.ToDictionary(user => user.Id, user => user.ToSlackUser());
         }
 
-        private Dictionary<string, SlackChatHub> GetChatHubs(HandshakeResponse handshakeResponse)
+        private Dictionary<string, SlackChatHub> GetChatHubs(HandshakeResponse handshakeResponse, SlackUser[] users)
         {
             var hubs = new Dictionary<string, SlackChatHub>();
 
@@ -92,15 +94,7 @@ namespace SlackConnector
 
             foreach (Im im in handshakeResponse.Ims)
             {
-                User user = handshakeResponse.Users.FirstOrDefault(x => x.Id == im.User);
-                var dm = new SlackChatHub
-                {
-                    Id = im.Id,
-                    Name = "@" + (user == null ? im.User : user.Name),
-                    Type = SlackChatHubType.DM
-                };
-
-                hubs.Add(im.Id, dm);
+                hubs.Add(im.Id, im.ToChatHub(users));
             }
 
             return hubs;

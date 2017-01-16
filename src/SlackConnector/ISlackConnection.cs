@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using SlackConnector.Connections.Models;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 
@@ -15,13 +15,7 @@ namespace SlackConnector
         /// All of the ChatHubs that are currently open.
         /// </summary>
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
-
-        /// <summary>
-        /// UserId => UserName cache.
-        /// </summary>
-        [Obsolete("Please use UserCache", true)]
-        IReadOnlyDictionary<string, SlackUser> UserNameCache { get; }
-
+        
         /// <summary>
         /// UserId => User object.
         /// </summary>
@@ -63,6 +57,16 @@ namespace SlackConnector
         /// Send message to Slack channel.
         /// </summary>
         Task Say(BotMessage message);
+        
+        /// <summary>
+        /// Uploads a file from to a Slack channel
+        /// </summary>
+        Task Upload(SlackChatHub chatHub, string filePath);
+
+        /// <summary>
+        /// Uploads a stream to a Slack channel as a file
+        /// </summary>
+        Task Upload(SlackChatHub chatHub, Stream stream, string fileName);
 
         /// <summary>
         /// Get all channels and groups info.
@@ -102,6 +106,14 @@ namespace SlackConnector
         /// </summary>
         event MessageReceivedEventHandler OnMessageReceived;
 
+        /// <summary>
+        /// Raised when bot joins a channel or group
+        /// </summary>
         event ChatHubJoinedEventHandler OnChatHubJoined;
+
+        /// <summary>
+        /// Raised when a new user joins the team
+        /// </summary>
+        event UserJoinedEventHandler OnUserJoined;
     }
 }

@@ -42,6 +42,5 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 typingMessage.Type.ShouldEqual("ping");
             }
         }
-
     }
 }
