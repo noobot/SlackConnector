@@ -129,7 +129,7 @@ namespace SlackConnector
         private Task HandleDmJoined(DmChannelJoinedMessage inboundMessage)
         {
             string channelId = inboundMessage?.Channel?.Id;
-            if (channelId == null) return Task.FromResult(false);
+            if (channelId == null) return Task.CompletedTask;
 
             var hub = inboundMessage.Channel.ToChatHub(_userCache.Values.ToArray());
             _connectedHubs[channelId] = hub;

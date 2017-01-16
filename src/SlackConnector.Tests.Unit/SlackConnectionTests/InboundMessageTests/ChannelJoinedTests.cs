@@ -21,7 +21,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             SUT.OnChatHubJoined += hub =>
             {
                 _lastHub = hub;
-                return Task.FromResult(false);
+                return Task.CompletedTask;
             };
 
             InboundMessage = new ChannelJoinedMessage
@@ -56,7 +56,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             SUT.OnChatHubJoined += hub =>
             {
                 _lastHub = hub;
-                return Task.FromResult(false);
+                return Task.CompletedTask;
             };
 
             InboundMessage = new ChannelJoinedMessage
