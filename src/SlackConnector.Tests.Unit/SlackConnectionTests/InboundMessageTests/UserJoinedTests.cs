@@ -22,7 +22,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             SUT.OnUserJoined += user =>
             {
                 _lastUser = user;
-                return Task.FromResult(false);
+                return Task.CompletedTask;
             };
 
             InboundMessage = new UserJoinedMessage
@@ -73,7 +73,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             SUT.OnUserJoined += slackUser =>
             {
                 _lastUser = slackUser;
-                return Task.FromResult(false);
+                return Task.CompletedTask;
             };
 
             InboundMessage = new UserJoinedMessage
