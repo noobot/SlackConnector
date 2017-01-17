@@ -11,6 +11,7 @@ namespace SlackConnector.Extensions
             {
                 Id = user.Id,
                 Name = user.Name,
+                Email = user.Profile?.Email,
                 TimeZoneOffset = user.TimeZoneOffset,
                 IsBot = user.IsBot
             };

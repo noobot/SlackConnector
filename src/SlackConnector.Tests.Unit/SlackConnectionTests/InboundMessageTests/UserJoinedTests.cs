@@ -34,7 +34,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                     Name = "my-name",
                     TimeZoneOffset = -231,
                     IsBot = true,
-                    Presence = "active"
+                    Presence = "active",
+                    Profile = new Profile
+                    {
+                        Email = "some-email@mail.com"
+                    }
                 }
             };
 
@@ -44,7 +48,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                 Name = "my-name",
                 TimeZoneOffset = -231,
                 IsBot = true,
-                Online = true
+                Online = true,
+                Email = "some-email@mail.com"
             };
         }
 
