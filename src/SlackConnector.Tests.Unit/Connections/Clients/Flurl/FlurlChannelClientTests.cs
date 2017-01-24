@@ -79,5 +79,32 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
 
             result.ToExpectedObject().ShouldEqual(expectedResponse);
         }
+
+        [Test]
+        public async Task should_call_expected_url_and_return_expected_users()
+        {
+            // given
+            const string slackKey = "I-is-another-key";
+
+            var expectedResponse = new[]
+            {
+                new User { Id = "some-id-thing", IsBot = true },
+                new User { Name = "some-id-thing", Deleted = true },
+            };
+
+            _httpTest.RespondWithJson(expectedResponse);
+            var client = new FlurlChannelClient();
+
+            // when
+            var result = await client.GetUsers(slackKey);
+
+            // then
+            _httpTest
+                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChannelClient.USERS_LIST_PATH))
+                .WithQueryParamValue("token", slackKey)
+                .Times(1);
+
+            result.ToExpectedObject().ShouldEqual(expectedResponse);
+        }
     }
 }
