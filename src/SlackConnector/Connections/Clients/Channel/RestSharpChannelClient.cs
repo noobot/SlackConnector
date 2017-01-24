@@ -5,7 +5,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.Channel
 {
-    internal class ChannelClient : IChannelClient
+    internal class RestSharpChannelClient : IChannelClient
     {
         internal const string JOIN_DM_PATH = "/api/im.open";
         internal const string CHANNELS_LIST_PATH = "/api/channels.list";
@@ -13,7 +13,7 @@ namespace SlackConnector.Connections.Clients.Channel
         internal const string USERS_LIST_PATH = "/api/users.list";
         private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
 
-        public ChannelClient(IRestSharpRequestExecutor restSharpRequestExecutor)
+        public RestSharpChannelClient(IRestSharpRequestExecutor restSharpRequestExecutor)
         {
             _restSharpRequestExecutor = restSharpRequestExecutor;
         }

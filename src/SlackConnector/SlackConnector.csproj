@@ -110,6 +110,7 @@
     <Compile Include="BotHelpers\ChatHubInterpreter.cs" />
     <Compile Include="BotHelpers\IMentionDetector.cs" />
     <Compile Include="BotHelpers\IChatHubInterpreter.cs" />
+    <Compile Include="Connections\Clients\Channel\FlurlChannelClient.cs" />
     <Compile Include="Connections\Clients\ClientConstants.cs" />
     <Compile Include="Connections\Clients\File\FileClient.cs" />
     <Compile Include="Connections\Clients\File\IFileClient.cs" />
@@ -118,7 +119,7 @@
     <Compile Include="Connections\Clients\RestSharpRestSharpRequestExecutor.cs" />
     <Compile Include="Connections\ConnectionFactory.cs" />
     <Compile Include="Connections\Clients\Handshake\IHandshakeClient.cs" />
-    <Compile Include="Connections\Clients\Channel\ChannelClient.cs" />
+    <Compile Include="Connections\Clients\Channel\RestSharpChannelClient.cs" />
     <Compile Include="Connections\Clients\Channel\IChannelClient.cs" />
     <Compile Include="Connections\Clients\Chat\IChatClient.cs" />
     <Compile Include="Connections\Clients\Chat\ChatClient.cs" />

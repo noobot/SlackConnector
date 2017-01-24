@@ -8,7 +8,7 @@ using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Responses;
 
-namespace SlackConnector.Tests.Unit.Connections.Clients
+namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
 {
     [TestFixture]
     public class FlurlHandshakeClientTests

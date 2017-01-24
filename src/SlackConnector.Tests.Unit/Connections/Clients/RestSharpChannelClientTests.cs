@@ -10,9 +10,9 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients
 {
-    public static class ChannelClientTests
+    public static class RestSharpChannelClientTests
     {
-        internal class given_valid_standard_setup : SpecsFor<ChannelClient>
+        internal class given_valid_standard_setup : SpecsFor<RestSharpChannelClient>
         {
             private string _slackKey = "super-key";
             private string _user = "super-user";
@@ -23,7 +23,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             protected override void InitializeClassUnderTest()
             {
                 _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
-                SUT = new ChannelClient(_restSharpRequestExecutorStub);
+                SUT = new RestSharpChannelClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
@@ -64,7 +64,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             public void then_should_access_expected_path()
             {
                 IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
-                request.Resource.ShouldEqual(ChannelClient.JOIN_DM_PATH);
+                request.Resource.ShouldEqual(RestSharpChannelClient.JOIN_DM_PATH);
             }
 
             [Test]
