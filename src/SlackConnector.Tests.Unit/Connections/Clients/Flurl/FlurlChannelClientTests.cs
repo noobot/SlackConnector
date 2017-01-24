@@ -106,5 +106,34 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
 
             result.ToExpectedObject().ShouldEqual(expectedResponse);
         }
+
+        [Test]
+        public async Task should_join_direct_message_channel()
+        {
+            // given
+            const string slackKey = "I-is-another-key";
+            const string userId = "blahdy-blah";
+
+            var expectedResponse = new Channel
+            {
+                Id = "some-channel",
+                IsChannel = true
+            };
+
+            _httpTest.RespondWithJson(expectedResponse);
+            var client = new FlurlChannelClient();
+
+            // when
+            var result = await client.JoinDirectMessageChannel(slackKey, userId);
+
+            // then
+            _httpTest
+                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChannelClient.JOIN_DM_PATH))
+                .WithQueryParamValue("token", slackKey)
+                .WithQueryParamValue("user", userId)
+                .Times(1);
+
+            result.ToExpectedObject().ShouldEqual(expectedResponse);
+        }
     }
 }

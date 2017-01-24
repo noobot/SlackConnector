@@ -12,9 +12,14 @@ namespace SlackConnector.Connections.Clients.Channel
         internal const string GROUPS_LIST_PATH = "/api/groups.list";
         internal const string USERS_LIST_PATH = "/api/users.list";
 
-        public Task<Models.Channel> JoinDirectMessageChannel(string slackKey, string user)
+        public async Task<Models.Channel> JoinDirectMessageChannel(string slackKey, string user)
         {
-            throw new System.NotImplementedException();
+            return await ClientConstants
+                       .HANDSHAKE_PATH
+                       .AppendPathSegment(JOIN_DM_PATH)
+                       .SetQueryParam("token", slackKey)
+                       .SetQueryParam("user", user)
+                       .GetJsonAsync<Models.Channel>();
         }
 
         public async Task<Models.Channel[]> GetChannels(string slackKey)
