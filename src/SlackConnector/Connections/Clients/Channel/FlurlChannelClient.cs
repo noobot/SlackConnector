@@ -26,9 +26,13 @@ namespace SlackConnector.Connections.Clients.Channel
                        .GetJsonAsync<Models.Channel[]>();
         }
 
-        public Task<Group[]> GetGroups(string slackKey)
+        public async Task<Group[]> GetGroups(string slackKey)
         {
-            throw new System.NotImplementedException();
+            return await ClientConstants
+                       .HANDSHAKE_PATH
+                       .AppendPathSegment(GROUPS_LIST_PATH)
+                       .SetQueryParam("token", slackKey)
+                       .GetJsonAsync<Models.Group[]>();
         }
 
         public Task<User[]> GetUsers(string slackKey)
