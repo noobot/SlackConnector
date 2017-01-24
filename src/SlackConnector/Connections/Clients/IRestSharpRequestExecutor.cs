@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace SlackConnector.Connections.Clients
 {
-    internal interface IRequestExecutor
+    internal interface IRestSharpRequestExecutor
     {
         Task<T> Execute<T>(IRestRequest request) where T : class;
     }

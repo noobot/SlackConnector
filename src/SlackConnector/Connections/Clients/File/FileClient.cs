@@ -7,12 +7,12 @@ namespace SlackConnector.Connections.Clients.File
 {
     internal class FileClient : IFileClient
     {
-        private readonly IRequestExecutor _requestExecutor;
+        private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
         internal const string FILE_UPLOAD_PATH = "/api/files.upload";
 
-        public FileClient(IRequestExecutor requestExecutor)
+        public FileClient(IRestSharpRequestExecutor restSharpRequestExecutor)
         {
-            _requestExecutor = requestExecutor;
+            _restSharpRequestExecutor = restSharpRequestExecutor;
         }
 
         public async Task PostFile(string slackKey, string channel, string file)
@@ -23,7 +23,7 @@ namespace SlackConnector.Connections.Clients.File
             request.AddParameter("filename", Path.GetFileName(file));
             request.AddFile("file", file);
 
-            await _requestExecutor.Execute<StandardResponse>(request);
+            await _restSharpRequestExecutor.Execute<StandardResponse>(request);
         }
 
         public async Task PostFile(string slackKey, string channel, Stream stream, string fileName)
@@ -36,7 +36,7 @@ namespace SlackConnector.Connections.Clients.File
             byte[] data = await ReadByteArray(stream);
             request.AddFile("file", data, fileName);
 
-            await _requestExecutor.Execute<StandardResponse>(request);
+            await _restSharpRequestExecutor.Execute<StandardResponse>(request);
         }
 
         private async Task<byte[]> ReadByteArray(Stream stream)

@@ -17,12 +17,12 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             private readonly string _slackKey = "super-key";
             private readonly string _channelId = "channel-id";
             private readonly string _filePath = Path.GetTempFileName();
-            private RequestExecutorStub _requestExecutorStub;
+            private RestSharpRequestExecutorStub _restSharpRequestExecutorStub;
 
             protected override void InitializeClassUnderTest()
             {
-                _requestExecutorStub = new RequestExecutorStub();
-                SUT = new FileClient(_requestExecutorStub);
+                _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
+                SUT = new FileClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
@@ -38,7 +38,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_key()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("token"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -48,7 +48,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_channel()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("channels"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -58,21 +58,21 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_access_expected_path()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 request.Resource.ShouldEqual(FileClient.FILE_UPLOAD_PATH);
             }
 
             [Test]
             public void then_should_have_3_params()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 request.Parameters.Count.ShouldEqual(3);
             }
 
             [Test]
             public void then_should_pass_expected_filename()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("filename"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -82,7 +82,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_file()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 FileParameter file = request.Files.FirstOrDefault(x => x.Name.Equals("file"));
                 file.ShouldNotBeNull();
                 file.ContentLength.ShouldBeGreaterThan(0);
@@ -96,12 +96,12 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             private readonly string _channelId = "channel-id";
             private readonly string _fileName = "file-name.txt";
             private MemoryStream _inputStream;
-            private RequestExecutorStub _requestExecutorStub;
+            private RestSharpRequestExecutorStub _restSharpRequestExecutorStub;
 
             protected override void InitializeClassUnderTest()
             {
-                _requestExecutorStub = new RequestExecutorStub();
-                SUT = new FileClient(_requestExecutorStub);
+                _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
+                SUT = new FileClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
@@ -121,7 +121,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_key()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("token"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -131,7 +131,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_channel()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("channels"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -141,21 +141,21 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_access_expected_path()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 request.Resource.ShouldEqual(FileClient.FILE_UPLOAD_PATH);
             }
 
             [Test]
             public void then_should_have_3_params()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 request.Parameters.Count.ShouldEqual(3);
             }
 
             [Test]
             public void then_should_pass_expected_filename()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("filename"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -165,7 +165,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_file()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 FileParameter file = request.Files.FirstOrDefault(x => x.Name.Equals("file"));
                 file.ShouldNotBeNull();
                 file.ContentLength.ShouldBeGreaterThan(0);

@@ -11,7 +11,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
 {
     public static class RequestExecutorTests
     {
-        internal class given_request_when_executing : SpecsFor<RequestExecutor>
+        internal class given_request_when_executing : SpecsFor<RestSharpRestSharpRequestExecutor>
         {
             private IRestRequest _request;
             private IRestResponse _response;
@@ -24,7 +24,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
                 _response = new RestResponse();
 
                 GetMockFor<IRestSharpFactory>()
-                    .Setup(x => x.CreateClient(RequestExecutor.SLACK_URL))
+                    .Setup(x => x.CreateClient(RestSharpRestSharpRequestExecutor.SLACK_URL))
                     .Returns(GetMockFor<IRestClient>().Object);
 
                 GetMockFor<IRestClient>()

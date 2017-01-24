@@ -5,7 +5,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Tests.Unit.Stubs
 {
-    internal class RequestExecutorStub : IRequestExecutor
+    internal class RestSharpRequestExecutorStub : IRestSharpRequestExecutor
     {
         public IRestRequest Execute_Request { get; private set; }
         public StandardResponse Execute_Value { get; set; }

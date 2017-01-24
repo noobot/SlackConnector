@@ -9,23 +9,23 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients
 {
-    public static class HandshakeClientTests
+    public static class RestSharpHandshakeClientTests
     {
-        internal class given_valid_response_when_handshaking_with_slack : SpecsFor<HandshakeClient>
+        internal class given_valid_response_when_handshaking_with_slack : SpecsFor<RestSharpHandshakeClient>
         {
             private const string SLACK_KEY = "something_that_looks_like_a_key";
-            private RequestExecutorStub _requestExecutorStub;
+            private RestSharpRequestExecutorStub _restSharpRequestExecutorStub;
             private HandshakeResponse Result { get; set; }
 
             protected override void InitializeClassUnderTest()
             {
-                _requestExecutorStub = new RequestExecutorStub();
-                SUT = new HandshakeClient(_requestExecutorStub);
+                _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
+                SUT = new RestSharpHandshakeClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
             {
-                _requestExecutorStub.Execute_Value = new HandshakeResponse();
+                _restSharpRequestExecutorStub.Execute_Value = new HandshakeResponse();
             }
 
             protected override void When()
@@ -36,7 +36,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_key()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("token"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -46,14 +46,14 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_access_expected_path()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
-                request.Resource.ShouldEqual(HandshakeClient.HANDSHAKE_PATH);
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
+                request.Resource.ShouldEqual(RestSharpHandshakeClient.HANDSHAKE_PATH);
             }
 
             [Test]
             public void then_should_return_expected_model()
             {
-                Result.ShouldEqual(_requestExecutorStub.Execute_Value);
+                Result.ShouldEqual(_restSharpRequestExecutorStub.Execute_Value);
             }
         }
     }

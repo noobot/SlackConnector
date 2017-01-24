@@ -11,11 +11,11 @@ namespace SlackConnector.Connections.Clients.Channel
         internal const string CHANNELS_LIST_PATH = "/api/channels.list";
         internal const string GROUPS_LIST_PATH = "/api/groups.list";
         internal const string USERS_LIST_PATH = "/api/users.list";
-        private readonly IRequestExecutor _requestExecutor;
+        private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
 
-        public ChannelClient(IRequestExecutor requestExecutor)
+        public ChannelClient(IRestSharpRequestExecutor restSharpRequestExecutor)
         {
-            _requestExecutor = requestExecutor;
+            _restSharpRequestExecutor = restSharpRequestExecutor;
         }
 
         public async Task<Models.Channel> JoinDirectMessageChannel(string slackKey, string user)
@@ -24,7 +24,7 @@ namespace SlackConnector.Connections.Clients.Channel
             request.AddParameter("token", slackKey);
             request.AddParameter("user", user);
 
-            var response = await _requestExecutor.Execute<JoinChannelResponse>(request);
+            var response = await _restSharpRequestExecutor.Execute<JoinChannelResponse>(request);
             return response.Channel;
         }
 
@@ -33,7 +33,7 @@ namespace SlackConnector.Connections.Clients.Channel
             var request = new RestRequest(CHANNELS_LIST_PATH);
             request.AddParameter("token", slackKey);
 
-            var response = await _requestExecutor.Execute<ChannelsResponse>(request);
+            var response = await _restSharpRequestExecutor.Execute<ChannelsResponse>(request);
             return response.Channels;
         }
 
@@ -42,7 +42,7 @@ namespace SlackConnector.Connections.Clients.Channel
             var request = new RestRequest(GROUPS_LIST_PATH);
             request.AddParameter("token", slackKey);
 
-            var response = await _requestExecutor.Execute<GroupsResponse>(request);
+            var response = await _restSharpRequestExecutor.Execute<GroupsResponse>(request);
             return response.Groups;
         }
 
@@ -52,7 +52,7 @@ namespace SlackConnector.Connections.Clients.Channel
             request.AddParameter("token", slackKey);
             request.AddParameter("presence", "1");
 
-            var response = await _requestExecutor.Execute<UsersResponse>(request);
+            var response = await _restSharpRequestExecutor.Execute<UsersResponse>(request);
             return response.Members;
         }
     }

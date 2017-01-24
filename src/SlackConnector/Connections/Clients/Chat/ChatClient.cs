@@ -10,12 +10,12 @@ namespace SlackConnector.Connections.Clients.Chat
 {
     internal class ChatClient : IChatClient
     {
-        private readonly IRequestExecutor _requestExecutor;
+        private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
         internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
 
-        public ChatClient(IRequestExecutor requestExecutor)
+        public ChatClient(IRestSharpRequestExecutor restSharpRequestExecutor)
         {
-            _requestExecutor = requestExecutor;
+            _restSharpRequestExecutor = restSharpRequestExecutor;
         }
 
         public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
@@ -31,7 +31,7 @@ namespace SlackConnector.Connections.Clients.Chat
                 request.AddParameter("attachments", JsonConvert.SerializeObject(attachments));
             }
 
-            await _requestExecutor.Execute<StandardResponse>(request);
+            await _restSharpRequestExecutor.Execute<StandardResponse>(request);
         }
     }
 }

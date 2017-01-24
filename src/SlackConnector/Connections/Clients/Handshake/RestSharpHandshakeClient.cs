@@ -4,14 +4,14 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.Handshake
 {
-    internal class HandshakeClient : IHandshakeClient
+    internal class RestSharpHandshakeClient : IHandshakeClient
     {
-        private readonly IRequestExecutor _requestExecutor;
+        private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
         internal const string HANDSHAKE_PATH = "/api/rtm.start";
 
-        public HandshakeClient(IRequestExecutor requestExecutor)
+        public RestSharpHandshakeClient(IRestSharpRequestExecutor restSharpRequestExecutor)
         {
-            _requestExecutor = requestExecutor;
+            _restSharpRequestExecutor = restSharpRequestExecutor;
         }
 
         public async Task<HandshakeResponse> FirmShake(string slackKey)
@@ -19,7 +19,7 @@ namespace SlackConnector.Connections.Clients.Handshake
             var request = new RestRequest(HANDSHAKE_PATH);
             request.AddParameter("token", slackKey);
 
-            return await _requestExecutor.Execute<HandshakeResponse>(request);
+            return await _restSharpRequestExecutor.Execute<HandshakeResponse>(request);
         }
     }
 }

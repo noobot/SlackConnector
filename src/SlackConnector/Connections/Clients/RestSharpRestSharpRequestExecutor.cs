@@ -3,14 +3,14 @@ using RestSharp;
 
 namespace SlackConnector.Connections.Clients
 {
-    internal class RequestExecutor : IRequestExecutor
+    internal class RestSharpRestSharpRequestExecutor : IRestSharpRequestExecutor
     {
-        internal const string SLACK_URL = "https://slack.com";
+        internal static string SLACK_URL => ClientConstants.HANDSHAKE_PATH;
 
         private readonly IRestSharpFactory _restSharpFactory;
         private readonly IResponseVerifier _responseVerifier;
 
-        public RequestExecutor(IRestSharpFactory restSharpFactory, IResponseVerifier responseVerifier)
+        public RestSharpRestSharpRequestExecutor(IRestSharpFactory restSharpFactory, IResponseVerifier responseVerifier)
         {
             _restSharpFactory = restSharpFactory;
             _responseVerifier = responseVerifier;

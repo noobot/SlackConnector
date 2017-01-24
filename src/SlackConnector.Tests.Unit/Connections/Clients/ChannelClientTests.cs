@@ -16,14 +16,14 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
         {
             private string _slackKey = "super-key";
             private string _user = "super-user";
-            private RequestExecutorStub _requestExecutorStub;
+            private RestSharpRequestExecutorStub _restSharpRequestExecutorStub;
             private JoinChannelResponse _executorResponse;
             private Channel Result { get; set; }
 
             protected override void InitializeClassUnderTest()
             {
-                _requestExecutorStub = new RequestExecutorStub();
-                SUT = new ChannelClient(_requestExecutorStub);
+                _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
+                SUT = new ChannelClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
@@ -32,7 +32,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
                 {
                     Channel = new Channel()
                 };
-                _requestExecutorStub.Execute_Value = _executorResponse;
+                _restSharpRequestExecutorStub.Execute_Value = _executorResponse;
             }
 
             protected override void When()
@@ -43,7 +43,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_key()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("token"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -53,7 +53,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_pass_expected_channel()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 Parameter keyParam = request.Parameters.FirstOrDefault(x => x.Name.Equals("user"));
                 keyParam.ShouldNotBeNull();
                 keyParam.Type.ShouldEqual(ParameterType.GetOrPost);
@@ -63,14 +63,14 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             [Test]
             public void then_should_access_expected_path()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 request.Resource.ShouldEqual(ChannelClient.JOIN_DM_PATH);
             }
 
             [Test]
             public void then_should_have_2_params()
             {
-                IRestRequest request = _requestExecutorStub.Execute_Request;
+                IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
                 request.Parameters.Count.ShouldEqual(2);
             }
 
