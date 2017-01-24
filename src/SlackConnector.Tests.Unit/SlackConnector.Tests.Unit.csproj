@@ -153,7 +153,6 @@
     <Compile Include="BotHelpers\ChatHubInterpreterTests.cs" />
     <Compile Include="Connections\Clients\FileClientTests.cs" />
     <Compile Include="Connections\Clients\FlurlHandshakeClientTests.cs" />
-    <Compile Include="Connections\Clients\RestSharpHandshakeClientTests.cs" />
     <Compile Include="Connections\Clients\ChannelClientTests.cs" />
     <Compile Include="Connections\Clients\ChatClientTests.cs" />
     <Compile Include="Connections\Clients\RequestExecutorTests.cs" />

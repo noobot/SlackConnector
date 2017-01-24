@@ -117,7 +117,6 @@
     <Compile Include="Connections\Clients\IRestSharpRequestExecutor.cs" />
     <Compile Include="Connections\Clients\RestSharpRestSharpRequestExecutor.cs" />
     <Compile Include="Connections\ConnectionFactory.cs" />
-    <Compile Include="Connections\Clients\Handshake\RestSharpHandshakeClient.cs" />
     <Compile Include="Connections\Clients\Handshake\IHandshakeClient.cs" />
     <Compile Include="Connections\Clients\Channel\ChannelClient.cs" />
     <Compile Include="Connections\Clients\Channel\IChannelClient.cs" />

@@ -27,7 +27,7 @@ namespace SlackConnector.Connections
 
         public IHandshakeClient CreateHandshakeClient()
         {
-            return new RestSharpHandshakeClient(_restSharpRequestExecutor);
+            return new FlurlHandshakeClient();
         }
 
         public IChatClient CreateChatClient()
