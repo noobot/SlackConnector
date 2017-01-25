@@ -28,8 +28,7 @@ namespace SlackConnector.Connections.Clients.Chat
                        .SetQueryParam("channel", channel)
                        .SetQueryParam("text", text)
                        .SetQueryParam("as_user", "true");
-
-
+            
             if (attachments != null && attachments.Any())
             {
                 request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));

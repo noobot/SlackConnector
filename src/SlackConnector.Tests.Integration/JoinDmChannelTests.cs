@@ -33,7 +33,7 @@ namespace SlackConnector.Tests.Integration
 
             var dmChannel = connection.ConnectedDM($"@{config.Slack.TestUserName}");
             Assert.That(dmChannel, Is.Not.Null);
-            await connection.Say(new BotMessage{ChatHub = dmChannel, Text = "Wuzzup - testing in da haus"});
+            await connection.Say(new BotMessage { ChatHub = dmChannel, Text = "Wuzzup - testing in da haus" });
         }
     }
 }
