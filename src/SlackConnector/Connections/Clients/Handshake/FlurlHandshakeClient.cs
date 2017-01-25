@@ -7,15 +7,24 @@ namespace SlackConnector.Connections.Clients.Handshake
 {
     internal class FlurlHandshakeClient : IHandshakeClient
     {
+        private readonly IResponseVerifier _responseVerifier;
         internal const string HANDSHAKE_PATH = "/api/rtm.start";
+
+        public FlurlHandshakeClient(IResponseVerifier responseVerifier)
+        {
+            _responseVerifier = responseVerifier;
+        }
 
         public async Task<HandshakeResponse> FirmShake(string slackKey)
         {
-            return await ClientConstants
+            var response = await ClientConstants
                        .HANDSHAKE_PATH
                        .AppendPathSegment(HANDSHAKE_PATH)
                        .SetQueryParam("token", slackKey)
                        .GetJsonAsync<HandshakeResponse>();
+
+            _responseVerifier.VerifyResponse(response);
+            return response;
         }
     }
 }

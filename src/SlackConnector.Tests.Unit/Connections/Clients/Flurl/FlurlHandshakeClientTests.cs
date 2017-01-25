@@ -5,8 +5,10 @@ using Flurl.Http.Testing;
 using Moq;
 using NUnit.Framework;
 using SlackConnector.Connections.Clients;
+using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Responses;
+using SlackConnector.Tests.Unit.TestExtensions;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
 {
@@ -14,11 +16,15 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
     public class FlurlHandshakeClientTests
     {
         private HttpTest _httpTest;
+        private Mock<IResponseVerifier> _responseVerifierMock;
+        private FlurlHandshakeClient _handshakeClient;
 
         [SetUp]
         public void Setup()
         {
             _httpTest = new HttpTest();
+            _responseVerifierMock = new Mock<IResponseVerifier>();
+            _handshakeClient = new FlurlHandshakeClient(_responseVerifierMock.Object);
         }
 
         [TearDown]
@@ -32,35 +38,24 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
         {
             // given
             const string slackKey = "I-is-da-key-yeah";
-            _httpTest.RespondWithJson(new HandshakeResponse());
-            var client = new FlurlHandshakeClient();
 
-            // when
-            await client.FirmShake(slackKey);
-
-            // then
-            _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlHandshakeClient.HANDSHAKE_PATH))
-                .WithQueryParamValue("token", slackKey)
-                .Times(1);
-        }
-
-        [Test]
-        public async Task should_return_expected_data()
-        {
-            // given
             var expectedResponse = new HandshakeResponse
             {
                 Ok = true,
                 WebSocketUrl = "some-url"
             };
             _httpTest.RespondWithJson(expectedResponse);
-            var client = new FlurlHandshakeClient();
 
             // when
-            var result = await client.FirmShake(It.IsAny<string>());
+            var result = await _handshakeClient.FirmShake(slackKey);
 
             // then
+            _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)));
+            _httpTest
+                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlHandshakeClient.HANDSHAKE_PATH))
+                .WithQueryParamValue("token", slackKey)
+                .Times(1);
+
             result.ToExpectedObject().ShouldEqual(expectedResponse);
         }
     }
