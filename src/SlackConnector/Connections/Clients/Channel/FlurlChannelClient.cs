@@ -62,6 +62,7 @@ namespace SlackConnector.Connections.Clients.Channel
                        .HANDSHAKE_PATH
                        .AppendPathSegment(USERS_LIST_PATH)
                        .SetQueryParam("token", slackKey)
+                       .SetQueryParam("presence", "1")
                        .GetJsonAsync<UsersResponse>();
 
             _responseVerifier.VerifyResponse(response);

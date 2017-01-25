@@ -150,6 +150,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             _httpTest
                 .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChannelClient.USERS_LIST_PATH))
                 .WithQueryParamValue("token", slackKey)
+                .WithQueryParamValue("presence", "1")
                 .Times(1);
 
             result.ToExpectedObject().ShouldEqual(expectedResponse.Members);
