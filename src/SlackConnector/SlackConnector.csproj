@@ -111,6 +111,7 @@
     <Compile Include="BotHelpers\IMentionDetector.cs" />
     <Compile Include="BotHelpers\IChatHubInterpreter.cs" />
     <Compile Include="Connections\Clients\Channel\FlurlChannelClient.cs" />
+    <Compile Include="Connections\Clients\Chat\FlurlChatClient.cs" />
     <Compile Include="Connections\Clients\ClientConstants.cs" />
     <Compile Include="Connections\Clients\File\RestSharpFileClient.cs" />
     <Compile Include="Connections\Clients\File\IFileClient.cs" />

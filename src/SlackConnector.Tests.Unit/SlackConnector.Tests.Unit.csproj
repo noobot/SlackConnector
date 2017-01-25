@@ -153,9 +153,10 @@
     <Compile Include="BotHelpers\ChatHubInterpreterTests.cs" />
     <Compile Include="Connections\Clients\FileClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlChannelClientTests.cs" />
+    <Compile Include="Connections\Clients\Flurl\FlurlChatClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlHandshakeClientTests.cs" />
     <Compile Include="Connections\Clients\RestSharpChannelClientTests.cs" />
-    <Compile Include="Connections\Clients\ChatClientTests.cs" />
+    <Compile Include="Connections\Clients\RestSharpChatClientTests.cs" />
     <Compile Include="Connections\Clients\RequestExecutorTests.cs" />
     <Compile Include="Connections\Clients\ResponseVerifierTests.cs" />
     <Compile Include="Connections\ProxySettingsTests.cs" />

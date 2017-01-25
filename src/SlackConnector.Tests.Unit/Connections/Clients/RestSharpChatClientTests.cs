@@ -12,7 +12,7 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients
 {
-    public static class ChatClientTests
+    public static class RestSharpChatClientTests
     {
         internal class given_valid_standard_setup_when_posting_message_without_attachments : SpecsFor<RestSharpChatClient>
         {
