@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
-using ExpectedObjects;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http.Testing;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Chat;
-using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Responses;
+using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
@@ -55,6 +56,28 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
                 .WithQueryParamValue("channel", channel)
                 .WithQueryParamValue("text", text)
                 .WithQueryParamValue("as_user", "true")
+                .WithoutQueryParam("attachments")
+                .Times(1);
+        }
+
+        [Test]
+        public async Task should_add_attachments_if_given()
+        {
+            // given
+            _httpTest.RespondWithJson(new StandardResponse());
+            var attachments = new List<SlackAttachment>
+            {
+                new SlackAttachment { Text = "dummy text" },
+                new SlackAttachment { AuthorName = "dummy author" },
+            };
+
+            // when
+            await _chatClient.PostMessage(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), attachments);
+
+            // then
+            _httpTest
+                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
+                .WithQueryParamValue("attachments", JsonConvert.SerializeObject(attachments))
                 .Times(1);
         }
     }
