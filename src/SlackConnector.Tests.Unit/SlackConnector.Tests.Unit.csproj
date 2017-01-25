@@ -185,6 +185,7 @@
     <Compile Include="Stubs\SlackConnectionFactoryStub.cs" />
     <Compile Include="Stubs\SlackConnectionStub.cs" />
     <Compile Include="Stubs\WebSocketClientStub.cs" />
+    <Compile Include="TestExtensions\ShouldExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SlackConnector\SlackConnector.csproj">

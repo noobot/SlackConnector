@@ -15,13 +15,21 @@ namespace SlackConnector.Connections.Clients
                 throw new CommunicationException($"Error occured while sending message '{response.StatusCode}'");
             }
 
-            var result = JsonConvert.DeserializeObject(response.Content, typeof (T)) as StandardResponse;
+            var result = JsonConvert.DeserializeObject(response.Content, typeof(T)) as StandardResponse;
             if (!result.Ok)
             {
                 throw new CommunicationException($"Error occured while posting message '{result.Error}'");
             }
 
             return result as T;
+        }
+
+        public void VerifyResponse(StandardResponse response)
+        {
+            if (!response.Ok)
+            {
+                throw new CommunicationException($"Error occured while posting message '{response.Error}'");
+            }
         }
     }
 }

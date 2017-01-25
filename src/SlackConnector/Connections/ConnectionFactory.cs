@@ -42,7 +42,7 @@ namespace SlackConnector.Connections
 
         public IChannelClient CreateChannelClient()
         {
-            return new RestSharpChannelClient(_restSharpRequestExecutor);
+            return new FlurlChannelClient(new ResponseVerifier());
         }
     }
 }
