@@ -10,7 +10,7 @@ using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
-namespace SlackConnector.Tests.Unit.Connections.Clients
+namespace SlackConnector.Tests.Unit.Connections.Clients.RestSharp
 {
     public static class RestSharpChatClientTests
     {

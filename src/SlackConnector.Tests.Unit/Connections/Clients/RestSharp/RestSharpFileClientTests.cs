@@ -8,9 +8,9 @@ using SlackConnector.Connections.Clients.File;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
-namespace SlackConnector.Tests.Unit.Connections.Clients
+namespace SlackConnector.Tests.Unit.Connections.Clients.RestSharp
 {
-    public static class FileClientTests
+    public static class RestSharpFileClientTests
     {
         internal class given_valid_standard_setup_when_posting_file : SpecsFor<RestSharpFileClient>
         {
