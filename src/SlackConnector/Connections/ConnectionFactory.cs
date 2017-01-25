@@ -32,12 +32,12 @@ namespace SlackConnector.Connections
 
         public IChatClient CreateChatClient()
         {
-            return new ChatClient(_restSharpRequestExecutor);
+            return new RestSharpChatClient(_restSharpRequestExecutor);
         }
 
         public IFileClient CreateFileClient()
         {
-            return new FileClient(_restSharpRequestExecutor);
+            return new RestSharpFileClient(_restSharpRequestExecutor);
         }
 
         public IChannelClient CreateChannelClient()

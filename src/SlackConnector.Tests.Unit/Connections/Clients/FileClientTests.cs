@@ -12,7 +12,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
 {
     public static class FileClientTests
     {
-        internal class given_valid_standard_setup_when_posting_file : SpecsFor<FileClient>
+        internal class given_valid_standard_setup_when_posting_file : SpecsFor<RestSharpFileClient>
         {
             private readonly string _slackKey = "super-key";
             private readonly string _channelId = "channel-id";
@@ -22,7 +22,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             protected override void InitializeClassUnderTest()
             {
                 _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
-                SUT = new FileClient(_restSharpRequestExecutorStub);
+                SUT = new RestSharpFileClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
@@ -59,7 +59,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             public void then_should_access_expected_path()
             {
                 IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
-                request.Resource.ShouldEqual(FileClient.FILE_UPLOAD_PATH);
+                request.Resource.ShouldEqual(RestSharpFileClient.FILE_UPLOAD_PATH);
             }
 
             [Test]
@@ -90,7 +90,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             }
         }
 
-        internal class given_valid_standard_setup_when_posting_stream : SpecsFor<FileClient>
+        internal class given_valid_standard_setup_when_posting_stream : SpecsFor<RestSharpFileClient>
         {
             private readonly string _slackKey = "super-key";
             private readonly string _channelId = "channel-id";
@@ -101,7 +101,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             protected override void InitializeClassUnderTest()
             {
                 _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
-                SUT = new FileClient(_restSharpRequestExecutorStub);
+                SUT = new RestSharpFileClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
@@ -142,7 +142,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             public void then_should_access_expected_path()
             {
                 IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
-                request.Resource.ShouldEqual(FileClient.FILE_UPLOAD_PATH);
+                request.Resource.ShouldEqual(RestSharpFileClient.FILE_UPLOAD_PATH);
             }
 
             [Test]

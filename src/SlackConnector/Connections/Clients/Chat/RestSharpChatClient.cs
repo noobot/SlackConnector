@@ -8,12 +8,12 @@ using SlackConnector.Models;
 
 namespace SlackConnector.Connections.Clients.Chat
 {
-    internal class ChatClient : IChatClient
+    internal class RestSharpChatClient : IChatClient
     {
         private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
         internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
 
-        public ChatClient(IRestSharpRequestExecutor restSharpRequestExecutor)
+        public RestSharpChatClient(IRestSharpRequestExecutor restSharpRequestExecutor)
         {
             _restSharpRequestExecutor = restSharpRequestExecutor;
         }

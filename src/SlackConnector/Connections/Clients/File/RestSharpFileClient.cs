@@ -5,12 +5,12 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.File
 {
-    internal class FileClient : IFileClient
+    internal class RestSharpFileClient : IFileClient
     {
         private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
         internal const string FILE_UPLOAD_PATH = "/api/files.upload";
 
-        public FileClient(IRestSharpRequestExecutor restSharpRequestExecutor)
+        public RestSharpFileClient(IRestSharpRequestExecutor restSharpRequestExecutor)
         {
             _restSharpRequestExecutor = restSharpRequestExecutor;
         }

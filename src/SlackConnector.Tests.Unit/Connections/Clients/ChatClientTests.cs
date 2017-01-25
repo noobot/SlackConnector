@@ -14,7 +14,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
 {
     public static class ChatClientTests
     {
-        internal class given_valid_standard_setup_when_posting_message_without_attachments : SpecsFor<ChatClient>
+        internal class given_valid_standard_setup_when_posting_message_without_attachments : SpecsFor<RestSharpChatClient>
         {
             private string _slackKey = "super-key";
             private string _channel = "super-channel";
@@ -24,7 +24,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             protected override void InitializeClassUnderTest()
             {
                 _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
-                SUT = new ChatClient(_restSharpRequestExecutorStub);
+                SUT = new RestSharpChatClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()
@@ -81,7 +81,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             public void then_should_access_expected_path()
             {
                 IRestRequest request = _restSharpRequestExecutorStub.Execute_Request;
-                request.Resource.ShouldEqual(ChatClient.SEND_MESSAGE_PATH);
+                request.Resource.ShouldEqual(RestSharpChatClient.SEND_MESSAGE_PATH);
             }
 
             [Test]
@@ -92,7 +92,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             }
         }
 
-        internal class given_valid_standard_setup_when_posting_message_with_attachments : SpecsFor<ChatClient>
+        internal class given_valid_standard_setup_when_posting_message_with_attachments : SpecsFor<RestSharpChatClient>
         {
             private List<SlackAttachment> _attachments;
             private RestSharpRequestExecutorStub _restSharpRequestExecutorStub;
@@ -100,7 +100,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             protected override void InitializeClassUnderTest()
             {
                 _restSharpRequestExecutorStub = new RestSharpRequestExecutorStub();
-                SUT = new ChatClient(_restSharpRequestExecutorStub);
+                SUT = new RestSharpChatClient(_restSharpRequestExecutorStub);
             }
 
             protected override void Given()

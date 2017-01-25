@@ -112,7 +112,7 @@
     <Compile Include="BotHelpers\IChatHubInterpreter.cs" />
     <Compile Include="Connections\Clients\Channel\FlurlChannelClient.cs" />
     <Compile Include="Connections\Clients\ClientConstants.cs" />
-    <Compile Include="Connections\Clients\File\FileClient.cs" />
+    <Compile Include="Connections\Clients\File\RestSharpFileClient.cs" />
     <Compile Include="Connections\Clients\File\IFileClient.cs" />
     <Compile Include="Connections\Clients\Handshake\FlurlHandshakeClient.cs" />
     <Compile Include="Connections\Clients\IRestSharpRequestExecutor.cs" />
@@ -122,7 +122,7 @@
     <Compile Include="Connections\Clients\Channel\RestSharpChannelClient.cs" />
     <Compile Include="Connections\Clients\Channel\IChannelClient.cs" />
     <Compile Include="Connections\Clients\Chat\IChatClient.cs" />
-    <Compile Include="Connections\Clients\Chat\ChatClient.cs" />
+    <Compile Include="Connections\Clients\Chat\RestSharpChatClient.cs" />
     <Compile Include="Connections\Clients\IResponseVerifier.cs" />
     <Compile Include="Connections\Clients\ResponseVerifier.cs" />
     <Compile Include="Connections\Models\Group.cs" />
