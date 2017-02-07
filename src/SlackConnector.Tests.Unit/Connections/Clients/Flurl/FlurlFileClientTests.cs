@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http.Testing;
 using Moq;
@@ -53,7 +54,9 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
                 .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlFileClient.FILE_UPLOAD_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("channels", channel)
-                .WithQueryParamValue("filename", "test-file-name.exe")
+                //.WithQueryParamValue("filename", "test-file-name.exe")
+                .WithVerb(HttpMethod.Post)
+                .WithContentType("multipart/form-data")
                 .Times(1);
         }
     }
