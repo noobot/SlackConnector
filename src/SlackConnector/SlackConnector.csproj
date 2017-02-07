@@ -48,10 +48,6 @@
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -114,17 +110,12 @@
     <Compile Include="Connections\Clients\Chat\FlurlChatClient.cs" />
     <Compile Include="Connections\Clients\ClientConstants.cs" />
     <Compile Include="Connections\Clients\File\FlurlFileClient.cs" />
-    <Compile Include="Connections\Clients\File\RestSharpFileClient.cs" />
     <Compile Include="Connections\Clients\File\IFileClient.cs" />
     <Compile Include="Connections\Clients\Handshake\FlurlHandshakeClient.cs" />
-    <Compile Include="Connections\Clients\IRestSharpRequestExecutor.cs" />
-    <Compile Include="Connections\Clients\RestSharpRestSharpRequestExecutor.cs" />
     <Compile Include="Connections\ConnectionFactory.cs" />
     <Compile Include="Connections\Clients\Handshake\IHandshakeClient.cs" />
-    <Compile Include="Connections\Clients\Channel\RestSharpChannelClient.cs" />
     <Compile Include="Connections\Clients\Channel\IChannelClient.cs" />
     <Compile Include="Connections\Clients\Chat\IChatClient.cs" />
-    <Compile Include="Connections\Clients\Chat\RestSharpChatClient.cs" />
     <Compile Include="Connections\Clients\IResponseVerifier.cs" />
     <Compile Include="Connections\Clients\ResponseVerifier.cs" />
     <Compile Include="Connections\Models\Group.cs" />
@@ -134,10 +125,8 @@
     <Compile Include="Connections\Responses\JoinChannelResponse.cs" />
     <Compile Include="Connections\Models\Profile.cs" />
     <Compile Include="Connections\IConnectionFactory.cs" />
-    <Compile Include="Connections\IRestSharpFactory.cs" />
     <Compile Include="Connections\Responses\StandardResponse.cs" />
     <Compile Include="Connections\Responses\UsersResponse.cs" />
-    <Compile Include="Connections\RestSharpFactory.cs" />
     <Compile Include="Connections\Sockets\Messages\Inbound\DmChannelJoinedMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Inbound\UserJoinedMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Inbound\ChannelJoinedMessage.cs" />

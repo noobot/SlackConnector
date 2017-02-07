@@ -11,15 +11,6 @@ namespace SlackConnector.Connections
 {
     internal class ConnectionFactory : IConnectionFactory
     {
-        private readonly IRestSharpRequestExecutor _restSharpRequestExecutor;
-
-        public ConnectionFactory()
-        {
-            IRestSharpFactory restSharpFactory = new RestSharpFactory();
-            IResponseVerifier responseVerifier = new ResponseVerifier();
-            _restSharpRequestExecutor = new RestSharpRestSharpRequestExecutor(restSharpFactory, responseVerifier);
-        }
-
         public IWebSocketClient CreateWebSocketClient(string url, ProxySettings proxySettings)
         {
             return new WebSocketClient(new MessageInterpreter(new Logger()), url, proxySettings);

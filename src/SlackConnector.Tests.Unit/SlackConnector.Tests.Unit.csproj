@@ -76,10 +76,6 @@
       <HintPath>..\..\packages\NUnitTestAdapter.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Should, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Should.1.1.20\lib\Should.dll</HintPath>
       <Private>True</Private>
@@ -151,14 +147,10 @@
   <ItemGroup>
     <Compile Include="BotHelpers\MentionDetectorTests.cs" />
     <Compile Include="BotHelpers\ChatHubInterpreterTests.cs" />
-    <Compile Include="Connections\Clients\RestSharp\RestSharpFileClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlChannelClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlChatClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlFileClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlHandshakeClientTests.cs" />
-    <Compile Include="Connections\Clients\RestSharp\RestSharpChannelClientTests.cs" />
-    <Compile Include="Connections\Clients\RestSharp\RestSharpChatClientTests.cs" />
-    <Compile Include="Connections\Clients\RequestExecutorTests.cs" />
     <Compile Include="Connections\Clients\ResponseVerifierTests.cs" />
     <Compile Include="Connections\ProxySettingsTests.cs" />
     <Compile Include="Models\SlackAttachmentSerialisationTests.cs" />
@@ -182,8 +174,6 @@
     <Compile Include="SlackConnectionTests\JoinDirectMessageChannelTests.cs" />
     <Compile Include="SlackConnectionTests\SayTests.cs" />
     <Compile Include="Connections\Sockets\Messages\MessageInterpreterTests.cs" />
-    <Compile Include="Stubs\RestSharpRequestExecutorStub.cs" />
-    <Compile Include="Stubs\RestClientStub.cs" />
     <Compile Include="Stubs\SlackConnectionFactoryStub.cs" />
     <Compile Include="Stubs\SlackConnectionStub.cs" />
     <Compile Include="Stubs\WebSocketClientStub.cs" />
