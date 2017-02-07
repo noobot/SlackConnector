@@ -20,7 +20,7 @@ namespace SlackConnector.Connections.Clients.File
         public async Task PostFile(string slackKey, string channel, string filePath)
         {
             var httpResponse = await ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(FILE_UPLOAD_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channels", channel)
@@ -34,7 +34,7 @@ namespace SlackConnector.Connections.Clients.File
         public async Task PostFile(string slackKey, string channel, Stream stream, string fileName)
         {
             var httpResponse = await ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(FILE_UPLOAD_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channels", channel)

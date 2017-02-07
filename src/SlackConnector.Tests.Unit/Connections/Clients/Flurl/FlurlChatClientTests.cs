@@ -51,7 +51,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)));
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("channel", channel)
                 .WithQueryParamValue("text", text)
@@ -76,7 +76,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
 
             // then
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
                 .WithQueryParamValue("attachments", JsonConvert.SerializeObject(attachments))
                 .Times(1);
         }

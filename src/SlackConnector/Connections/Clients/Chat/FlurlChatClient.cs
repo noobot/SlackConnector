@@ -22,7 +22,7 @@ namespace SlackConnector.Connections.Clients.Chat
         public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
         {
             var request = ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(SEND_MESSAGE_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channel", channel)

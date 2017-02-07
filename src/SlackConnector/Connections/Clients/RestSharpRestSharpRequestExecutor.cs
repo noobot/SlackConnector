@@ -5,7 +5,7 @@ namespace SlackConnector.Connections.Clients
 {
     internal class RestSharpRestSharpRequestExecutor : IRestSharpRequestExecutor
     {
-        internal static string SLACK_URL => ClientConstants.HANDSHAKE_PATH;
+        internal static string SLACK_URL => ClientConstants.SlackApiHost;
 
         private readonly IRestSharpFactory _restSharpFactory;
         private readonly IResponseVerifier _responseVerifier;

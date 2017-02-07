@@ -18,7 +18,7 @@ namespace SlackConnector.Connections.Clients.Handshake
         public async Task<HandshakeResponse> FirmShake(string slackKey)
         {
             var response = await ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(HANDSHAKE_PATH)
                        .SetQueryParam("token", slackKey)
                        .GetJsonAsync<HandshakeResponse>();

@@ -2,6 +2,6 @@
 {
     internal static class ClientConstants
     {
-        internal const string HANDSHAKE_PATH = "https://slack.com";
+        internal const string SlackApiHost = "https://slack.com";
     }
 }

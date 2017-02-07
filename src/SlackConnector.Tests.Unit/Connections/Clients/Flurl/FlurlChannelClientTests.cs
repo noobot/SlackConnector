@@ -57,7 +57,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)), Times.Once);
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChannelClient.JOIN_DM_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChannelClient.JOIN_DM_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("user", userId)
                 .Times(1);
@@ -88,7 +88,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)), Times.Once);
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChannelClient.CHANNELS_LIST_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChannelClient.CHANNELS_LIST_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .Times(1);
 
@@ -118,7 +118,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)), Times.Once);
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChannelClient.GROUPS_LIST_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChannelClient.GROUPS_LIST_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .Times(1);
 
@@ -148,7 +148,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)), Times.Once);
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlChannelClient.USERS_LIST_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChannelClient.USERS_LIST_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("presence", "1")
                 .Times(1);

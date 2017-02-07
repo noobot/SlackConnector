@@ -51,7 +51,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)));
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlHandshakeClient.HANDSHAKE_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlHandshakeClient.HANDSHAKE_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .Times(1);
 

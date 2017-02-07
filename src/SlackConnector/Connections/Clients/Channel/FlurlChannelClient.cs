@@ -22,7 +22,7 @@ namespace SlackConnector.Connections.Clients.Channel
         public async Task<Models.Channel> JoinDirectMessageChannel(string slackKey, string user)
         {
             var response = await ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(JOIN_DM_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("user", user)
@@ -35,7 +35,7 @@ namespace SlackConnector.Connections.Clients.Channel
         public async Task<Models.Channel[]> GetChannels(string slackKey)
         {
             var response = await ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(CHANNELS_LIST_PATH)
                        .SetQueryParam("token", slackKey)
                        .GetJsonAsync<ChannelsResponse>();
@@ -47,7 +47,7 @@ namespace SlackConnector.Connections.Clients.Channel
         public async Task<Group[]> GetGroups(string slackKey)
         {
             var response = await ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(GROUPS_LIST_PATH)
                        .SetQueryParam("token", slackKey)
                        .GetJsonAsync<GroupsResponse>();
@@ -59,7 +59,7 @@ namespace SlackConnector.Connections.Clients.Channel
         public async Task<User[]> GetUsers(string slackKey)
         {
             var response = await ClientConstants
-                       .HANDSHAKE_PATH
+                       .SlackApiHost
                        .AppendPathSegment(USERS_LIST_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("presence", "1")

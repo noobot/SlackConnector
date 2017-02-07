@@ -51,7 +51,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)));
             _httpTest
-                .ShouldHaveCalled(ClientConstants.HANDSHAKE_PATH.AppendPathSegment(FlurlFileClient.FILE_UPLOAD_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlFileClient.FILE_UPLOAD_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("channels", channel)
                 //.WithQueryParamValue("filename", "test-file-name.exe")
