@@ -37,7 +37,7 @@ namespace SlackConnector.Connections
 
         public IFileClient CreateFileClient()
         {
-            return new RestSharpFileClient(_restSharpRequestExecutor);
+            return new FlurlFileClient(new ResponseVerifier());
         }
 
         public IChannelClient CreateChannelClient()

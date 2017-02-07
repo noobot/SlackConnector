@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using Newtonsoft.Json;
 using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.File
@@ -18,20 +19,30 @@ namespace SlackConnector.Connections.Clients.File
 
         public async Task PostFile(string slackKey, string channel, string filePath)
         {
-            var response = await ClientConstants
+            var httpResponse = await ClientConstants
                        .HANDSHAKE_PATH
                        .AppendPathSegment(FILE_UPLOAD_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channels", channel)
-                       .SetQueryParam("filename", Path.GetFileName(filePath))
-                       .GetJsonAsync<StandardResponse>();
+                       .PostMultipartAsync(content => content.AddFile("file", filePath));
 
+            var responseContent = await httpResponse.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<StandardResponse>(responseContent);
             _responseVerifier.VerifyResponse(response);
         }
 
-        public Task PostFile(string slackKey, string channel, Stream stream, string fileName)
+        public async Task PostFile(string slackKey, string channel, Stream stream, string fileName)
         {
-            throw new System.NotImplementedException();
+            var httpResponse = await ClientConstants
+                       .HANDSHAKE_PATH
+                       .AppendPathSegment(FILE_UPLOAD_PATH)
+                       .SetQueryParam("token", slackKey)
+                       .SetQueryParam("channels", channel)
+                       .PostMultipartAsync(content => content.AddFile("file", stream, fileName));
+
+            var responseContent = await httpResponse.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<StandardResponse>(responseContent);
+            _responseVerifier.VerifyResponse(response);
         }
     }
 }
