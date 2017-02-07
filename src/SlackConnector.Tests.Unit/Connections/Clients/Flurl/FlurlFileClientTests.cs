@@ -54,7 +54,6 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlFileClient.FILE_UPLOAD_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("channels", channel)
-                //.WithQueryParamValue("filename", "test-file-name.exe")
                 .WithVerb(HttpMethod.Post)
                 .WithContentType("multipart/form-data")
                 .Times(1);

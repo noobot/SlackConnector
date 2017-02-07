@@ -11,6 +11,7 @@ namespace SlackConnector.Connections.Clients.File
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string FILE_UPLOAD_PATH = "/api/files.upload";
+        internal const string POST_FILE_VARIABLE_NAME = "file";
 
         public FlurlFileClient(IResponseVerifier responseVerifier)
         {
@@ -24,7 +25,7 @@ namespace SlackConnector.Connections.Clients.File
                        .AppendPathSegment(FILE_UPLOAD_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channels", channel)
-                       .PostMultipartAsync(content => content.AddFile("file", filePath));
+                       .PostMultipartAsync(content => content.AddFile(POST_FILE_VARIABLE_NAME, filePath));
 
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
             var response = JsonConvert.DeserializeObject<StandardResponse>(responseContent);
@@ -38,7 +39,7 @@ namespace SlackConnector.Connections.Clients.File
                        .AppendPathSegment(FILE_UPLOAD_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channels", channel)
-                       .PostMultipartAsync(content => content.AddFile("file", stream, fileName));
+                       .PostMultipartAsync(content => content.AddFile(POST_FILE_VARIABLE_NAME, stream, fileName));
 
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
             var response = JsonConvert.DeserializeObject<StandardResponse>(responseContent);
