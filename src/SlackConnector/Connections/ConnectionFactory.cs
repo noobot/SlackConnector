@@ -11,15 +11,6 @@ namespace SlackConnector.Connections
 {
     internal class ConnectionFactory : IConnectionFactory
     {
-        private readonly IRequestExecutor _requestExecutor;
-
-        public ConnectionFactory()
-        {
-            IRestSharpFactory restSharpFactory = new RestSharpFactory();
-            IResponseVerifier responseVerifier = new ResponseVerifier();
-            _requestExecutor = new RequestExecutor(restSharpFactory, responseVerifier);
-        }
-
         public IWebSocketClient CreateWebSocketClient(string url, ProxySettings proxySettings)
         {
             return new WebSocketClient(new MessageInterpreter(new Logger()), url, proxySettings);
@@ -27,22 +18,22 @@ namespace SlackConnector.Connections
 
         public IHandshakeClient CreateHandshakeClient()
         {
-            return new HandshakeClient(_requestExecutor);
+            return new FlurlHandshakeClient(new ResponseVerifier());
         }
 
         public IChatClient CreateChatClient()
         {
-            return new ChatClient(_requestExecutor);
+            return new FlurlChatClient(new ResponseVerifier());
         }
 
         public IFileClient CreateFileClient()
         {
-            return new FileClient(_requestExecutor);
+            return new FlurlFileClient(new ResponseVerifier());
         }
 
         public IChannelClient CreateChannelClient()
         {
-            return new ChannelClient(_requestExecutor);
+            return new FlurlChannelClient(new ResponseVerifier());
         }
     }
 }
