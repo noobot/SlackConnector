@@ -33,7 +33,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 
             protected override void When()
             {
-                SUT.Disconnect();
+                SUT.Close().Wait();
             }
 
             [Test]
@@ -68,7 +68,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
 
             protected override void When()
             {
-                SUT.Disconnect();
+                SUT.Close().Wait();
             }
 
             [Test]

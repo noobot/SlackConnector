@@ -35,9 +35,9 @@ namespace SlackConnector.Tests.Unit.Stubs
             return Task.Factory.StartNew(() => { });
         }
         
-        public void Close()
+        public Task Close()
         {
-
+            return Task.CompletedTask;
         }
     }
 }

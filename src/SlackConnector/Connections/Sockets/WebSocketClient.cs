@@ -68,9 +68,10 @@ namespace SlackConnector.Connections.Sockets
             return taskSource.Task;
         }
 
-        public void Close()
+        public Task Close()
         {
             _webSocket.Close();
+            return Task.CompletedTask;
         }
 
         private void WebSocketOnMessage(object sender, MessageEventArgs args)

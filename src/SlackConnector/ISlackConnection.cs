@@ -47,11 +47,17 @@ namespace SlackConnector
         ContactDetails Self { get; }
 
         #endregion
-        
+
         /// <summary>
         /// Disconnect from Slack.
         /// </summary>
+        [Obsolete("Please use Close async method", true)]
         void Disconnect();
+
+        /// <summary>
+        /// Close websocket connection to Slack
+        /// </summary>
+        Task Close();
 
         /// <summary>
         /// Send message to Slack channel.

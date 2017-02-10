@@ -152,12 +152,18 @@ namespace SlackConnector
                 new SlackUser { Id = userId, Name = string.Empty };
         }
 
-        public void Disconnect()
+        public async Task Close()
         {
             if (_webSocketClient != null && _webSocketClient.IsAlive)
             {
-                _webSocketClient.Close();
+                await _webSocketClient.Close();
             }
+        }
+
+        [Obsolete("Please use Close async method", true)]
+        public void Disconnect()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Say(BotMessage message)

@@ -212,6 +212,7 @@
     <Compile Include="Connections\Sockets\Messages\Outbound\BaseMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\PingMessage.cs" />
     <Compile Include="Connections\Sockets\Messages\Outbound\TypingIndicatorMessage.cs" />
+    <Compile Include="Connections\Sockets\WebSocketClientLite.cs" />
     <Compile Include="ConsoleLoggingLevel.cs" />
     <Compile Include="EventHandlers\UserJoinedEventHandler.cs" />
     <Compile Include="EventHandlers\ChatHubJoinedEventHandler.cs" />

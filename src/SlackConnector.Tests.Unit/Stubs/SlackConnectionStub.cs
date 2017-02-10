@@ -95,5 +95,10 @@ namespace SlackConnector.Tests.Unit.Stubs
         {
             throw new NotImplementedException();
         }
+
+        public Task Close()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
