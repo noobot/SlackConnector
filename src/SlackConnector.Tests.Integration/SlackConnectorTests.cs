@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ namespace SlackConnector.Tests.Integration
 
             // then
             Assert.That(_slackConnection.IsConnected, Is.True);
-            Thread.Sleep(TimeSpan.FromMinutes(5));
+            //Thread.Sleep(TimeSpan.FromMinutes(1));
         }
 
         private void SlackConnector_OnDisconnect()
@@ -37,7 +38,9 @@ namespace SlackConnector.Tests.Integration
 
         private Task SlackConnectorOnMessageReceived(SlackMessage message)
         {
-            return new Task(() => { });
+            Debug.WriteLine(message.Text);
+            Console.WriteLine(message.Text);
+            return Task.CompletedTask;
         }
     }
 }
