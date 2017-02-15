@@ -49,11 +49,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ISocketLite.PCL, Version=3.6.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SocketLite.PCL.3.6.4-beta1\lib\net45\ISocketLite.PCL.dll</HintPath>
+      <HintPath>..\..\packages\SocketLite.PCL.3.6.4\lib\net45\ISocketLite.PCL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="IWebsocketClientLite.PCL, Version=3.6.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebsocketClientLite.PCL.3.6.4-beta2\lib\netstandard1.2\IWebsocketClientLite.PCL.dll</HintPath>
+    <Reference Include="IWebsocketClientLite.PCL, Version=3.6.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebsocketClientLite.PCL.3.6.6\lib\netstandard1.2\IWebsocketClientLite.PCL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -93,7 +93,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SocketLite, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SocketLite.PCL.3.6.4-beta1\lib\net45\SocketLite.dll</HintPath>
+      <HintPath>..\..\packages\SocketLite.PCL.3.6.4\lib\net45\SocketLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SpecsFor, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -216,7 +216,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="WebsocketClientLite.PCL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebsocketClientLite.PCL.3.6.4-beta2\lib\netstandard1.2\WebsocketClientLite.PCL.dll</HintPath>
+      <HintPath>..\..\packages\WebsocketClientLite.PCL.3.6.6\lib\netstandard1.2\WebsocketClientLite.PCL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />

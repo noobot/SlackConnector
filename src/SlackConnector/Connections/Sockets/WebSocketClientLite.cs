@@ -29,7 +29,7 @@ namespace SlackConnector.Connections.Sockets
 
         public async Task Connect()
         {
-            await _webSocket.ConnectAsync(_uri);
+            await _webSocket.ConnectAsync(_uri, excludeZeroApplicationDataInPong: true);
         }
 
         public async Task SendMessage(BaseMessage message)
