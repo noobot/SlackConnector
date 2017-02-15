@@ -44,7 +44,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 Text = "hi, my name is <noobot>",
                 Team = "<myTeam>",
                 RawData = Json,
-                TimeStamp = 1445366603.000002
+                Timestamp = 1445366603.000002
             };
 
             Result.ShouldLookLike(expected);
@@ -315,7 +315,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 Text = null,
                 Team = null,
                 RawData = Json,
-                TimeStamp = 1445366603.000002
+                Timestamp = 1445366603.000002
             };
 
             Result.ShouldLookLike(expected);

@@ -20,6 +20,6 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         public string Team { get; set; }
 
         [JsonProperty("ts")]
-        public double TimeStamp { get; set; }
+        public double Timestamp { get; set; }
     }
 }

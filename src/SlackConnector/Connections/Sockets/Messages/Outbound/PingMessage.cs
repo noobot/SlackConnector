@@ -4,7 +4,7 @@ namespace SlackConnector.Connections.Sockets.Messages.Outbound
 {
     internal class PingMessage : BaseMessage
     {
-        public DateTime TimeStamp { get; } = DateTime.Now;
+        public DateTime Timestamp { get; } = DateTime.Now;
 
         public PingMessage()
         {

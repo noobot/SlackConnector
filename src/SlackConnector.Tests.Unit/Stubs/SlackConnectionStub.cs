@@ -86,6 +86,12 @@ namespace SlackConnector.Tests.Unit.Stubs
             OnUserJoined?.Invoke(null);
         }
 
+        public event PongEventHandler OnPong;
+        public void RaiseOnPong()
+        {
+            OnPong?.Invoke(DateTime.MinValue);
+        }
+
         public Task Upload(SlackChatHub chatHub, string filePath)
         {
             throw new NotImplementedException();

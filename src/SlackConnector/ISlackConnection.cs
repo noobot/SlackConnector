@@ -121,5 +121,10 @@ namespace SlackConnector
         /// Raised when a new user joins the team
         /// </summary>
         event UserJoinedEventHandler OnUserJoined;
+
+        /// <summary>
+        /// Raised when SlackApi sends a pong to our ping
+        /// </summary>
+        event PongEventHandler OnPong;
     }
 }

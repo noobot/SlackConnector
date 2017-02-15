@@ -4,6 +4,11 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
     internal class PongMessage : InboundMessage
     {
-        public DateTime TimeStamp { get; set; }
+        public DateTime Timestamp { get; set; }
+
+        public PongMessage()
+        {
+            MessageType = MessageType.Pong;
+        }
     }
 }

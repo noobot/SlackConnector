@@ -28,7 +28,7 @@ namespace SlackConnector
 
         private Dictionary<string, SlackUser> _userCache { get; set; }
         public IReadOnlyDictionary<string, SlackUser> UserCache => _userCache;
-        
+
         public bool IsConnected => ConnectedSince.HasValue;
         public DateTime? ConnectedSince { get; private set; }
         public string SlackKey { get; private set; }
@@ -76,6 +76,7 @@ namespace SlackConnector
                 case MessageType.Channel_Joined: return HandleChannelJoined((ChannelJoinedMessage)inboundMessage);
                 case MessageType.Im_Created: return HandleDmJoined((DmChannelJoinedMessage)inboundMessage);
                 case MessageType.Team_Join: return HandleUserJoined((UserJoinedMessage)inboundMessage);
+                case MessageType.Pong: return HandlePong((PongMessage)inboundMessage);
             }
 
             return Task.CompletedTask;
@@ -86,7 +87,7 @@ namespace SlackConnector
             if (string.IsNullOrEmpty(inboundMessage.User))
                 return Task.CompletedTask;
 
-            if(!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
+            if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return Task.CompletedTask;
 
             //TODO: Insert into connectedHubs when DM is missing
@@ -94,7 +95,7 @@ namespace SlackConnector
             var message = new SlackMessage
             {
                 User = GetMessageUser(inboundMessage.User),
-                TimeStamp = inboundMessage.TimeStamp,
+                Timestamp = inboundMessage.Timestamp,
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
                 RawData = inboundMessage.RawData,
@@ -143,6 +144,11 @@ namespace SlackConnector
             _userCache[slackUser.Id] = slackUser;
 
             return RaiseUserJoined(slackUser);
+        }
+
+        private Task HandlePong(PongMessage inboundMessage)
+        {
+            return RaisePong(inboundMessage.Timestamp);
         }
 
         private SlackUser GetMessageUser(string userId)
@@ -272,7 +278,6 @@ namespace SlackConnector
         private async Task RaiseChatHubJoined(SlackChatHub hub)
         {
             var e = OnChatHubJoined;
-
             if (e != null)
             {
                 try
@@ -289,10 +294,31 @@ namespace SlackConnector
         private async Task RaiseUserJoined(SlackUser user)
         {
             var e = OnUserJoined;
+            try
+            {
+                if (e != null)
+                {
+                    await e(user);
+                }
+            }
+            catch
+            {
+            }
+        }
 
+        public event PongEventHandler OnPong;
+        private async Task RaisePong(DateTime timestamp)
+        {
+            var e = OnPong;
             if (e != null)
             {
-                await e(user);
+                try
+                {
+                    await e(timestamp);
+                }
+                catch
+                {
+                }
             }
         }
 
