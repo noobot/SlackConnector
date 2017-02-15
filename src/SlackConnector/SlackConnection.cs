@@ -192,11 +192,13 @@ namespace SlackConnector
         public async Task<IEnumerable<SlackChatHub>> GetChannels()
         {
             IChannelClient client = _connectionFactory.CreateChannelClient();
-            var channels = await client.GetChannels(SlackKey);
-            var groups = await client.GetGroups(SlackKey);
 
-            var fromChannels = channels.Select(c => c.ToChatHub());
-            var fromGroups = groups.Select(g => g.ToChatHub());
+            var channelsTask = client.GetChannels(SlackKey);
+            var groupsTask = client.GetGroups(SlackKey);
+            await Task.WhenAll(channelsTask, groupsTask);
+
+            var fromChannels = channelsTask.Result.Select(c => c.ToChatHub());
+            var fromGroups = groupsTask.Result.Select(g => g.ToChatHub());
             return fromChannels.Concat(fromGroups);
         }
 
