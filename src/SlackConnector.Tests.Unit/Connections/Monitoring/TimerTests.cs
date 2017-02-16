@@ -27,5 +27,16 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             // then
             Assert.That(calls, Is.AtLeast(5));
         }
+
+        [Test]
+        public void should_throw_exception_if_a_second_timer_is_created()
+        {
+            // given
+            var timer = new Timer();
+            timer.RunEvery(() => { }, TimeSpan.FromMilliseconds(1));
+
+            // when + then
+            Assert.Throws<Timer.TimerAlreadyInitialisedException>(() => timer.RunEvery(() => { }, TimeSpan.FromMinutes(1)));
+        }
     }
 }
