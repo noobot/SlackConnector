@@ -229,6 +229,7 @@
     <Compile Include="Connections\Clients\Flurl\FlurlFileClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlHandshakeClientTests.cs" />
     <Compile Include="Connections\Clients\ResponseVerifierTests.cs" />
+    <Compile Include="Connections\Monitoring\TimerTests.cs" />
     <Compile Include="Connections\ProxySettingsTests.cs" />
     <Compile Include="Models\SlackAttachmentSerialisationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -196,6 +196,10 @@
     <Compile Include="Connections\Clients\IResponseVerifier.cs" />
     <Compile Include="Connections\Clients\ResponseVerifier.cs" />
     <Compile Include="Connections\Models\Group.cs" />
+    <Compile Include="Connections\Monitoring\Timer.cs" />
+    <Compile Include="Connections\Monitoring\IPingPongMonitor.cs" />
+    <Compile Include="Connections\Monitoring\ITimer.cs" />
+    <Compile Include="Connections\Monitoring\PingPongMonitor.cs" />
     <Compile Include="Connections\ProxySettings.cs" />
     <Compile Include="Connections\Responses\ChannelsResponse.cs" />
     <Compile Include="Connections\Responses\GroupsResponse.cs" />

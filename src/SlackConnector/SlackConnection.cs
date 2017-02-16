@@ -7,6 +7,7 @@ using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Monitoring;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
