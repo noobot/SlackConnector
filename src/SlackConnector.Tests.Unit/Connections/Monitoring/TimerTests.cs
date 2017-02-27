@@ -21,7 +21,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
 
             while (calls < 5 && DateTime.Now < timeout)
             {
-                Thread.Sleep(5);
+                Thread.Sleep(TimeSpan.FromMilliseconds(5));
             }
 
             // then
