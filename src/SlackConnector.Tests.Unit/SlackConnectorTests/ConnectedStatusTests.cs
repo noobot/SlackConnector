@@ -75,8 +75,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                     .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
 
                 GetMockFor<IWebSocketClient>()
-                    .Setup(x => x.Connect())
-                    .Returns(Task.Factory.StartNew(() => { }));
+                    .Setup(x => x.Connect(HandshakeResponse.WebSocketUrl))
+                    .Returns(Task.CompletedTask);
             }
 
             protected override void When()
@@ -107,7 +107,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 team.Id.ShouldEqual(HandshakeResponse.Team.Id);
                 team.Name.ShouldEqual(HandshakeResponse.Team.Name);
             }
-
+            
             [Test]
             public void then_should_pass_expected_users()
             {
@@ -278,10 +278,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, ProxySettings))
                     .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-
-                GetMockFor<IWebSocketClient>()
-                    .Setup(x => x.Connect())
-                    .Returns(Task.Factory.StartNew(() => { }));
             }
 
             protected override void When()

@@ -19,7 +19,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             {
                 Result = message;
                 MessageRaised = true;
-                await Task.Factory.StartNew(() => { });
+                await Task.CompletedTask;
             };
 
             ConnectionInfo = new ConnectionInformation { WebSocket = GetMockFor<IWebSocketClient>().Object };

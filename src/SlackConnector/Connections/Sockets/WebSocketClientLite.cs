@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using IWebsocketClientLite.PCL;
 using Newtonsoft.Json;
@@ -11,25 +12,30 @@ namespace SlackConnector.Connections.Sockets
     internal class WebSocketClientLite : IWebSocketClient
     {
         private readonly IMessageInterpreter _interpreter;
-        private readonly IMessageWebSocketRx _webSocket;
-        private readonly Uri _uri;
+        private readonly List<IDisposable> _subscriptions = new List<IDisposable>();
+        private IMessageWebSocketRx _webSocket;
         private int _currentMessageId;
 
         public bool IsAlive => _webSocket.IsConnected;
 
-        public WebSocketClientLite(IMessageInterpreter interpreter, string url)
+        public WebSocketClientLite(IMessageInterpreter interpreter)
         {
             _interpreter = interpreter;
-            _uri = new Uri(url);
-
-            _webSocket = new MessageWebSocketRx();
-            _webSocket.ObserveTextMessagesReceived.Subscribe(OnWebSocketOnMessage);
-            _webSocket.ObserveConnectionStatus.Subscribe(OnConnectionChange);
         }
 
-        public async Task Connect()
+        public async Task Connect(string webSockerUrl)
         {
-            await _webSocket.ConnectAsync(_uri, excludeZeroApplicationDataInPong: true);
+            if (_webSocket != null)
+            {
+                await Close();
+            }
+
+            _webSocket = new MessageWebSocketRx();
+            _subscriptions.Add(_webSocket.ObserveTextMessagesReceived.Subscribe(OnWebSocketOnMessage));
+            _subscriptions.Add(_webSocket.ObserveConnectionStatus.Subscribe(OnConnectionChange));
+
+            var uri = new Uri(webSockerUrl);
+            await _webSocket.ConnectAsync(uri, excludeZeroApplicationDataInPong: true);
         }
 
         public async Task SendMessage(BaseMessage message)
@@ -43,7 +49,17 @@ namespace SlackConnector.Connections.Sockets
 
         public async Task Close()
         {
-            await _webSocket.CloseAsync();
+            using (_webSocket)
+            {
+                foreach (var subscription in _subscriptions)
+                {
+                    subscription.Dispose();
+                }
+
+                await _webSocket.CloseAsync();
+                _subscriptions.Clear();
+                _webSocket = null;
+            }
         }
 
         public event EventHandler<InboundMessage> OnMessage;

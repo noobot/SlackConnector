@@ -10,23 +10,14 @@ namespace SlackConnector.Connections.Sockets
     internal class WebSocketClient : IWebSocketClient
     {
         private readonly IMessageInterpreter _interpreter;
-        private readonly WebSocket _webSocket;
+        private readonly ProxySettings _proxySettings;
+        private WebSocket _webSocket;
         private int _currentMessageId;
 
-        public WebSocketClient(IMessageInterpreter interpreter, string url, ProxySettings proxySettings)
+        public WebSocketClient(IMessageInterpreter interpreter, ProxySettings proxySettings)
         {
             _interpreter = interpreter;
-
-            _webSocket = new WebSocket(url);
-            _webSocket.OnMessage += WebSocketOnMessage;
-            _webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
-            _webSocket.Log.Level = GetLoggingLevel();
-            _webSocket.EmitOnPing = true;
-
-            if (proxySettings != null)
-            {
-                _webSocket.SetProxy(proxySettings.Url, proxySettings.Username, proxySettings.Password);
-            }
+            _proxySettings = proxySettings;
         }
 
         public bool IsAlive => _webSocket.IsAlive;
@@ -34,16 +25,33 @@ namespace SlackConnector.Connections.Sockets
         public event EventHandler<InboundMessage> OnMessage;
         public event EventHandler OnClose;
 
-        public Task Connect()
+        public Task Connect(string url)
         {
             var taskSource = new TaskCompletionSource<bool>();
             EventHandler<ErrorEventArgs> onError = (sender, args) => { taskSource.TrySetException(args.Exception); };
 
+            _webSocket = SetupWebSocket(url, _proxySettings);
             _webSocket.OnOpen += (sender, args) => { taskSource.SetResult(true); _webSocket.OnError -= onError; };
             _webSocket.OnError += onError;
             _webSocket.Connect();
 
             return taskSource.Task;
+        }
+
+        private WebSocket SetupWebSocket(string url, ProxySettings proxySettings)
+        {
+            var webSocket = new WebSocket(url);
+            webSocket.OnMessage += WebSocketOnMessage;
+            webSocket.OnClose += (sender, args) => OnClose?.Invoke(sender, args);
+            webSocket.Log.Level = GetLoggingLevel();
+            webSocket.EmitOnPing = true;
+
+            if (proxySettings != null)
+            {
+                webSocket.SetProxy(proxySettings.Url, proxySettings.Username, proxySettings.Password);
+            }
+
+            return webSocket;
         }
 
         public Task SendMessage(BaseMessage message)

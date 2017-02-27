@@ -6,6 +6,7 @@ namespace SlackConnector.Connections.Monitoring
 {
     internal interface IPingPongMonitor
     {
-        void StartMonitor(Func<Task> pingMethod, PongEventHandler onPong);
+        void StartMonitor(Func<Task> pingMethod);
+        void Pong(DateTime timestamp);
     }
 }
