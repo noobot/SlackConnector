@@ -72,7 +72,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
 
                 GetMockFor<IWebSocketClient>()
                     .Setup(x => x.Connect())
@@ -165,13 +165,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             {
                 var webSocket = SlackFactoryStub.Create_ConnectionInformation.WebSocket;
                 webSocket.ShouldEqual(GetMockFor<IWebSocketClient>().Object);
-            }
-
-            [Test]
-            public void then_should_connect_websocket()
-            {
-                GetMockFor<IWebSocketClient>()
-                    .Verify(x => x.Connect());
             }
 
             [Test]
@@ -284,7 +277,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 ProxySettings = new ProxySettings("hi", "you", "ok?");
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, ProxySettings))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
 
                 GetMockFor<IWebSocketClient>()
                     .Setup(x => x.Connect())

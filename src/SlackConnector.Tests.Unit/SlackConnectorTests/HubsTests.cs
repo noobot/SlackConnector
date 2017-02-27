@@ -3,7 +3,6 @@ using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
@@ -60,7 +59,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
             }
 
             protected override void When()
@@ -112,7 +111,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
             }
 
             protected override void When()
@@ -165,7 +164,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
             }
 
             protected override void When()
@@ -220,7 +219,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
             }
 
             protected override void When()
@@ -279,7 +278,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
+                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
             }
 
             protected override void When()
