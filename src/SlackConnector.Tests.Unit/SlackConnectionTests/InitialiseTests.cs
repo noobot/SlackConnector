@@ -23,6 +23,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     SlackChatHubs = new Dictionary<string, SlackChatHub> { { "some-hub", new SlackChatHub() } },
                     WebSocket = GetMockFor<IWebSocketClient>().Object
                 };
+
+                GetMockFor<IWebSocketClient>()
+                    .Setup(x => x.IsAlive)
+                    .Returns(true);
             }
 
             protected override void When()

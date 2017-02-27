@@ -29,6 +29,11 @@ namespace SlackConnector.Tests.Integration
             // then
             Assert.That(_slackConnection.IsConnected, Is.True);
             //Thread.Sleep(TimeSpan.FromMinutes(1));
+
+            // when
+            await _slackConnection.Close();
+
+            Assert.That(_slackConnection.IsConnected, Is.False);
         }
 
         private void SlackConnector_OnDisconnect()

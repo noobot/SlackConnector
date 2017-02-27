@@ -30,7 +30,7 @@ namespace SlackConnector
         private Dictionary<string, SlackUser> _userCache { get; set; }
         public IReadOnlyDictionary<string, SlackUser> UserCache => _userCache;
 
-        public bool IsConnected => ConnectedSince.HasValue;
+        public bool IsConnected => _webSocketClient.IsAlive;
         public DateTime? ConnectedSince { get; private set; }
         public string SlackKey { get; private set; }
 

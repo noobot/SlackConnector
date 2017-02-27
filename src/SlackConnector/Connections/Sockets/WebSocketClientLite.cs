@@ -55,10 +55,9 @@ namespace SlackConnector.Connections.Sockets
                 {
                     subscription.Dispose();
                 }
+                _subscriptions.Clear();
 
                 await _webSocket.CloseAsync();
-                _subscriptions.Clear();
-                _webSocket = null;
             }
         }
 
