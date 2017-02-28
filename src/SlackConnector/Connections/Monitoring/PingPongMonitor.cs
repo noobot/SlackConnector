@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SlackConnector.EventHandlers;
 
 namespace SlackConnector.Connections.Monitoring
 {
     internal class PingPongMonitor : IPingPongMonitor
     {
         private readonly ITimer _timer;
-        private readonly TimeSpan _maximumTimeBetweenPongs = TimeSpan.FromMinutes(1);
+        private TimeSpan _pongTimeout;
         private Func<Task> _pingMethod;
-        private DateTime _lastPong;
+        private Func<Task> _reconnectMethod;
 
-        public PingPongMonitor() : this(new Timer())
-        { }
+        private DateTime _lastPong;
 
         public PingPongMonitor(ITimer timer)
         {
             _timer = timer;
         }
 
-        public void StartMonitor(Func<Task> pingMethod)
+        public async Task StartMonitor(Func<Task> pingMethod, Func<Task> reconnectMethod, TimeSpan pongTimeout)
         {
-            _lastPong = DateTime.Now;
             _pingMethod = pingMethod;
+            _reconnectMethod = reconnectMethod;
+            _pongTimeout = pongTimeout;
+            _lastPong = DateTime.Now;
+
+            _timer.RunEvery(() => {}, TimeSpan.FromSeconds(5));
+            await pingMethod();
         }
 
         public void Pong(DateTime timestamp)
