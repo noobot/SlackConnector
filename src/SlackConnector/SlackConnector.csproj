@@ -196,6 +196,8 @@
     <Compile Include="Connections\Clients\IResponseVerifier.cs" />
     <Compile Include="Connections\Clients\ResponseVerifier.cs" />
     <Compile Include="Connections\Models\Group.cs" />
+    <Compile Include="Connections\Monitoring\IDateTimeKeeper.cs" />
+    <Compile Include="Connections\Monitoring\MonitorAlreadyStartedException.cs" />
     <Compile Include="Connections\Monitoring\Timer.cs" />
     <Compile Include="Connections\Monitoring\IPingPongMonitor.cs" />
     <Compile Include="Connections\Monitoring\ITimer.cs" />

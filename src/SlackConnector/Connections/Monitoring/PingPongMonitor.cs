@@ -6,31 +6,46 @@ namespace SlackConnector.Connections.Monitoring
     internal class PingPongMonitor : IPingPongMonitor
     {
         private readonly ITimer _timer;
+        private readonly IDateTimeKeeper _dateTimeKeeper;
+
         private TimeSpan _pongTimeout;
         private Func<Task> _pingMethod;
         private Func<Task> _reconnectMethod;
-
-        private DateTime _lastPong;
-
-        public PingPongMonitor(ITimer timer)
+        
+        public PingPongMonitor(ITimer timer, IDateTimeKeeper dateTimeKeeper)
         {
             _timer = timer;
+            _dateTimeKeeper = dateTimeKeeper;
         }
 
         public async Task StartMonitor(Func<Task> pingMethod, Func<Task> reconnectMethod, TimeSpan pongTimeout)
         {
+            if (_dateTimeKeeper.HasDateTime())
+            {
+                throw new MonitorAlreadyStartedException();
+            }
+
             _pingMethod = pingMethod;
             _reconnectMethod = reconnectMethod;
             _pongTimeout = pongTimeout;
-            _lastPong = DateTime.Now;
 
-            _timer.RunEvery(() => {}, TimeSpan.FromSeconds(5));
+            _timer.RunEvery(TimerTick, TimeSpan.FromSeconds(5));
             await pingMethod();
         }
 
-        public void Pong(DateTime timestamp)
+        private void TimerTick()
         {
-            throw new NotImplementedException();
+            if (_dateTimeKeeper.TimeSinceDateTime() > _pongTimeout)
+            {
+                _reconnectMethod().Wait();
+            }
+
+            _pingMethod();
+        }
+
+        public void Pong()
+        {
+            _dateTimeKeeper.SetDateTimeToNow();
         }
     }
 }
