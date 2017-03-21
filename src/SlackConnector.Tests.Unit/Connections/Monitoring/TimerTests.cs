@@ -14,7 +14,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             // given
             var timer = new Timer();
             int calls = 0;
-            DateTime timeout = DateTime.Now.AddSeconds(2);
+            DateTime timeout = DateTime.Now.AddSeconds(4);
 
             // when
             timer.RunEvery(() => calls++, TimeSpan.FromMilliseconds(1));
