@@ -242,6 +242,7 @@
     <Compile Include="Connections\Clients\Flurl\FlurlFileClientTests.cs" />
     <Compile Include="Connections\Clients\Flurl\FlurlHandshakeClientTests.cs" />
     <Compile Include="Connections\Clients\ResponseVerifierTests.cs" />
+    <Compile Include="Connections\Monitoring\DateTimeKeeperTests.cs" />
     <Compile Include="Connections\Monitoring\PingPongMonitorTests.cs" />
     <Compile Include="Connections\Monitoring\TimerTests.cs" />
     <Compile Include="Connections\ProxySettingsTests.cs" />

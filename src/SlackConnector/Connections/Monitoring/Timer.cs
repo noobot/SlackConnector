@@ -17,8 +17,6 @@ namespace SlackConnector.Connections.Monitoring
         }
 
         public class TimerAlreadyInitialisedException : Exception
-        {
-            
-        }
+        { }
     }
 }

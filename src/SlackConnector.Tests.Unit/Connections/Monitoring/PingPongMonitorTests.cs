@@ -86,6 +86,35 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
         {
             // given
             var monitor = new PingPongMonitor(timerStub, dateTimeKeeperMock.Object);
+            
+            dateTimeKeeperMock
+                .Setup(x => x.TimeSinceDateTime())
+                .Returns(TimeSpan.FromMinutes(2));
+
+            bool reconnectCalled = false;
+            Func<Task> reconnect = () => { reconnectCalled = true; return Task.CompletedTask; };
+            await monitor.StartMonitor(() => Task.CompletedTask, reconnect, TimeSpan.FromMinutes(1));
+
+            dateTimeKeeperMock
+                .Setup(x => x.HasDateTime())
+                .Returns(true);
+
+            // when
+            timerStub.RunEvery_Action();
+
+            // then
+            Assert.That(reconnectCalled, Is.True);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_not_initiate_reconnect_if_timerkeeper_hasnt_been_set(TimerStub timerStub, Mock<IDateTimeKeeper> dateTimeKeeperMock)
+        {
+            // given
+            var monitor = new PingPongMonitor(timerStub, dateTimeKeeperMock.Object);
+
+            dateTimeKeeperMock
+                .Setup(x => x.HasDateTime())
+                .Returns(false);
 
             dateTimeKeeperMock
                 .Setup(x => x.TimeSinceDateTime())
@@ -99,7 +128,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             timerStub.RunEvery_Action();
 
             // then
-            Assert.That(reconnectCalled, Is.True);
+            Assert.That(reconnectCalled, Is.False);
         }
 
         [Test, AutoMoqData]
