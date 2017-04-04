@@ -200,6 +200,7 @@
     <Compile Include="Connections\Monitoring\IDateTimeKeeper.cs" />
     <Compile Include="Connections\Monitoring\IMonitoringFactory.cs" />
     <Compile Include="Connections\Monitoring\MonitorAlreadyStartedException.cs" />
+    <Compile Include="Connections\Monitoring\MonitoringFactory.cs" />
     <Compile Include="Connections\Monitoring\Timer.cs" />
     <Compile Include="Connections\Monitoring\IPingPongMonitor.cs" />
     <Compile Include="Connections\Monitoring\ITimer.cs" />
