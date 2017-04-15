@@ -279,5 +279,30 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldBeNull();
             logger.Verify(x => x.LogError(It.IsAny<string>()), Times.AtLeastOnce);
         }
+
+        [Test, AutoMoqData]
+        public void should_return_pong_message(MessageInterpreter interpreter)
+        {
+            // given
+            string json = @"
+                {
+                  'type': 'pong',
+                  'ts': '1445366603.000002'
+                }
+            ";
+
+            // when
+            var result = interpreter.InterpretMessage(json);
+
+            // then
+            var expected = new PongMessage
+            {
+                MessageType = MessageType.Pong,
+                RawData = json,
+                //Timestamp = 1445366603.000002
+            };
+
+            result.ShouldLookLike(expected);
+        }
     }
 }
