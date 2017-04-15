@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Tests.Integration.Configuration;
 
@@ -11,19 +12,19 @@ namespace SlackConnector.Tests.Integration
         protected Config Config;
 
         [SetUp]
-        public virtual void SetUp()
+        public virtual async Task SetUp()
         {
             Config = new ConfigReader().GetConfig();
 
             var slackConnector = new SlackConnector();
-            SlackConnection = slackConnector.Connect(Config.Slack.ApiToken).Result;
+            SlackConnection = await slackConnector.Connect(Config.Slack.ApiToken);
         }
 
         [TearDown]
-        public virtual void TearDown()
+        public virtual async Task TearDown()
         {
-            SlackConnection.Close().Wait();
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            await SlackConnection.Close();
+            Thread.Sleep(TimeSpan.FromSeconds(2));
         }
     }
 }

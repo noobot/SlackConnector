@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -13,7 +14,7 @@ namespace SlackConnector.Tests.Integration.Configuration
         {
             if (Current == null)
             {
-                string fileName = Path.Combine(Environment.CurrentDirectory, "configuration", "config.json");
+                string fileName = Path.Combine(GetAssemblyDirectory(), "configuration", "config.json");
                 if (!File.Exists(fileName))
                 {
                     Assert.Inconclusive("Unable to load config file from: " + fileName);
@@ -34,6 +35,14 @@ namespace SlackConnector.Tests.Integration.Configuration
             }
 
             return Current;
+        }
+
+        public static string GetAssemblyDirectory()
+        {
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(path);
         }
     }
 }

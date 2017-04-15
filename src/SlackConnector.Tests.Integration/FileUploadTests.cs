@@ -11,18 +11,18 @@ namespace SlackConnector.Tests.Integration
         private string _filePath;
 
         [SetUp]
-        public override void SetUp()
+        public override async Task SetUp()
         {
-            base.SetUp();
+            await base.SetUp();
 
             _filePath = Path.GetTempFileName();
             File.WriteAllText(_filePath, EmbeddedResourceFileReader.ReadEmbeddedFileAsText("UploadTest.txt"));
         }
 
         [TearDown]
-        public override void TearDown()
+        public override async Task TearDown()
         {
-            base.TearDown();
+            await base.TearDown();
             File.Delete(_filePath);
         }
 
