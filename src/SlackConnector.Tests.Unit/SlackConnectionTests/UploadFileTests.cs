@@ -32,7 +32,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 .Setup(x => x.CreateFileClient())
                 .Returns(GetMockFor<IFileClient>().Object);
 
-            SUT.Initialise(connectionInfo);
+            SUT.Initialise(connectionInfo).Wait();
         }
 
         protected override void When()
@@ -71,7 +71,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 .Setup(x => x.CreateFileClient())
                 .Returns(GetMockFor<IFileClient>().Object);
 
-            SUT.Initialise(connectionInfo);
+            SUT.Initialise(connectionInfo).Wait();
         }
 
         protected override void When()

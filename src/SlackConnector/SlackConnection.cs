@@ -7,6 +7,7 @@ using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Monitoring;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
@@ -21,7 +22,9 @@ namespace SlackConnector
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly IMentionDetector _mentionDetector;
+        private readonly IMonitoringFactory _monitoringFactory;
         private IWebSocketClient _webSocketClient;
+        private IPingPongMonitor _pingPongMonitor;
 
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
@@ -36,13 +39,14 @@ namespace SlackConnector
         public ContactDetails Team { get; private set; }
         public ContactDetails Self { get; private set; }
 
-        public SlackConnection(IConnectionFactory connectionFactory, IMentionDetector mentionDetector)
+        public SlackConnection(IConnectionFactory connectionFactory, IMentionDetector mentionDetector, IMonitoringFactory monitoringFactory)
         {
             _connectionFactory = connectionFactory;
             _mentionDetector = mentionDetector;
+            _monitoringFactory = monitoringFactory;
         }
 
-        public void Initialise(ConnectionInformation connectionInformation)
+        public async Task Initialise(ConnectionInformation connectionInformation)
         {
             SlackKey = connectionInformation.SlackKey;
             Team = connectionInformation.Team;
@@ -60,6 +64,9 @@ namespace SlackConnector
             _webSocketClient.OnMessage += async (sender, message) => await ListenTo(message);
 
             ConnectedSince = DateTime.Now;
+
+            _pingPongMonitor = _monitoringFactory.CreatePingPongMonitor();
+            await _pingPongMonitor.StartMonitor(Ping, () => Task.CompletedTask, TimeSpan.FromMinutes(2));
         }
 
         private Task ListenTo(InboundMessage inboundMessage)

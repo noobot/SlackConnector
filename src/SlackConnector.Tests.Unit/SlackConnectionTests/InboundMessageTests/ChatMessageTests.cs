@@ -16,7 +16,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
     {
         protected override void When()
         {
-            SUT.Initialise(ConnectionInfo);
+            SUT.Initialise(ConnectionInfo).Wait();
 
             if (!string.IsNullOrEmpty(InboundMessage?.Channel))
             {

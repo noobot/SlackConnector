@@ -28,7 +28,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     .Setup(x => x.IsAlive)
                     .Returns(true);
 
-                SUT.Initialise(Info);
+                SUT.Initialise(Info).Wait();
             }
 
             protected override void When()
@@ -63,7 +63,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     .Setup(x => x.IsAlive)
                     .Returns(false);
 
-                SUT.Initialise(Info);
+                SUT.Initialise(Info).Wait();
             }
 
             protected override void When()

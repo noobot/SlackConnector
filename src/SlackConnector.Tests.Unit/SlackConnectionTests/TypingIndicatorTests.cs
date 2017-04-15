@@ -25,7 +25,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     SlackKey = SlackKey,
                     WebSocket = _webSocketClient
                 };
-                SUT.Initialise(connectionInfo);
+                SUT.Initialise(connectionInfo).Wait();
             }
 
             protected override void When()

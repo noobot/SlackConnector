@@ -25,7 +25,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             protected override void Given()
             {
                 var connectionInfo = new ConnectionInformation { SlackKey = SlackKey,  WebSocket = new WebSocketClientStub()};
-                SUT.Initialise(connectionInfo);
+                SUT.Initialise(connectionInfo).Wait();
 
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateChannelClient())

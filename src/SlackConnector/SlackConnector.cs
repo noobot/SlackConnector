@@ -55,7 +55,8 @@ namespace SlackConnector
                 WebSocket = await _connectionFactory.CreateWebSocketClient(handshakeResponse.WebSocketUrl, proxySettings)
             };
 
-            return _slackConnectionFactory.Create(connectionInfo);
+            var connection = await _slackConnectionFactory.Create(connectionInfo);
+            return connection;
         }
 
         private Dictionary<string, SlackUser> GenerateUsers(User[] users)

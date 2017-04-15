@@ -20,7 +20,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 SUT.OnDisconnect += () => ConnectionChangedValue = true;
 
                 var info = new ConnectionInformation { WebSocket = GetMockFor<IWebSocketClient>().Object };
-                SUT.Initialise(info);
+                SUT.Initialise(info).Wait();
             }
 
             protected override void When()

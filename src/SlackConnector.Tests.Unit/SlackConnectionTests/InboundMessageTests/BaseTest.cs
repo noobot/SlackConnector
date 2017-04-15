@@ -27,7 +27,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 
         protected override void When()
         {
-            SUT.Initialise(ConnectionInfo);
+            SUT.Initialise(ConnectionInfo).Wait();
             GetMockFor<IWebSocketClient>()
                 .Raise(x => x.OnMessage += null, null, InboundMessage);
         }

@@ -38,7 +38,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                     WebSocket = GetMockFor<IWebSocketClient>().Object
                 };
 
-                SUT.Initialise(connectionInfo);
+                SUT.Initialise(connectionInfo).Wait();
             }
 
             protected override void When()
