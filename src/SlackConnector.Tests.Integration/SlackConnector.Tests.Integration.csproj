@@ -182,12 +182,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntegrationTest.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\IConfigReader.cs" />
     <Compile Include="Configuration\SlackConfig.cs" />
     <Compile Include="Connections\Clients\FlurlHandshakeClientTests.cs" />
     <Compile Include="FileUploadTests.cs" />
+    <Compile Include="PingPongTests.cs" />
     <Compile Include="Resources\EmbeddedResourceFileReader.cs" />
     <Compile Include="SayTests.cs" />
     <Compile Include="JoinDmChannelTests.cs" />

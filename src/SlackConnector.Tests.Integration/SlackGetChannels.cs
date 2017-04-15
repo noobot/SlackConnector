@@ -1,26 +1,21 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using SlackConnector.Tests.Integration.Configuration;
 
 namespace SlackConnector.Tests.Integration
 {
     public class SlackGetChannels
     {
         [TestFixture]
-        public class SlackConnectorTests
+        public class SlackConnectorTests : IntegrationTest
         {
             [Test]
             public async Task should_connect_and_get_channels()
             {
                 // given
-                var config = new ConfigReader().GetConfig();
-
-                var slackConnector = new SlackConnector();
 
                 // when
-                var connection = await slackConnector.Connect(config.Slack.ApiToken);
-                var channels = await connection.GetChannels();
+                var channels = await SlackConnection.GetChannels();
 
                 // then
                 Assert.That(channels.Any(), Is.True);
@@ -30,13 +25,9 @@ namespace SlackConnector.Tests.Integration
             public async Task should_connect_and_get_users()
             {
                 // given
-                var config = new ConfigReader().GetConfig();
-
-                var slackConnector = new SlackConnector();
 
                 // when
-                var connection = await slackConnector.Connect(config.Slack.ApiToken);
-                var users = await connection.GetUsers();
+                var users = await SlackConnection.GetUsers();
 
                 // then
                 Assert.That(users.Any(u => u.Online == true), Is.True);
