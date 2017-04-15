@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using SlackConnector.Tests.Integration.Configuration;
 
@@ -24,7 +22,6 @@ namespace SlackConnector.Tests.Integration
         public virtual async Task TearDown()
         {
             await SlackConnection.Close();
-            Thread.Sleep(TimeSpan.FromSeconds(2));
         }
     }
 }
