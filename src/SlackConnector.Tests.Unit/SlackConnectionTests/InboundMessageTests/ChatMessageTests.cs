@@ -86,24 +86,31 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                 User = new SlackUser { Id = "userABC", Name = string.Empty }
             });
         }
-    }
-    
-    internal class given_connector_is_setup_when_inbound_message_arrives_that_isnt_message_type : ChatMessageTest
-    {
-        protected override void Given()
+
+        [Test, AutoMoqData]
+        public async Task should_not_raise_message_event_given_incorrect_message_type(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            InboundMessage = new ChatMessage
+            // given
+            var connectionInfo = new ConnectionInformation
             {
-                MessageType = MessageType.Unknown
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage { MessageType = MessageType.Unknown };
+
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
+            {
+                messageRaised = true;
+                return Task.CompletedTask;
             };
 
-            base.Given();
-        }
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
 
-        [Test]
-        public void then_should_not_call_callback()
-        {
-            MessageRaised.ShouldBeFalse();
+            // then
+            messageRaised.ShouldBeFalse();
         }
     }
 
