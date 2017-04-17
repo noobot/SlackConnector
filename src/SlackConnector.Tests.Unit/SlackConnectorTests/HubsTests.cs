@@ -16,12 +16,35 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
     internal class HubsTests
     {
-        [Test, AutoMoqData]
-        public async Task should_not_contain_archived_channels(Mock<IHandshakeClient> handshakeClient,
-            Mock<IWebSocketClient> webSocketClient, Mock<IConnectionFactory> connectionFactory, Mock<ISlackConnectionFactory> slackConnectionFactory)
+        private string _webSocketUrl = "some-web-url";
+        private Mock<IHandshakeClient> _handshakeClient;
+        private Mock<IWebSocketClient> _webSocketClient;
+        private Mock<IConnectionFactory> _connectionFactory;
+        private Mock<ISlackConnectionFactory> _slackConnectionFactory;
+        private SlackConnector _slackConnector;
+
+        [SetUp]
+        public void Setup()
+        {
+            _handshakeClient = new Mock<IHandshakeClient>();
+            _webSocketClient = new Mock<IWebSocketClient>();
+            _connectionFactory = new Mock<IConnectionFactory>();
+            _slackConnectionFactory = new Mock<ISlackConnectionFactory>();
+            _slackConnector = new SlackConnector(_connectionFactory.Object, _slackConnectionFactory.Object);
+            
+            _connectionFactory
+                .Setup(x => x.CreateHandshakeClient())
+                .Returns(_handshakeClient.Object);
+
+            _connectionFactory
+                .Setup(x => x.CreateWebSocketClient(_webSocketUrl, null))
+                .ReturnsAsync(_webSocketClient.Object);
+        }
+
+        [Test]
+        public async Task should_not_contain_archived_channels()
         {
             // given
-            var slackConnector = new SlackConnector(connectionFactory.Object, slackConnectionFactory.Object);
             var handshakeResponse = new HandshakeResponse
             {
                 Ok = true,
@@ -44,23 +67,15 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 }
             };
 
-            handshakeClient
+            _handshakeClient
                 .Setup(x => x.FirmShake(It.IsAny<string>()))
                 .ReturnsAsync(handshakeResponse);
 
-            connectionFactory
-                .Setup(x => x.CreateHandshakeClient())
-                .Returns(handshakeClient.Object);
-
-            connectionFactory
-                .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, null))
-                .ReturnsAsync(webSocketClient.Object);
-
             // when
-            await slackConnector.Connect("something");
+            await _slackConnector.Connect("something");
 
             // then
-            slackConnectionFactory
+            _slackConnectionFactory
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 0)), Times.Once);
         }
 
@@ -241,7 +256,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 HandshakeResponse = new HandshakeResponse
                 {
                     Ok = true,
-                    Users = new []
+                    Users = new[]
                     {
                         new User
                         {
@@ -249,7 +264,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                             Name = "name-4eva"
                         }
                     },
-                    Ims = new []
+                    Ims = new[]
                     {
                         new Im
                         {
