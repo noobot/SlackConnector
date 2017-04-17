@@ -1,89 +1,64 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Clients.File;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    internal class given_valid_connection_when_uploading_file_from_disk : SpecsFor<SlackConnection>
+    internal class UploadFileTests
     {
-        private string SlackKey = "doobeedoo";
-        private SlackChatHub _chatHub;
-        private WebSocketClientStub _webSocketClient;
-        private string _filePath = "expected-file-name";
-
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_upload_file_from_disk([Frozen]Mock<IConnectionFactory> connectionFactory,
+            Mock<IFileClient> fileClient, Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            _webSocketClient = new WebSocketClientStub();
-            _chatHub = new SlackChatHub { Id = "channelz-id" };
+            // given
+            const string slackKey = "key-yay";
+            const string filePath = "expected-file-name";
+            var chatHub = new SlackChatHub { Id = "channelz-id" };
 
-            var connectionInfo = new ConnectionInformation
-            {
-                SlackKey = SlackKey,
-                WebSocket = _webSocketClient
-            };
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey };
+            await slackConnection.Initialise(connectionInfo);
 
-            GetMockFor<IConnectionFactory>()
+            connectionFactory
                 .Setup(x => x.CreateFileClient())
-                .Returns(GetMockFor<IFileClient>().Object);
+                .Returns(fileClient.Object);
 
-            SUT.Initialise(connectionInfo).Wait();
+            // when
+            await slackConnection.Upload(chatHub, filePath);
+
+            // then
+            fileClient
+                .Verify(x => x.PostFile(slackKey, chatHub.Id, filePath), Times.Once);
         }
 
-        protected override void When()
+        [Test, AutoMoqData]
+        public async Task should_upload_file_from_stream([Frozen]Mock<IConnectionFactory> connectionFactory,
+            Mock<IFileClient> fileClient, Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            SUT.Upload(_chatHub, _filePath).Wait();
-        }
+            // given
+            const string slackKey = "key-yay";
+            const string fileName = "expected-file-name";
+            var chatHub = new SlackChatHub { Id = "channelz-id" };
+            var stream = new MemoryStream();
 
-        [Test]
-        public void then_should_call_client()
-        {
-            GetMockFor<IFileClient>()
-                .Verify(x => x.PostFile(SlackKey, _chatHub.Id, _filePath), Times.Once);
-        }
-    }
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey };
+            await slackConnection.Initialise(connectionInfo);
 
-    internal class given_valid_connection_when_uploading_stream : SpecsFor<SlackConnection>
-    {
-        private string SlackKey = "doobeedoo";
-        private SlackChatHub _chatHub;
-        private WebSocketClientStub _webSocketClient;
-        private readonly string _filePath = "expected-file-name";
-        private readonly Stream _stream = new MemoryStream();
-
-        protected override void Given()
-        {
-            _webSocketClient = new WebSocketClientStub();
-            _chatHub = new SlackChatHub { Id = "channelz-id" };
-
-            var connectionInfo = new ConnectionInformation
-            {
-                SlackKey = SlackKey,
-                WebSocket = _webSocketClient
-            };
-
-            GetMockFor<IConnectionFactory>()
+            connectionFactory
                 .Setup(x => x.CreateFileClient())
-                .Returns(GetMockFor<IFileClient>().Object);
+                .Returns(fileClient.Object);
 
-            SUT.Initialise(connectionInfo).Wait();
-        }
+            // when
+            await slackConnection.Upload(chatHub, stream, fileName);
 
-        protected override void When()
-        {
-            SUT.Upload(_chatHub, _stream, _filePath).Wait();
-        }
-
-        [Test]
-        public void then_should_call_client()
-        {
-            GetMockFor<IFileClient>()
-                .Verify(x => x.PostFile(SlackKey, _chatHub.Id, _stream, _filePath), Times.Once);
+            // then
+            fileClient
+                .Verify(x => x.PostFile(slackKey, chatHub.Id, stream, fileName), Times.Once);
         }
     }
 }
