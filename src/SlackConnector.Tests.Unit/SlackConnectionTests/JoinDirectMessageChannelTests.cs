@@ -1,57 +1,50 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class JoinDirectMessageChannel
+    internal class JoinDirectMessageChannelTests
     {
-        internal class given_dm_channel : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_return_expected_slack_hub([Frozen]Mock<IConnectionFactory> connectionFactory,
+            Mock<IChannelClient> channelClient, Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            private readonly string SlackKey = "doobeedoo";
-            private readonly string UserId = "something interesting";
-            private readonly Channel ReturnChannel = new Channel { Id = "super-id", Name = "dm-channel" };
-            private SlackChatHub Result { get; set; }
+            // given
+            const string slackKey = "key-yay";
+            const string userId = "some-id";
 
-            protected override void Given()
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey};
+            await slackConnection.Initialise(connectionInfo);
+
+            connectionFactory
+                .Setup(x => x.CreateChannelClient())
+                .Returns(channelClient.Object);
+
+            var returnChannel = new Channel { Id = "super-id", Name = "dm-channel" };
+            channelClient
+                .Setup(x => x.JoinDirectMessageChannel(slackKey, userId))
+                .ReturnsAsync(returnChannel);
+            
+            // when
+            var result = await slackConnection.JoinDirectMessageChannel(userId);
+
+            // then
+            result.ShouldLookLike(new SlackChatHub
             {
-                var connectionInfo = new ConnectionInformation { SlackKey = SlackKey,  WebSocket = new WebSocketClientStub()};
-                SUT.Initialise(connectionInfo).Wait();
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChannelClient())
-                    .Returns(GetMockFor<IChannelClient>().Object);
-
-                GetMockFor<IChannelClient>()
-                    .Setup(x => x.JoinDirectMessageChannel(SlackKey, UserId))
-                    .ReturnsAsync(ReturnChannel);
-            }
-
-            protected override void When()
-            {
-                Result = SUT.JoinDirectMessageChannel(UserId).Result;
-            }
-
-            [Test]
-            public void then_should_return_expected_slack_hub()
-            {
-                var expected = new SlackChatHub
-                {
-                    Id = ReturnChannel.Id,
-                    Name = ReturnChannel.Name,
-                    Type = SlackChatHubType.DM
-                };
-                Result.ShouldLookLike(expected);
-            }
+                Id = returnChannel.Id,
+                Name = returnChannel.Name,
+                Type = SlackChatHubType.DM
+            });
         }
 
         internal class given_no_valid_user_id : SpecsFor<SlackConnection>

@@ -49,7 +49,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                 Name = "@test-user",
                 Type = SlackChatHubType.DM
             });
-
         }
     }
 }
