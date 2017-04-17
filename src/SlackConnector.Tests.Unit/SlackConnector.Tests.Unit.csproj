@@ -36,9 +36,8 @@
       <HintPath>..\..\packages\ExpectedObjects.1.2.3\lib\net40\ExpectedObjects.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Flurl, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Flurl.2.2.1\lib\netstandard1.4\Flurl.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Flurl, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Flurl.2.3.0\lib\netstandard1.4\Flurl.dll</HintPath>
     </Reference>
     <Reference Include="Flurl.Http, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Flurl.Http.1.1.1\lib\net45\Flurl.Http.dll</HintPath>
