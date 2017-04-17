@@ -233,25 +233,35 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             // then
             messageRaised.ShouldBeFalse();
         }
-    }
-    
-    internal class given_message_is_missing_user_information : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
 
-            InboundMessage = new ChatMessage
+        [Test, AutoMoqData]
+        public async Task should_not_raise_event_given_message_is_missing_user_information(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage
             {
                 MessageType = MessageType.Message,
                 User = null
             };
-        }
 
-        [Test]
-        public void then_should_not_raise_message()
-        {
-            MessageRaised.ShouldBeFalse();
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
+            {
+                messageRaised = true;
+                return Task.CompletedTask;
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            messageRaised.ShouldBeFalse();
         }
     }
 
