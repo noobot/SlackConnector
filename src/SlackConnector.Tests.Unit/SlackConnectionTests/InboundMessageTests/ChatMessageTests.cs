@@ -263,53 +263,27 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             // then
             messageRaised.ShouldBeFalse();
         }
-    }
 
-    [TestFixture]
-    internal class given_exception_thrown_when_handling_inbound_message : ChatMessageTest
-    {
-        private WebSocketClientStub WebSocket { get; set; }
-
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_exception(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
-
-            WebSocket = new WebSocketClientStub();
-            ConnectionInfo.WebSocket = WebSocket;
-
-            SUT.OnMessageReceived += message =>
+            // given
+            var connectionInfo = new ConnectionInformation
             {
-                throw new NotImplementedException();
+                WebSocket = webSocket.Object
             };
-        }
+            await slackConnection.Initialise(connectionInfo);
 
-        [Test]
-        public void should_not_throw_exception_when_error_is_thrown()
-        {
-            var message = new ChatMessage
+            var inboundMessage = new ChatMessage
             {
-                User = "something",
-                MessageType = MessageType.Message
+                MessageType = MessageType.Message,
+                User = "lalala"
             };
 
-            WebSocket.RaiseOnMessage(message);
-        }
-    }
+            slackConnection.OnMessageReceived += message => throw new Exception("EMPORER OF THE WORLD");
 
-    internal abstract class ChatMessageTest : BaseTest<ChatMessage>
-    {
-        protected override void When()
-        {
-            SUT.Initialise(ConnectionInfo).Wait();
-
-            if (!string.IsNullOrEmpty(InboundMessage?.Channel))
-            {
-                GetMockFor<IWebSocketClient>()
-                    .Raise(x => x.OnMessage += null, null, new ChannelJoinedMessage { Channel = new Channel { Id = InboundMessage.Channel } });
-            }
-
-            GetMockFor<IWebSocketClient>()
-                .Raise(x => x.OnMessage += null, null, InboundMessage);
+            // when & then
+            Assert.DoesNotThrow(() => webSocket.Raise(x => x.OnMessage += null, null, inboundMessage));
         }
     }
 }
