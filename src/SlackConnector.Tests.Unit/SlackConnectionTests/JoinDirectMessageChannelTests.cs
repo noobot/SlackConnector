@@ -23,7 +23,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             const string slackKey = "key-yay";
             const string userId = "some-id";
 
-            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey};
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey };
             await slackConnection.Initialise(connectionInfo);
 
             connectionFactory
@@ -34,7 +34,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             channelClient
                 .Setup(x => x.JoinDirectMessageChannel(slackKey, userId))
                 .ReturnsAsync(returnChannel);
-            
+
             // when
             var result = await slackConnection.JoinDirectMessageChannel(userId);
 
@@ -47,43 +47,32 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             });
         }
 
-        internal class given_no_valid_user_id : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_throw_exception_given_null_user_id(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            [Test]
-            public void should_throw_exception_when_no_chathub_given()
-            {
-                ArgumentNullException exception = null;
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-                try
-                {
-                    SUT.JoinDirectMessageChannel(null).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as ArgumentNullException;
-                }
+            // when
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => slackConnection.JoinDirectMessageChannel(null));
 
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo("Value cannot be null.\r\nParameter name: user"));
-            }
+            // then
+            Assert.That(exception.Message, Is.EqualTo("Value cannot be null.\r\nParameter name: user"));
+        }
 
-            [Test]
-            public void should_throw_exception_when_no_chathub_id_given()
-            {
-                ArgumentNullException exception = null;
+        [Test, AutoMoqData]
+        public async Task should_throw_exception_given_empty_user_id(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-                try
-                {
-                    SUT.JoinDirectMessageChannel("").Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as ArgumentNullException;
-                }
+            // when
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => slackConnection.JoinDirectMessageChannel(string.Empty));
 
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo("Value cannot be null.\r\nParameter name: user"));
-            }
+            // then
+            Assert.That(exception.Message, Is.EqualTo("Value cannot be null.\r\nParameter name: user"));
         }
     }
 }
