@@ -87,36 +87,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             });
         }
     }
-
-    internal class given_connector_is_missing_use_when_inbound_message_arrives : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            InboundMessage = new ChatMessage
-            {
-                User = "userABC",
-                MessageType = MessageType.Message
-            };
-        }
-
-        [Test]
-        public void then_should_pass_through_expected_message()
-        {
-            var expected = new SlackMessage
-            {
-                User = new SlackUser
-                {
-                    Id = "userABC",
-                    Name = string.Empty
-                }
-            };
-
-            Result.ShouldLookLike(expected);
-        }
-    }
-
+    
     internal class given_connector_is_setup_when_inbound_message_arrives_that_isnt_message_type : ChatMessageTest
     {
         protected override void Given()
