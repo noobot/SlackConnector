@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Ploeh.AutoFixture.NUnit3;
 using Should;
 using SlackConnector.Serialising;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Serialising
 {
