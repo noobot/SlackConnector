@@ -2,15 +2,12 @@
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Should;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
