@@ -265,6 +265,8 @@
     <Compile Include="Stubs\SlackConnectionStub.cs" />
     <Compile Include="Stubs\TimerStub.cs" />
     <Compile Include="Stubs\WebSocketClientStub.cs" />
+    <Compile Include="TestExtensions\ExpectedObjectExtensions.cs" />
+    <Compile Include="TestExtensions\ShouldLooksLikeExtensions.cs" />
     <Compile Include="TestExtensions\ShouldExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

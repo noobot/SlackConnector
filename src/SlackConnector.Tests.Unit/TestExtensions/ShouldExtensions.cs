@@ -2,7 +2,6 @@
 using System.Linq.Expressions;
 using ExpectedObjects;
 using Moq;
-using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.TestExtensions
 {
