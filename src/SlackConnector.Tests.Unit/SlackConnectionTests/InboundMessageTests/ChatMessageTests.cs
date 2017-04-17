@@ -184,12 +184,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 
             var inboundMessage = new ChatMessage
             {
-                //Channel = "idy",
                 MessageType = MessageType.Message,
                 Text = "please send help... :-p",
                 User = "lalala"
             };
-            
+
             mentionDetector
                 .Setup(x => x.WasBotMentioned(connectionInfo.Self.Name, connectionInfo.Self.Id, inboundMessage.Text))
                 .Returns(true);
@@ -203,30 +202,39 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             // then
             receivedMessage.MentionsBot.ShouldBeTrue();
         }
-    }
-    
-    internal class given_message_is_from_self : ChatMessageTest
-    {
-        protected override void Given()
+
+        [Test, AutoMoqData]
+        public async Task should_not_raise_message_event_given_message_from_self(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                Self = new ContactDetails { Id = "self-id", Name = "self-name" },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
 
-            ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
-
-            InboundMessage = new ChatMessage
+            var inboundMessage = new ChatMessage
             {
                 MessageType = MessageType.Message,
-                User = ConnectionInfo.Self.Id
+                User = connectionInfo.Self.Id
             };
-        }
 
-        [Test]
-        public void then_should_not_raise_message()
-        {
-            MessageRaised.ShouldBeFalse();
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
+            {
+                messageRaised = true;
+                return Task.CompletedTask;
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            messageRaised.ShouldBeFalse();
         }
     }
-
+    
     internal class given_message_is_missing_user_information : ChatMessageTest
     {
         protected override void Given()
