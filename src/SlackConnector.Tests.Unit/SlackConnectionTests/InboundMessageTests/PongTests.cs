@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Should;
-using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
@@ -36,33 +35,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 
             // then
             lastTimestamp.ShouldEqual(inboundMessage.Timestamp);
-        }
-    }
-
-    internal class given_pong : BaseTest<PongMessage>
-    {
-        private DateTime _timestamp;
-
-        protected override void Given()
-        {
-            base.Given();
-
-            SUT.OnPong += timestamp =>
-            {
-                _timestamp = timestamp;
-                return Task.CompletedTask;
-            };
-
-            InboundMessage = new PongMessage
-            {
-                Timestamp = DateTime.Now
-            };
-        }
-
-        [Test]
-        public void then_should_raised_event_with_expected_timestamp()
-        {
-            Assert.That(_timestamp, Is.EqualTo(InboundMessage.Timestamp));
         }
     }
 }
