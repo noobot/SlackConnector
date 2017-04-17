@@ -1,28 +1,32 @@
 ﻿using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
-    internal class given_new_dm_channel : BaseTest<DmChannelJoinedMessage>
+    internal class DmJoinedTests
     {
-        private SlackChatHub _lastHub;
-
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_raise_event(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
-
-            SUT.OnChatHubJoined += hub =>
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
+            
+            SlackChatHub lastHub = null;
+            slackConnection.OnChatHubJoined += hub =>
             {
-                _lastHub = hub;
+                lastHub = hub;
                 return Task.CompletedTask;
             };
 
-            InboundMessage = new DmChannelJoinedMessage
+            var inboundMessage = new DmChannelJoinedMessage
             {
                 Channel = new Im
                 {
@@ -32,25 +36,20 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                     IsOpen = true
                 }
             };
-        }
 
-        [Test]
-        public void then_should_raised_event_with_expected_channel_information()
-        {
-            var expectedChatHub = new SlackChatHub
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            slackConnection.ConnectedHubs.ContainsKey("channel-id").ShouldBeTrue();
+            slackConnection.ConnectedHubs["channel-id"].ShouldEqual(lastHub);
+            lastHub.ShouldLookLike(new SlackChatHub
             {
                 Id = "channel-id",
                 Name = "@test-user",
                 Type = SlackChatHubType.DM
-            };
-            _lastHub.ShouldLookLike(expectedChatHub);
-        }
+            });
 
-        [Test]
-        public void then_should_add_channel_to_connected_hubs()
-        {
-            SUT.ConnectedHubs.ContainsKey("channel-id").ShouldBeTrue();
-            SUT.ConnectedHubs["channel-id"].ShouldEqual(_lastHub);
         }
     }
 }

@@ -6,11 +6,9 @@ using NUnit.Framework;
 using Ploeh.AutoFixture.NUnit3;
 using Should;
 using SlackConnector.BotHelpers;
-using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
