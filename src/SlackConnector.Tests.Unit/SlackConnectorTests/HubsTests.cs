@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Should;
@@ -7,72 +8,62 @@ using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Connections.Sockets;
+using SlackConnector.Models;
 using SlackConnector.Tests.Unit.Stubs;
 using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
-    public static class HubsTests
+    internal class HubsTests
     {
-        public class given_channels_are_archived : SpecsFor<SlackConnector>
+        [Test, AutoMoqData]
+        public async Task should_not_contain_archived_channels(Mock<IHandshakeClient> handshakeClient,
+            Mock<IWebSocketClient> webSocketClient, Mock<IConnectionFactory> connectionFactory, Mock<ISlackConnectionFactory> slackConnectionFactory)
         {
-            private HandshakeResponse HandshakeResponse { get; set; }
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-
-            protected override void InitializeClassUnderTest()
+            // given
+            var slackConnector = new SlackConnector(connectionFactory.Object, slackConnectionFactory.Object);
+            var handshakeResponse = new HandshakeResponse
             {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
-
-            protected override void Given()
-            {
-                HandshakeResponse = new HandshakeResponse
+                Ok = true,
+                Channels = new[]
                 {
-                    Ok = true,
-                    Channels = new[]
+                    new Channel
                     {
-                        new Channel
-                        {
-                            Id = "Id1",
-                            Name = "Name1",
-                            IsArchived = true,
-                            IsMember = true //TODO: Need to do self things
-                        },
-                        new Channel
-                        {
-                            Id = "Id2",
-                            Name = "Name2",
-                            IsArchived = true,
-                            IsMember = true //TODO: Need to do self things
-                        },
-                    }
-                };
+                        Id = "Id1",
+                        Name = "Name1",
+                        IsArchived = true,
+                        IsMember = true //TODO: Need to do self things
+                    },
+                    new Channel
+                    {
+                        Id = "Id2",
+                        Name = "Name2",
+                        IsArchived = true,
+                        IsMember = true //TODO: Need to do self things
+                    },
+                }
+            };
 
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(HandshakeResponse);
+            handshakeClient
+                .Setup(x => x.FirmShake(It.IsAny<string>()))
+                .ReturnsAsync(handshakeResponse);
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+            connectionFactory
+                .Setup(x => x.CreateHandshakeClient())
+                .Returns(handshakeClient.Object);
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-            }
+            connectionFactory
+                .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, null))
+                .ReturnsAsync(webSocketClient.Object);
 
-            protected override void When()
-            {
-                SUT.Connect("something").Wait();
-            }
+            // when
+            await slackConnector.Connect("something");
 
-            [Test]
-            public void then_should_not_contain_channels()
-            {
-                SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs.Count.ShouldEqual(0);
-            }
+            // then
+            slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 0)), Times.Once);
         }
+
         public class given_channels_are_not_archived_and_not_a_member : SpecsFor<SlackConnector>
         {
             private HandshakeResponse HandshakeResponse { get; set; }
