@@ -245,7 +245,6 @@
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="Serialising\EnumConverterTests.cs" />
     <Compile Include="SlackConnectionTests\CloseConnectionTests.cs" />
-    <Compile Include="SlackConnectionTests\InboundMessageTests\BaseTest.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\PongTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\GroupJoinedTests.cs" />
     <Compile Include="SlackConnectionTests\InboundMessageTests\ChannelJoinedTests.cs" />
