@@ -1,46 +1,43 @@
-﻿using NUnit.Framework;
-using Should;
+﻿using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
+using SlackConnector.Connections;
+using SlackConnector.Connections.Clients.Channel;
+using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class PingTests
+    internal class PingTests
     {
-        internal class given_valid_connection_when_initiating_a_ping : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_return_expected_slack_hub([Frozen]Mock<IConnectionFactory> connectionFactory,
+            Mock<IChannelClient> channelClient, Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            private string SlackKey = "doobeedoo";
-            private SlackChatHub _chatHub;
-            private WebSocketClientStub _webSocketClient;
+            // given
+            const string slackKey = "key-yay";
+            const string userId = "some-id";
 
-            protected override void Given()
-            {
-                _webSocketClient = new WebSocketClientStub();
-                _chatHub = new SlackChatHub { Id = "channelz-id" };
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey };
+            await slackConnection.Initialise(connectionInfo);
 
-                var connectionInfo = new ConnectionInformation
-                {
-                    SlackKey = SlackKey,
-                    WebSocket = _webSocketClient
-                };
-                SUT.Initialise(connectionInfo).Wait();
-            }
+            connectionFactory
+                .Setup(x => x.CreateChannelClient())
+                .Returns(channelClient.Object);
 
-            protected override void When()
-            {
-                SUT.Ping().Wait();
-            }
+            var returnChannel = new Channel { Id = "super-id", Name = "dm-channel" };
+            channelClient
+                .Setup(x => x.JoinDirectMessageChannel(slackKey, userId))
+                .ReturnsAsync(returnChannel);
 
-            [Test]
-            public void then_should_send_ping_message_with_expected_type()
-            {
-                var typingMessage = _webSocketClient.SendMessage_Message as PingMessage;
-                typingMessage.ShouldNotBeNull();
+            // when
+            await slackConnection.Ping();
 
-                typingMessage.Type.ShouldEqual("ping");
-            }
+            // then
+            webSocket.Verify(x => x.SendMessage(It.IsAny<PingMessage>()));
         }
     }
 }
