@@ -91,40 +91,27 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             lastUser.ShouldBeNull();
             slackConnection.UserCache.ShouldBeEmpty();
         }
-    }
 
-    internal class given_exception_in_user_joined_event : BaseTest<UserJoinedMessage>
-    {
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_exception(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
+            slackConnection.OnUserJoined += user => throw new NotImplementedException("THIS SHOULDN'T BUBBLE UP");
 
-            SUT.OnUserJoined += slackUser =>
-            {
-                throw new NotImplementedException("THIS SHOULDN'T BUBBLE UP");
-            };
-
-            InboundMessage = new UserJoinedMessage
+            var inboundMessage = new UserJoinedMessage
             {
                 User = new User
                 {
-                    Id = "something"
+                    Id = null
                 }
             };
-        }
 
-        protected override void When()
-        {
-            SUT.Initialise(ConnectionInfo).Wait();
-        }
-
-        [Test]
-        public void then_shouldnt_bubble_exception()
-        {
+            // when & then
             Assert.DoesNotThrow(() =>
             {
-                GetMockFor<IWebSocketClient>()
-                    .Raise(x => x.OnMessage += null, null, InboundMessage);
+                webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
             });
         }
     }
