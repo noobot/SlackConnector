@@ -46,38 +46,48 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
 
             // then
-            var expected = new SlackMessage
+            receivedMessage.ShouldLookLike(new SlackMessage
             {
                 Text = "amazing-text",
-                User = new SlackUser
-                {
-                    Id = "userABC",
-                    Name = "i-have-a-name"
-                },
+                User = new SlackUser { Id = "userABC", Name = "i-have-a-name" },
                 RawData = inboundMessage.RawData
+            });
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_raise_event_given_user_information_is_missing_from_cache(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage
+            {
+                User = "userABC",
+                MessageType = MessageType.Message
             };
 
-            receivedMessage.ShouldLookLike(expected);
-        }
-    }
-
-    internal abstract class ChatMessageTest : BaseTest<ChatMessage>
-    {
-        protected override void When()
-        {
-            SUT.Initialise(ConnectionInfo).Wait();
-
-            if (!string.IsNullOrEmpty(InboundMessage?.Channel))
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message =>
             {
-                GetMockFor<IWebSocketClient>()
-                    .Raise(x => x.OnMessage += null, null, new ChannelJoinedMessage { Channel = new Channel { Id = InboundMessage.Channel } });
-            }
+                receivedMessage = message;
+                return Task.CompletedTask;
+            };
 
-            GetMockFor<IWebSocketClient>()
-                .Raise(x => x.OnMessage += null, null, InboundMessage);
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            receivedMessage.ShouldLookLike(new SlackMessage
+            {
+                User = new SlackUser { Id = "userABC", Name = string.Empty }
+            });
         }
     }
-    
+
     internal class given_connector_is_missing_use_when_inbound_message_arrives : ChatMessageTest
     {
         protected override void Given()
@@ -265,6 +275,23 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             };
 
             WebSocket.RaiseOnMessage(message);
+        }
+    }
+
+    internal abstract class ChatMessageTest : BaseTest<ChatMessage>
+    {
+        protected override void When()
+        {
+            SUT.Initialise(ConnectionInfo).Wait();
+
+            if (!string.IsNullOrEmpty(InboundMessage?.Channel))
+            {
+                GetMockFor<IWebSocketClient>()
+                    .Raise(x => x.OnMessage += null, null, new ChannelJoinedMessage { Channel = new Channel { Id = InboundMessage.Channel } });
+            }
+
+            GetMockFor<IWebSocketClient>()
+                .Raise(x => x.OnMessage += null, null, InboundMessage);
         }
     }
 }
