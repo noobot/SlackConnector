@@ -80,7 +80,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         }
 
         [Test]
-        public async Task should_not_contain_channels_that_bot_is_not_a_member_off()
+        public async Task should_not_contain_channels_that_are_archived_and_bot_is_not_a_member_off()
         {
             // given
             var handshakeResponse = new HandshakeResponse
@@ -110,112 +110,65 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 0)), Times.Once);
         }
 
-        public class given_groups_are_archived : SpecsFor<SlackConnector>
+        [Test]
+        public async Task should_not_contain_archived_groups()
         {
-            private HandshakeResponse HandshakeResponse { get; set; }
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-
-            protected override void InitializeClassUnderTest()
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
-
-            protected override void Given()
-            {
-                HandshakeResponse = new HandshakeResponse
+                Ok = true,
+                Groups = new[]
                 {
-                    Ok = true,
-                    Groups = new[]
+                    new Group
                     {
-                        new Group
-                        {
-                            Id = "group-id",
-                            Name = "group-name",
-                            IsArchived = true,
-                            //Members = new [] { SelfId } //TODO: Need to do self things
-                        }
+                        Id = "group-id",
+                        Name = "group-name",
+                        IsArchived = true
                     }
-                };
+                }
+            };
 
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(HandshakeResponse);
+            _handshakeClient
+                .Setup(x => x.FirmShake(It.IsAny<string>()))
+                .ReturnsAsync(handshakeResponse);
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+            // when
+            await _slackConnector.Connect("something");
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-            }
-
-            protected override void When()
-            {
-                SUT.Connect("key").Wait();
-            }
-
-            [Test]
-            public void then_should_not_contain_channels()
-            {
-                SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs.Count.ShouldEqual(0);
-            }
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 0)), Times.Once);
         }
 
-        public class given_groups_that_are_not_archived_and_is_not_a_member_of_group : SpecsFor<SlackConnector>
+        [Test]
+        public async Task should_not_contain_groups_that_are_archived_and_bot_is_not_a_member_off()
         {
-            private HandshakeResponse HandshakeResponse { get; set; }
-            private const string SelfId = "abc123";
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-
-            protected override void InitializeClassUnderTest()
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
-
-            protected override void Given()
-            {
-                HandshakeResponse = new HandshakeResponse
+                Ok = true,
+                Groups = new[]
                 {
-                    Ok = true,
-                    Self = new Detail { Id = SelfId },
-                    Groups = new[]
+                    new Group
                     {
-                        new Group
-                        {
-                            Id = "group-id",
-                            Name = "group-name",
-                            IsArchived = false,
-                            Members = new [] { "something-else" }
-                        }
+                        Id = "group-id",
+                        Name = "group-name",
+                        IsArchived = false,
+                        Members = new [] { "something-else" }
                     }
-                };
+                }
+            };
 
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(HandshakeResponse);
+            _handshakeClient
+                .Setup(x => x.FirmShake(It.IsAny<string>()))
+                .ReturnsAsync(handshakeResponse);
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+            // when
+            await _slackConnector.Connect("something");
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-            }
-
-            protected override void When()
-            {
-                SUT.Connect("key").Wait();
-            }
-
-            [Test]
-            public void then_should_not_contain_any_channels()
-            {
-                SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs.Count.ShouldEqual(0);
-            }
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 0)), Times.Once);
         }
 
         public class given_instant_message_channel_when_user_id_exists_in_cache : SpecsFor<SlackConnector>
