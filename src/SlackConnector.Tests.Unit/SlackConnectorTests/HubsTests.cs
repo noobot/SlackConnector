@@ -171,70 +171,44 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 0)), Times.Once);
         }
 
-        public class given_instant_message_channel_when_user_id_exists_in_cache : SpecsFor<SlackConnector>
+        [Test]
+        public async Task should_contain_channel_and_username()
         {
-            private HandshakeResponse HandshakeResponse { get; set; }
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-
-            protected override void InitializeClassUnderTest()
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
-
-            protected override void Given()
-            {
-                HandshakeResponse = new HandshakeResponse
+                Ok = true,
+                Users = new[]
                 {
-                    Ok = true,
-                    Users = new[]
+                    new User
                     {
-                        new User
-                        {
-                            Id = "user-id-thingy",
-                            Name = "name-4eva"
-                        }
-                    },
-                    Ims = new[]
-                    {
-                        new Im
-                        {
-                            Id = "im-id-yay",
-                            User = "user-id-thingy"
-                        }
+                        Id = "user-id-thingy",
+                        Name = "name-4eva"
                     }
-                };
+                },
+                Ims = new[]
+                {
+                    new Im
+                    {
+                        Id = "im-id-yay",
+                        User = "user-id-thingy"
+                    }
+                }
+            };
 
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(HandshakeResponse);
+            _handshakeClient
+                .Setup(x => x.FirmShake(It.IsAny<string>()))
+                .ReturnsAsync(handshakeResponse);
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+            // when
+            await _slackConnector.Connect("something");
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-            }
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 1)), Times.Once);
 
-            protected override void When()
-            {
-                SUT.Connect("something").Wait();
-            }
-
-            [Test]
-            public void then_should_contain_single_channel()
-            {
-                SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs.Count.ShouldEqual(1);
-            }
-
-            [Test]
-            public void then_should_use_username()
-            {
-                var im = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs.First().Value;
-                im.Name.ShouldEqual("@" + HandshakeResponse.Users[0].Name);
-            }
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.First().Value.Name == "@" + handshakeResponse.Users[0].Name)), Times.Once);
         }
     }
 }
