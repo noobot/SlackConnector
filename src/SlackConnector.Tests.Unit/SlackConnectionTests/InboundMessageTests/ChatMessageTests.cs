@@ -112,24 +112,32 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             // then
             messageRaised.ShouldBeFalse();
         }
-    }
 
-    internal class given_null_message_when_inbound_message_arrives : ChatMessageTest
-    {
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_message_event_given_null_message(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            InboundMessage = null;
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+            
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
+            {
+                messageRaised = true;
+                return Task.CompletedTask;
+            };
 
-            base.Given();
-        }
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, null);
 
-        [Test]
-        public void then_should_not_call_callback()
-        {
-            MessageRaised.ShouldBeFalse();
+            // then
+            messageRaised.ShouldBeFalse();
         }
     }
-
+    
     internal class given_channel_already_defined_when_inbound_message_arrives_with_channel : ChatMessageTest
     {
         protected override void Given()
