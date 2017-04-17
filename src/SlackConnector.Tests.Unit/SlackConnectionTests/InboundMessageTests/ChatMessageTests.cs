@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
 using Should;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections.Models;
@@ -122,7 +123,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                 WebSocket = webSocket.Object
             };
             await slackConnection.Initialise(connectionInfo);
-            
+
             bool messageRaised = false;
             slackConnection.OnMessageReceived += message =>
             {
@@ -143,7 +144,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             // given
             var connectionInfo = new ConnectionInformation
             {
-                SlackChatHubs = {{ "channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" } } },
+                SlackChatHubs = { { "channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" } } },
                 WebSocket = webSocket.Object
             };
             await slackConnection.Initialise(connectionInfo);
@@ -169,36 +170,41 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             SlackChatHub expected = connectionInfo.SlackChatHubs.First().Value;
             receivedMessage.ChatHub.ShouldEqual(expected);
         }
-    }
-    
-    internal class given_bot_was_mentioned_in_text : ChatMessageTest
-    {
-        protected override void Given()
+
+        [Test, AutoMoqData]
+        public async Task should_detect_bot_is_mentioned_in_message([Frozen]Mock<IMentionDetector> mentionDetector, Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
-
-            ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
-
-            InboundMessage = new ChatMessage
+            // given
+            var connectionInfo = new ConnectionInformation
             {
-                Channel = "idy",
+                Self = new ContactDetails { Id = "self-id", Name = "self-name" },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage
+            {
+                //Channel = "idy",
                 MessageType = MessageType.Message,
                 Text = "please send help... :-p",
                 User = "lalala"
             };
-
-            GetMockFor<IMentionDetector>()
-                .Setup(x => x.WasBotMentioned(ConnectionInfo.Self.Name, ConnectionInfo.Self.Id, InboundMessage.Text))
+            
+            mentionDetector
+                .Setup(x => x.WasBotMentioned(connectionInfo.Self.Name, connectionInfo.Self.Id, inboundMessage.Text))
                 .Returns(true);
-        }
 
-        [Test]
-        public void then_should_return_expected_channel_information()
-        {
-            Result.MentionsBot.ShouldBeTrue();
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message => { receivedMessage = message; return Task.CompletedTask; };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            receivedMessage.MentionsBot.ShouldBeTrue();
         }
     }
-
+    
     internal class given_message_is_from_self : ChatMessageTest
     {
         protected override void Given()
