@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -9,7 +8,6 @@ using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
@@ -44,50 +42,32 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
                 .Verify(x => x.PostMessage(slackKey, message.ChatHub.Id, message.Text, message.Attachments), Times.Once);
         }
 
-        internal class given_no_valid_chathub_id : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_throw_exception_given_null_chat_hub(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            protected override void Given()
-            {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChatClient())
-                    .Returns(GetMockFor<IChatClient>().Object);
-            }
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-            [Test]
-            public void should_throw_exception_when_no_chathub_given()
-            {
-                MissingChannelException exception = null;
+            // when
+            var exception = Assert.ThrowsAsync<MissingChannelException>(() => slackConnection.Say(new BotMessage { ChatHub = null }));
 
-                try
-                {
-                    SUT.Say(new BotMessage { ChatHub = null }).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as MissingChannelException;
-                }
+            // then
+            Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
+        }
 
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
-            }
+        [Test, AutoMoqData]
+        public async Task should_throw_exception_given_empty_chat_hub_id(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-            [Test]
-            public void should_throw_exception_when_no_chathub_id_given()
-            {
-                MissingChannelException exception = null;
+            // when
+            var exception = Assert.ThrowsAsync<MissingChannelException>(() => slackConnection.Say(new BotMessage { ChatHub = new SlackChatHub { Id = string.Empty } }));
 
-                try
-                {
-                    SUT.Say(new BotMessage { ChatHub = new SlackChatHub { Id = "" } }).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as MissingChannelException;
-                }
-
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
-            }
+            // then
+            Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
         }
     }
 }
