@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.BotHelpers;
@@ -12,6 +14,53 @@ using SpecsFor.ShouldExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
+    internal class ChatMessageTests
+    {
+        [Test, AutoMoqData]
+        public async Task should_raise_event(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                Users = { { "userABC", new SlackUser { Id = "userABC", Name = "i-have-a-name" } } },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+            
+            var inboundMessage = new ChatMessage
+            {
+                User = "userABC",
+                MessageType = MessageType.Message,
+                Text = "amazing-text",
+                RawData = "I am raw data yo"
+            };
+
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message =>
+            {
+                receivedMessage = message;
+                return Task.CompletedTask;
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            var expected = new SlackMessage
+            {
+                Text = "amazing-text",
+                User = new SlackUser
+                {
+                    Id = "userABC",
+                    Name = "i-have-a-name"
+                },
+                RawData = inboundMessage.RawData
+            };
+
+            receivedMessage.ShouldLookLike(expected);
+        }
+    }
+
     internal abstract class ChatMessageTest : BaseTest<ChatMessage>
     {
         protected override void When()
@@ -26,47 +75,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 
             GetMockFor<IWebSocketClient>()
                 .Raise(x => x.OnMessage += null, null, InboundMessage);
-        }
-    }
-
-    internal class given_connector_is_setup_when_inbound_message_arrives : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            ConnectionInfo.Users.Add("userABC", new SlackUser() { Id = "userABC", Name = "i-have-a-name" });
-
-            InboundMessage = new ChatMessage
-            {
-                User = "userABC",
-                MessageType = MessageType.Message,
-                Text = "amazing-text",
-                RawData = "I am raw data yo"
-            };
-        }
-
-        [Test]
-        public void then_should_raise_event()
-        {
-            MessageRaised.ShouldBeTrue();
-        }
-
-        [Test]
-        public void then_should_pass_through_expected_message()
-        {
-            var expected = new SlackMessage
-            {
-                Text = "amazing-text",
-                User = new SlackUser
-                {
-                    Id = "userABC",
-                    Name = "i-have-a-name"
-                },
-                RawData = InboundMessage.RawData
-            };
-
-            Result.ShouldLookLike(expected);
         }
     }
 
