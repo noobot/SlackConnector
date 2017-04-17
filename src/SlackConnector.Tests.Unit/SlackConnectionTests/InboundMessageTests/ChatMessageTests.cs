@@ -136,33 +136,41 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             // then
             messageRaised.ShouldBeFalse();
         }
-    }
-    
-    internal class given_channel_already_defined_when_inbound_message_arrives_with_channel : ChatMessageTest
-    {
-        protected override void Given()
+
+        [Test, AutoMoqData]
+        public async Task should_return_expected_channel_inf0(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
-
-            ConnectionInfo.SlackChatHubs.Add("channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" });
-
-            InboundMessage = new ChatMessage
+            // given
+            var connectionInfo = new ConnectionInformation
             {
-                Channel = ConnectionInfo.SlackChatHubs.First().Key,
+                SlackChatHubs = {{ "channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" } } },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage
+            {
+                Channel = connectionInfo.SlackChatHubs.First().Key,
                 MessageType = MessageType.Message,
                 User = "irmBrady"
             };
-        }
 
-        [Test]
-        public void then_should_return_expected_channel_information()
-        {
-            SlackChatHub expected = ConnectionInfo.SlackChatHubs.First().Value;
-            Result.ChatHub.ShouldEqual(expected);
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message =>
+            {
+                receivedMessage = message;
+                return Task.CompletedTask;
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            SlackChatHub expected = connectionInfo.SlackChatHubs.First().Value;
+            receivedMessage.ChatHub.ShouldEqual(expected);
         }
     }
-
-
+    
     internal class given_bot_was_mentioned_in_text : ChatMessageTest
     {
         protected override void Given()
