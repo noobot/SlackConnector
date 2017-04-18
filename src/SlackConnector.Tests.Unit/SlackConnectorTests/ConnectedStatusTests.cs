@@ -299,117 +299,39 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             _slackConnectionFactory
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Type == SlackChatHubType.DM)), Times.Once);
         }
-        
-        public class given_handshake_was_not_ok : SpecsFor<SlackConnector>
+
+        [Test]
+        public void should_throw_exception_when_handshake_is_not_ok()
         {
-            private HandshakeResponse HandshakeResponse { get; set; }
-
-            protected override void InitializeClassUnderTest()
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<ISlackConnectionFactory>().Object);
-            }
+                Ok = false,
+                Error = "I AM A ERROR"
+            };
 
-            protected override void Given()
-            {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
 
-                HandshakeResponse = new HandshakeResponse { Ok = false, Error = "I AM A ERROR" };
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(HandshakeResponse);
-            }
+            // when
+            var exception = Assert.ThrowsAsync<HandshakeException>(() => _slackConnector.Connect(_slackKey));
 
-            [Test]
-            public void then_should_throw_exception()
-            {
-                HandshakeException exception = null;
-
-                try
-                {
-                    SUT.Connect("something").Wait();
-                }
-                catch (AggregateException ex)
-                {
-
-                    exception = ex.InnerExceptions[0] as HandshakeException;
-                }
-
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo(HandshakeResponse.Error));
-            }
+            // then
+            Assert.That(exception.Message, Is.EqualTo(handshakeResponse.Error));
         }
 
-        public class given_empty_api_key : SpecsFor<SlackConnector>
+        [TestCase("")]
+        [TestCase(null)]
+        public void should_throw_exception_given_empty_api_key(string slackKey)
         {
-            protected override void InitializeClassUnderTest()
-            {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<ISlackConnectionFactory>().Object);
-            }
+            // given
+            
+            // when
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => _slackConnector.Connect(slackKey));
 
-            [Test]
-            public void then_should_be_aware_of_current_state()
-            {
-                bool exceptionDetected = false;
-
-                try
-                {
-                    SUT.Connect("").Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exceptionDetected = ex.InnerExceptions[0] is ArgumentNullException;
-                }
-
-                Assert.That(exceptionDetected, Is.True);
-            }
-        }
-
-        public class given_valid_setup_when_connecting_with_a_proxy_connection : SpecsFor<SlackConnector>
-        {
-            private const string SlackKey = "slacKing-off-ey?";
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-            private SlackConnectionStub Connection { get; set; }
-            private ISlackConnection Result { get; set; }
-            private ProxySettings ProxySettings { get; set; }
-
-            protected override void InitializeClassUnderTest()
-            {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
-
-            protected override void Given()
-            {
-                var handshakeResponse = new HandshakeResponse
-                {
-                    Ok = true,
-                    WebSocketUrl = "some-valid-url"
-                };
-
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(SlackKey))
-                    .ReturnsAsync(handshakeResponse);
-
-                Connection = new SlackConnectionStub();
-                SlackFactoryStub.Create_Value = Connection;
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                ProxySettings = new ProxySettings("hi", "you", "ok?");
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, ProxySettings))
-                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-            }
-
-            [Test]
-            public void then_should_return_expected_connection()
-            {
-                Result.ShouldEqual(Connection);
-            }
+            // then
+            Assert.That(exception.Message, Does.Contain("slackKey"));
         }
     }
 }
