@@ -121,6 +121,37 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Team.Name == handshakeResponse.Team.Name)), Times.Once);
         }
 
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_users_details()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                Users = new[]
+                {
+                    new User { Id = "user-1-id", Name = "user-1-name" },
+                    new User { Id = "user-2-id", Name = "user-2-name" },
+                },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Users.Count == 2)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Users["user-1-id"].Name == "user-1-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Users["user-2-id"].Name == "user-2-name")), Times.Once);
+        }
+
         public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
         {
             private const string SlackKey = "slacKing-off-ey?";
@@ -185,16 +216,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             protected override void When()
             {
                 Result = SUT.Connect(SlackKey).Result;
-            }
-
-            [Test]
-            public void then_should_pass_expected_users()
-            {
-                var users = SlackFactoryStub.Create_ConnectionInformation.Users;
-                users.ShouldNotBeNull();
-                users.Count.ShouldEqual(2);
-                users[HandshakeResponse.Users[0].Id].Name.ShouldEqual(HandshakeResponse.Users[0].Name);
-                users[HandshakeResponse.Users[1].Id].Name.ShouldEqual(HandshakeResponse.Users[1].Name);
             }
 
             [Test]
