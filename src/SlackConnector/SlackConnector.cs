@@ -79,7 +79,7 @@ namespace SlackConnector
 
             foreach (Group group in handshakeResponse.Groups.Where(x => !x.IsArchived))
             {
-                if (group.Members.Any(x => x == handshakeResponse.Self.Id))
+                if ((group.Members ?? new string[0]).Any(x => x == handshakeResponse.Self.Id))
                 {
                     var newGroup = group.ToChatHub();
                     hubs.Add(group.Id, newGroup);
