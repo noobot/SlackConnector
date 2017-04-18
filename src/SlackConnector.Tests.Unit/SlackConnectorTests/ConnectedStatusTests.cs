@@ -45,6 +45,36 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         }
 
         [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_websocket_and_return_expected_connection()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            var expectedConnection = new Mock<ISlackConnection>().Object;
+            _slackConnectionFactory
+                .Setup(x => x.Create(It.IsAny<ConnectionInformation>()))
+                .ReturnsAsync(expectedConnection);
+
+            // when
+            var result = await _slackConnector.Connect(_slackKey);
+
+            // then
+            result.ShouldEqual(expectedConnection);
+
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.WebSocket == _webSocketClient.Object)), Times.Once);
+            _connectionFactory.Verify(x => x.CreateWebSocketClient(_webSocketUrl, null));
+        }
+
+        [Test, AutoMoqData]
         public async Task should_initialise_connection_with_expected_self_details()
         {
             // given
@@ -269,88 +299,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             _slackConnectionFactory
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Type == SlackChatHubType.DM)), Times.Once);
         }
-
-        public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
-        {
-            private const string SlackKey = "slacKing-off-ey?";
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-            private SlackConnectionStub Connection { get; set; }
-            private HandshakeResponse HandshakeResponse { get; set; }
-            private ISlackConnection Result { get; set; }
-
-            protected override void InitializeClassUnderTest()
-            {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
-
-            protected override void Given()
-            {
-                HandshakeResponse = new HandshakeResponse
-                {
-                    Ok = true,
-                    Self = new Detail { Id = "my-id", Name = "my-name" },
-                    Team = new Detail { Id = "team-id", Name = "team-name" },
-                    Users = new[]
-                    {
-                        new User { Id = "user-1-id", Name = "user-1-name" },
-                        new User { Id = "user-2-id", Name = "user-2-name" },
-                    },
-                    Channels = new[]
-                    {
-                        new Channel { Id = "i-am-a-channel", Name = "channel-name" , IsMember = true }
-                    },
-                    Groups = new[]
-                    {
-                        new Group { Id = "i-am-a-group", Name = "group-name", Members = new [] {"my-id"} },
-                    },
-                    Ims = new[]
-                    {
-                        new Im { Id = "i-am-a-im", User = "user-i-am_yup"}
-                    },
-                    WebSocketUrl = "some-valid-url"
-                };
-
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(SlackKey))
-                    .ReturnsAsync(HandshakeResponse);
-
-                Connection = new SlackConnectionStub();
-                SlackFactoryStub.Create_Value = Connection;
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-
-                GetMockFor<IWebSocketClient>()
-                    .Setup(x => x.Connect(HandshakeResponse.WebSocketUrl))
-                    .Returns(Task.CompletedTask);
-            }
-
-            protected override void When()
-            {
-                Result = SUT.Connect(SlackKey).Result;
-            }
-
-            [Test]
-            public void then_should_pass_in_expected_websocket()
-            {
-                var webSocket = SlackFactoryStub.Create_ConnectionInformation.WebSocket;
-                webSocket.ShouldEqual(GetMockFor<IWebSocketClient>().Object);
-            }
-
-            [Test]
-            public void then_should_pass_in_slack_key()
-            {
-                string key = SlackFactoryStub.Create_ConnectionInformation.SlackKey;
-                key.ShouldEqual(SlackKey);
-            }
-        }
-
+        
         public class given_handshake_was_not_ok : SpecsFor<SlackConnector>
         {
             private HandshakeResponse HandshakeResponse { get; set; }
@@ -454,11 +403,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 GetMockFor<IConnectionFactory>()
                     .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, ProxySettings))
                     .ReturnsAsync(GetMockFor<IWebSocketClient>().Object);
-            }
-
-            protected override void When()
-            {
-                Result = SUT.Connect(SlackKey, ProxySettings).Result;
             }
 
             [Test]
