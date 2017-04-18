@@ -225,6 +225,51 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-group"].Members == handshakeResponse.Groups[0].Members)), Times.Once);
         }
 
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_ims()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                Self = new Detail { Id = "my-id" },
+                Users = new[]
+                {
+                    new User { Id = "user-guid-thingy", Name = "expected-name" },
+                },
+                Ims = new[]
+                {
+                    new Im { Id = "i-am-a-im", User = "user-i-am_yup" },
+                    new Im { Id = "user-with-name", User = "user-guid-thingy" },
+                },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 2)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-im"].Id == "i-am-a-im")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-im"].Name == "@user-i-am_yup")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-im"].Type == SlackChatHubType.DM)), Times.Once);
+
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Id == "user-with-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Name == "@expected-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Type == SlackChatHubType.DM)), Times.Once);
+        }
+
         public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
         {
             private const string SlackKey = "slacKing-off-ey?";
@@ -289,20 +334,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             protected override void When()
             {
                 Result = SUT.Connect(SlackKey).Result;
-            }
-
-            [Test]
-            public void then_should_pass_expected_ims()
-            {
-                Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
-                hubs.ShouldNotBeNull();
-                hubs.Count.ShouldBeGreaterThan(0);
-
-                var hub = hubs[HandshakeResponse.Ims[0].Id];
-                hub.ShouldNotBeNull();
-                hub.Id.ShouldEqual(HandshakeResponse.Ims[0].Id);
-                hub.Name.ShouldEqual("@" + HandshakeResponse.Ims[0].User);
-                hub.Type.ShouldEqual(SlackChatHubType.DM);
             }
 
             [Test]
