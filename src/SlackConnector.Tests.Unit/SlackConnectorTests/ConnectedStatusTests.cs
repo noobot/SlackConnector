@@ -16,8 +16,86 @@ using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
-    public static class ConnectedStatusTests
+    public class ConnectedStatusTests
     {
+        private string _slackKey = "slacKing-off-ey?";
+        private string _webSocketUrl = "https://some-web-url";
+        private Mock<IHandshakeClient> _handshakeClient;
+        private Mock<IWebSocketClient> _webSocketClient;
+        private Mock<IConnectionFactory> _connectionFactory;
+        private Mock<ISlackConnectionFactory> _slackConnectionFactory;
+        private SlackConnector _slackConnector;
+
+        [SetUp]
+        public void Setup()
+        {
+            _handshakeClient = new Mock<IHandshakeClient>();
+            _webSocketClient = new Mock<IWebSocketClient>();
+            _connectionFactory = new Mock<IConnectionFactory>();
+            _slackConnectionFactory = new Mock<ISlackConnectionFactory>();
+            _slackConnector = new SlackConnector(_connectionFactory.Object, _slackConnectionFactory.Object);
+
+            _connectionFactory
+                .Setup(x => x.CreateHandshakeClient())
+                .Returns(_handshakeClient.Object);
+
+            _connectionFactory
+                .Setup(x => x.CreateWebSocketClient(_webSocketUrl, null))
+                .ReturnsAsync(_webSocketClient.Object);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_return_expected_connection()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                Self = new Detail { Id = "my-id", Name = "my-name" },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Self.Id == handshakeResponse.Self.Id)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Self.Name == handshakeResponse.Self.Name)), Times.Once);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_self_details()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                Self = new Detail { Id = "my-id", Name = "my-name" },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            var expectedConnection = new Mock<ISlackConnection>().Object;
+            _slackConnectionFactory
+                .Setup(x => x.Create(It.IsAny<ConnectionInformation>()))
+                .ReturnsAsync(expectedConnection);
+
+            // when
+            var result = await _slackConnector.Connect(_slackKey);
+
+            // then
+            result.ShouldEqual(expectedConnection);
+        }
+
         public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
         {
             private const string SlackKey = "slacKing-off-ey?";
@@ -85,21 +163,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             }
 
             [Test]
-            public void then_should_return_expected_connection()
-            {
-                Result.ShouldEqual(Connection);
-            }
-
-            [Test]
-            public void then_should_pass_in_self_details()
-            {
-                ContactDetails self = SlackFactoryStub.Create_ConnectionInformation.Self;
-                self.ShouldNotBeNull();
-                self.Id.ShouldEqual(HandshakeResponse.Self.Id);
-                self.Name.ShouldEqual(HandshakeResponse.Self.Name);
-            }
-
-            [Test]
             public void then_should_pass_in_team_details()
             {
                 ContactDetails team = SlackFactoryStub.Create_ConnectionInformation.Team;
@@ -107,7 +170,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 team.Id.ShouldEqual(HandshakeResponse.Team.Id);
                 team.Name.ShouldEqual(HandshakeResponse.Team.Name);
             }
-            
+
             [Test]
             public void then_should_pass_expected_users()
             {
@@ -240,7 +303,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 Assert.That(exceptionDetected, Is.True);
             }
         }
-        
+
         public class given_valid_setup_when_connecting_with_a_proxy_connection : SpecsFor<SlackConnector>
         {
             private const string SlackKey = "slacKing-off-ey?";
