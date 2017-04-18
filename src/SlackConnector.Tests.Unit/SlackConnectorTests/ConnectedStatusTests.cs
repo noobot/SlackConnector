@@ -45,7 +45,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         }
 
         [Test, AutoMoqData]
-        public async Task should_return_expected_connection()
+        public async Task should_initialise_connection_with_expected_self_details()
         {
             // given
             var handshakeResponse = new HandshakeResponse
@@ -70,7 +70,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
         }
 
         [Test, AutoMoqData]
-        public async Task should_initialise_connection_with_expected_self_details()
+        public async Task should_return_expected_connection()
         {
             // given
             var handshakeResponse = new HandshakeResponse
@@ -94,6 +94,31 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
 
             // then
             result.ShouldEqual(expectedConnection);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_team_details()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                Team = new Detail { Id = "team-id", Name = "team-name" },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Team.Id == handshakeResponse.Team.Id)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Team.Name == handshakeResponse.Team.Name)), Times.Once);
         }
 
         public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
@@ -160,15 +185,6 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             protected override void When()
             {
                 Result = SUT.Connect(SlackKey).Result;
-            }
-
-            [Test]
-            public void then_should_pass_in_team_details()
-            {
-                ContactDetails team = SlackFactoryStub.Create_ConnectionInformation.Team;
-                team.ShouldNotBeNull();
-                team.Id.ShouldEqual(HandshakeResponse.Team.Id);
-                team.Name.ShouldEqual(HandshakeResponse.Team.Name);
             }
 
             [Test]
