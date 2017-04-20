@@ -155,6 +155,7 @@ namespace SlackConnector
 
         private Task HandlePong(PongMessage inboundMessage)
         {
+            _pingPongMonitor.Pong();
             return RaisePong(inboundMessage.Timestamp);
         }
 
