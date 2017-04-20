@@ -4,5 +4,12 @@
     {
         public bool Ok { get; set; }
         public string Error { get; set; }
+
+        /// <summary>
+        /// timestamp
+        /// </summary>
+        public string Ts { get; set; }
+        public string Channel { get; set; }
+
     }
 }

@@ -56,8 +56,15 @@ namespace SlackConnector
         /// <summary>
         /// Send message to Slack channel.
         /// </summary>
-        Task Say(BotMessage message);
-        
+        Task<string> Say(BotMessage message);
+
+        /// <summary>
+        /// Update previously posted message on slack
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task<string> Update(BotMessage message);
+
         /// <summary>
         /// Uploads a file from to a Slack channel
         /// </summary>
@@ -115,5 +122,6 @@ namespace SlackConnector
         /// Raised when a new user joins the team
         /// </summary>
         event UserJoinedEventHandler OnUserJoined;
+
     }
 }

@@ -160,7 +160,7 @@ namespace SlackConnector
             }
         }
 
-        public async Task Say(BotMessage message)
+        public async Task<string> Say(BotMessage message)
         {
             if (string.IsNullOrEmpty(message.ChatHub?.Id))
             {
@@ -168,7 +168,25 @@ namespace SlackConnector
             }
 
             var client = _connectionFactory.CreateChatClient();
-            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+            var ts = await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+            return ts;
+        }
+
+        public async Task<string> Update(BotMessage message)
+        {
+            if (string.IsNullOrEmpty(message.Ts))
+            {
+                throw new MissingChannelException("When calling the Update() method, the message parameter must have its Ts (timestamp) property set.");
+            }
+
+            if (string.IsNullOrEmpty(message.ChatHub?.Id))
+            {
+                throw new MissingChannelException("When calling the Update() method, the message parameter must have its ChatHub property set.");
+            }
+
+            var client = _connectionFactory.CreateChatClient();
+            var ts = await client.UpdateMessage(SlackKey, message.Ts, message.ChatHub.Id, message.Text, message.Attachments);
+            return ts;
         }
 
         public async Task Upload(SlackChatHub chatHub, string filePath)
