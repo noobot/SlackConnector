@@ -123,5 +123,7 @@ namespace SlackConnector
         /// </summary>
         event UserJoinedEventHandler OnUserJoined;
 
+        Task CloseDirectMessageChannel(string channel);
+        Task LeaveChannel(string channel);
     }
 }

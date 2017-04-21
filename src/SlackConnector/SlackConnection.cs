@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace SlackConnector
 
         private Task ListenTo(InboundMessage inboundMessage)
         {
-            if (inboundMessage == null)
+            if (inboundMessage == null || inboundMessage.MessageType==MessageType.Unknown)
             {
                 return Task.CompletedTask;
             }
@@ -83,6 +84,13 @@ namespace SlackConnector
 
         private Task HandleMessage(ChatMessage inboundMessage)
         {
+            if (string.IsNullOrEmpty(inboundMessage.User) &&
+                inboundMessage.UpdatedMessage != null)
+            {
+                inboundMessage.User = inboundMessage.UpdatedMessage.User;
+                inboundMessage.Text = inboundMessage.UpdatedMessage.Text;
+            }
+
             if (string.IsNullOrEmpty(inboundMessage.User))
                 return Task.CompletedTask;
 
@@ -241,6 +249,27 @@ namespace SlackConnector
                 Type = SlackChatHubType.DM
             };
         }
+        public async Task CloseDirectMessageChannel(string channel)
+        {
+            if (string.IsNullOrEmpty(channel))
+            {
+                throw new ArgumentNullException(nameof(channel));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            await client.CloseDirectMessageChannel(SlackKey, channel);
+        }
+
+        public async Task LeaveChannel(string channel)
+        {
+            if (string.IsNullOrEmpty(channel))
+            {
+                throw new ArgumentNullException(nameof(channel));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            await client.LeaveChannel(SlackKey, channel);
+        }
 
         public async Task IndicateTyping(SlackChatHub chatHub)
         {
@@ -273,9 +302,9 @@ namespace SlackConnector
                 {
                     await e(message);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    Debug.WriteLine($"Exception occurred: {ex}");
                 }
             }
         }
