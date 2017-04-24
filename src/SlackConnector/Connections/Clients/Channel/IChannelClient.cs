@@ -11,5 +11,7 @@ namespace SlackConnector.Connections.Clients.Channel
         Task<Models.Group[]> GetGroups(string slackKey);
 
         Task<Models.User[]> GetUsers(string slackKey);
+        Task CloseDirectMessageChannel(string slackKey, string channel);
+        Task LeaveChannel(string slackKey, string channel);
     }
 }

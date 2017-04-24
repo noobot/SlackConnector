@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace SlackConnector
 
         private Task ListenTo(InboundMessage inboundMessage)
         {
-            if (inboundMessage == null)
+            if (inboundMessage == null || inboundMessage.MessageType==MessageType.Unknown)
             {
                 return Task.CompletedTask;
             }
@@ -83,6 +84,13 @@ namespace SlackConnector
 
         private Task HandleMessage(ChatMessage inboundMessage)
         {
+            if (string.IsNullOrEmpty(inboundMessage.User) &&
+                inboundMessage.UpdatedMessage != null)
+            {
+                inboundMessage.User = inboundMessage.UpdatedMessage.User;
+                inboundMessage.Text = inboundMessage.UpdatedMessage.Text;
+            }
+
             if (string.IsNullOrEmpty(inboundMessage.User))
                 return Task.CompletedTask;
 
@@ -160,7 +168,7 @@ namespace SlackConnector
             }
         }
 
-        public async Task Say(BotMessage message)
+        public async Task<string> Say(BotMessage message)
         {
             if (string.IsNullOrEmpty(message.ChatHub?.Id))
             {
@@ -168,7 +176,25 @@ namespace SlackConnector
             }
 
             var client = _connectionFactory.CreateChatClient();
-            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+            var ts = await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+            return ts;
+        }
+
+        public async Task<string> Update(BotMessage message)
+        {
+            if (string.IsNullOrEmpty(message.Ts))
+            {
+                throw new MissingChannelException("When calling the Update() method, the message parameter must have its Ts (timestamp) property set.");
+            }
+
+            if (string.IsNullOrEmpty(message.ChatHub?.Id))
+            {
+                throw new MissingChannelException("When calling the Update() method, the message parameter must have its ChatHub property set.");
+            }
+
+            var client = _connectionFactory.CreateChatClient();
+            var ts = await client.UpdateMessage(SlackKey, message.Ts, message.ChatHub.Id, message.Text, message.Attachments);
+            return ts;
         }
 
         public async Task Upload(SlackChatHub chatHub, string filePath)
@@ -223,6 +249,27 @@ namespace SlackConnector
                 Type = SlackChatHubType.DM
             };
         }
+        public async Task CloseDirectMessageChannel(string channel)
+        {
+            if (string.IsNullOrEmpty(channel))
+            {
+                throw new ArgumentNullException(nameof(channel));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            await client.CloseDirectMessageChannel(SlackKey, channel);
+        }
+
+        public async Task LeaveChannel(string channel)
+        {
+            if (string.IsNullOrEmpty(channel))
+            {
+                throw new ArgumentNullException(nameof(channel));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            await client.LeaveChannel(SlackKey, channel);
+        }
 
         public async Task IndicateTyping(SlackChatHub chatHub)
         {
@@ -255,9 +302,9 @@ namespace SlackConnector
                 {
                     await e(message);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    Debug.WriteLine($"Exception occurred: {ex}");
                 }
             }
         }
