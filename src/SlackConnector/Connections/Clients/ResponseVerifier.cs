@@ -11,7 +11,7 @@ namespace SlackConnector.Connections.Clients
         {
             if (!response.Ok)
             {
-                throw new CommunicationException($"Error occured while posting message '{response.Error}'");
+                throw new CommunicationException($"Error occured while posting message '{response.Error}', needed='{response.Needed}'");
             }
         }
     }
