@@ -32,11 +32,16 @@ namespace SlackConnector.Tests.Unit.Stubs
             throw new NotImplementedException();
         }
 
-        public Task Say(BotMessage message)
+        public Task<string> Say(BotMessage message)
         {
             throw new NotImplementedException();
         }
-        
+
+        public Task<string> Update(BotMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<SlackChatHub>> GetChannels()
         {
           throw new NotImplementedException();
@@ -81,6 +86,16 @@ namespace SlackConnector.Tests.Unit.Stubs
         }
 
         public event UserJoinedEventHandler OnUserJoined;
+        public Task CloseDirectMessageChannel(string channel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LeaveChannel(string channel)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RaiseOnUserJoined()
         {
             OnUserJoined?.Invoke(null);
