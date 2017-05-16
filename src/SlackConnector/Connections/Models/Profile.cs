@@ -16,6 +16,11 @@ namespace SlackConnector.Connections.Models
         [JsonProperty("real_name_normalized")]
         public string RealNameNormalised { get; set; }
 
+        [JsonProperty("image_original")]
+        public string ImageOriginal { get; set; }
+
         public string Email { get; set; }
+
+        public string Title { get; set; }
     }
 }
