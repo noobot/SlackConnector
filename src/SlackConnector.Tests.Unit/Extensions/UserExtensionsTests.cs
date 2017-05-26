@@ -2,28 +2,23 @@
 using SlackConnector.Connections.Models;
 using SlackConnector.Extensions;
 
-namespace SlackConnector.Tests.Unit.Extensions
-{
+namespace SlackConnector.Tests.Unit.Extensions {
     [TestFixture]
-    public class UserExtensionsTests
-    {
+    public class UserExtensionsTests {
         [Test]
-        public void should_create_slack_user_from_user()
-        {
-            var user = new User
-            {
+        public void should_create_slack_user_from_user() {
+            var user = new User {
                 Id = "Id",
                 Name = "Name",
                 TimeZoneOffset = 0L,
                 IsBot = false,
                 Deleted = false,
                 Presence = "active",
-                Profile = new Profile
-                {
+                Profile = new Profile {
                     Email = "a@b.c",
                     FirstName = "First",
                     LastName = "Last",
-                    ImageOriginal = "http://image.com",
+                    Image = "http://image.com",
                     Title = "Developer"
                 }
             };
@@ -37,7 +32,7 @@ namespace SlackConnector.Tests.Unit.Extensions
             Assert.AreEqual(user.IsBot, slackUser.IsBot);
             Assert.AreEqual(user.Profile.FirstName, slackUser.FirstName);
             Assert.AreEqual(user.Profile.LastName, slackUser.LastName);
-            Assert.AreEqual(user.Profile.ImageOriginal, slackUser.Image);
+            Assert.AreEqual(user.Profile.Image, slackUser.Image);
             Assert.AreEqual(user.Profile.Title, slackUser.WhatIDo);
             Assert.AreEqual(user.Deleted, slackUser.Deleted);
             Assert.IsNotNull(slackUser.Online);
@@ -45,9 +40,8 @@ namespace SlackConnector.Tests.Unit.Extensions
         }
 
         [Test]
-        public void should_create_slack_user_from_incomplete_user()
-        {
-            var user = new User { Presence = "Away" };
+        public void should_create_slack_user_from_incomplete_user() {
+            var user = new User {Presence = "Away"};
 
             var slackUser = user.ToSlackUser();
 
