@@ -2,19 +2,24 @@
 using SlackConnector.Connections.Models;
 using SlackConnector.Extensions;
 
-namespace SlackConnector.Tests.Unit.Extensions {
+namespace SlackConnector.Tests.Unit.Extensions
+{
     [TestFixture]
-    public class UserExtensionsTests {
+    public class UserExtensionsTests
+    {
         [Test]
-        public void should_create_slack_user_from_user() {
-            var user = new User {
+        public void should_create_slack_user_from_user()
+        {
+            var user = new User
+            {
                 Id = "Id",
                 Name = "Name",
                 TimeZoneOffset = 0L,
                 IsBot = false,
                 Deleted = false,
                 Presence = "active",
-                Profile = new Profile {
+                Profile = new Profile
+                {
                     Email = "a@b.c",
                     FirstName = "First",
                     LastName = "Last",
@@ -40,8 +45,9 @@ namespace SlackConnector.Tests.Unit.Extensions {
         }
 
         [Test]
-        public void should_create_slack_user_from_incomplete_user() {
-            var user = new User {Presence = "Away"};
+        public void should_create_slack_user_from_incomplete_user()
+        {
+            var user = new User { Presence = "Away" };
 
             var slackUser = user.ToSlackUser();
 
