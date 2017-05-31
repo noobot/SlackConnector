@@ -11,6 +11,7 @@ namespace SlackConnector.Connections.Monitoring
         private TimeSpan _pongTimeout;
         private Func<Task> _pingMethod;
         private Func<Task> _reconnectMethod;
+        private bool _isReconnecting = false;
 
         public PingPongMonitor(ITimer timer, IDateTimeKeeper dateTimeKeeper)
         {
@@ -35,12 +36,20 @@ namespace SlackConnector.Connections.Monitoring
 
         private void TimerTick()
         {
-            if (_dateTimeKeeper.HasDateTime() && _dateTimeKeeper.TimeSinceDateTime() > _pongTimeout)
+            if (NeedsToReconnect() && !_isReconnecting)
             {
-                _reconnectMethod().Wait();
+                _isReconnecting = true;
+                _reconnectMethod()
+                    .ContinueWith(task => _isReconnecting = false)
+                    .Wait();
             }
 
             _pingMethod();
+        }
+
+        private bool NeedsToReconnect()
+        {
+            return _dateTimeKeeper.HasDateTime() && _dateTimeKeeper.TimeSinceDateTime() > _pongTimeout;
         }
 
         public void Pong()

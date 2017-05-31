@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -86,7 +87,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
         {
             // given
             var monitor = new PingPongMonitor(timerStub, dateTimeKeeperMock.Object);
-            
+
             dateTimeKeeperMock
                 .Setup(x => x.TimeSinceDateTime())
                 .Returns(TimeSpan.FromMinutes(2));
@@ -104,6 +105,41 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
 
             // then
             Assert.That(reconnectCalled, Is.True);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_not_initiate_reconnect_if_reconnection_is_already_underway(TimerStub timerStub, Mock<IDateTimeKeeper> dateTimeKeeperMock)
+        {
+            // given
+            var monitor = new PingPongMonitor(timerStub, dateTimeKeeperMock.Object);
+
+            dateTimeKeeperMock
+                .Setup(x => x.TimeSinceDateTime())
+                .Returns(TimeSpan.FromMinutes(2));
+
+            int reconnectCalls = 0;
+            Func<Task> reconnect = () =>
+            {
+                reconnectCalls++;
+                if (reconnectCalls == 1)
+                {
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                }
+                return Task.CompletedTask;
+            };
+            await monitor.StartMonitor(() => Task.CompletedTask, reconnect, TimeSpan.FromMinutes(1));
+
+            dateTimeKeeperMock
+                .Setup(x => x.HasDateTime())
+                .Returns(true);
+
+            // when
+            var thing = Task.Factory.StartNew(() => timerStub.RunEvery_Action());
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            timerStub.RunEvery_Action();
+            
+            // then
+            Assert.That(reconnectCalls, Is.EqualTo(1));
         }
 
         [Test, AutoMoqData]
