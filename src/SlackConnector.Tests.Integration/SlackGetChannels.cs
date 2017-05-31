@@ -4,34 +4,30 @@ using NUnit.Framework;
 
 namespace SlackConnector.Tests.Integration
 {
-    public class SlackGetChannels
+    public class SlackGetChannels : IntegrationTest
     {
-        [TestFixture]
-        public class SlackConnectorTests : IntegrationTest
+        [Test]
+        public async Task should_connect_and_get_channels()
         {
-            [Test]
-            public async Task should_connect_and_get_channels()
-            {
-                // given
+            // given
 
-                // when
-                var channels = await SlackConnection.GetChannels();
+            // when
+            var channels = await SlackConnection.GetChannels();
 
-                // then
-                Assert.That(channels.Any(), Is.True);
-            }
+            // then
+            Assert.That(channels.Any(), Is.True);
+        }
 
-            [Test]
-            public async Task should_connect_and_get_users()
-            {
-                // given
+        [Test]
+        public async Task should_connect_and_get_users()
+        {
+            // given
 
-                // when
-                var users = await SlackConnection.GetUsers();
+            // when
+            var users = await SlackConnection.GetUsers();
 
-                // then
-                Assert.That(users.Any(u => u.Online == true), Is.True);
-            }
+            // then
+            Assert.That(users.Any(u => u.Online == true), Is.True);
         }
     }
 }
