@@ -120,10 +120,13 @@
     <Compile Include="Connections\Models\Group.cs" />
     <Compile Include="Connections\ProxySettings.cs" />
     <Compile Include="Connections\Responses\ChannelsResponse.cs" />
+    <Compile Include="Connections\Responses\DeleteMessageResponse.cs" />
     <Compile Include="Connections\Responses\GroupsResponse.cs" />
     <Compile Include="Connections\Responses\JoinChannelResponse.cs" />
     <Compile Include="Connections\Models\Profile.cs" />
     <Compile Include="Connections\IConnectionFactory.cs" />
+    <Compile Include="Connections\Responses\MessageObjectResponse.cs" />
+    <Compile Include="Connections\Responses\PostMessageResponse.cs" />
     <Compile Include="Connections\Responses\StandardResponse.cs" />
     <Compile Include="Connections\Responses\UsersResponse.cs" />
     <Compile Include="Connections\Sockets\Messages\Inbound\DmChannelJoinedMessage.cs" />
@@ -162,6 +165,8 @@
     <Compile Include="Models\SlackAttachmentAction.cs" />
     <Compile Include="Models\SlackAttachmentActionStyle.cs" />
     <Compile Include="Models\SlackAttachmentStatics.cs" />
+    <Compile Include="Models\SlackMessageDeleted.cs" />
+    <Compile Include="Models\SlackMessagePosted.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SlackAttachment.cs" />
     <Compile Include="Models\SlackAttachmentField.cs" />

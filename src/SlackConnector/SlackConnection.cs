@@ -160,7 +160,7 @@ namespace SlackConnector
             }
         }
 
-        public async Task Say(BotMessage message)
+        public async Task<SlackMessagePosted> Say(BotMessage message)
         {
             if (string.IsNullOrEmpty(message.ChatHub?.Id))
             {
@@ -168,7 +168,15 @@ namespace SlackConnector
             }
 
             var client = _connectionFactory.CreateChatClient();
-            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+            var response = await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+            return new SlackMessagePosted() { TimeStamp = response.TimeStamp, Channel = response.Channel, Message = response.Message };
+        }
+        
+        public async Task<SlackMessageDeleted> DeleteMessage(string channel, string timeStamp)
+        {
+            var client = _connectionFactory.CreateChatClient();
+            var response = await client.DeleteMessage(SlackKey, channel, timeStamp);
+            return new SlackMessageDeleted() { TimeStamp = response.TimeStamp, Channel = response.Channel };
         }
 
         public async Task Upload(SlackChatHub chatHub, string filePath)
