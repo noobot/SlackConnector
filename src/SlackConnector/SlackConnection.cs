@@ -170,7 +170,9 @@ namespace SlackConnector
             var client = _connectionFactory.CreateChatClient();
             var response = await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
             if (response == null)
+            {
                 return null;
+            }
             return new SlackMessagePosted() { TimeStamp = response.TimeStamp, Channel = response.Channel, Message = response.Message };
         }
         
@@ -179,7 +181,9 @@ namespace SlackConnector
             var client = _connectionFactory.CreateChatClient();
             var response = await client.DeleteMessage(SlackKey, channel, timeStamp);
             if (response == null)
+            {
                 return null;
+            }
             return new SlackMessageDeleted() { TimeStamp = response.TimeStamp, Channel = response.Channel };
         }
 
