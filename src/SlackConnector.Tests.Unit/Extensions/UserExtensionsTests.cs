@@ -42,6 +42,7 @@ namespace SlackConnector.Tests.Unit.Extensions
             Assert.AreEqual(user.Deleted, slackUser.Deleted);
             Assert.IsNotNull(slackUser.Online);
             Assert.IsTrue(slackUser.Online.Value);
+            Assert.IsFalse(slackUser.IsGuest);
         }
 
         [Test]
@@ -53,6 +54,19 @@ namespace SlackConnector.Tests.Unit.Extensions
 
             Assert.IsNotNull(slackUser.Online);
             Assert.IsFalse(slackUser.Online.Value);
+        }
+
+        [Test]
+        public void should_create_guest_slack_user_from_guest_user() 
+        {
+            var user = new User 
+            {
+                IsGuest = true
+            };
+
+            var slackUser = user.ToSlackUser();
+
+            Assert.IsTrue(slackUser.IsGuest);
         }
     }
 }

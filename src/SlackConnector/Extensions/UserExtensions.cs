@@ -16,9 +16,10 @@ namespace SlackConnector.Extensions
                 IsBot = user.IsBot,
                 FirstName = user.Profile?.FirstName,
                 LastName = user.Profile?.LastName,
-                Image =  user.Profile?.Image,
+                Image = user.Profile?.Image,
                 WhatIDo = user.Profile?.Title,
-                Deleted = user.Deleted
+                Deleted = user.Deleted,
+                IsGuest = user.IsGuest
             };
 
             if (!string.IsNullOrWhiteSpace(user.Presence))

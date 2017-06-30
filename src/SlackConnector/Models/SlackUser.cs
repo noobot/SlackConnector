@@ -28,5 +28,7 @@
         public bool? Online { get; set; }
 
         public bool IsBot { get; set; }
+
+        public bool IsGuest { get; set; }
     }
 }
