@@ -56,8 +56,16 @@ namespace SlackConnector
         /// <summary>
         /// Send message to Slack channel.
         /// </summary>
-        Task Say(BotMessage message);
+        Task<SlackMessagePosted> Say(BotMessage message);
         
+        /// <summary>
+        /// Delete message from Slack channel.
+        /// </summary>
+        /// <param name="channel">channel is used to locate a particular message with a timeStamp</param>
+        /// <param name="timeStamp">timStamp is used to identify a message instance</param>
+        /// <returns></returns>
+        Task<SlackMessageDeleted> DeleteMessage(string channel, string timeStamp);
+
         /// <summary>
         /// Uploads a file from to a Slack channel
         /// </summary>

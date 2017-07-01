@@ -31,8 +31,13 @@ namespace SlackConnector.Tests.Unit.Stubs
         {
             throw new NotImplementedException();
         }
-
-        public Task Say(BotMessage message)
+        
+        Task<SlackMessagePosted> ISlackConnection.Say(BotMessage message)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public Task<SlackMessageDeleted> DeleteMessage(string channel, string timeStamp)
         {
             throw new NotImplementedException();
         }
