@@ -13,7 +13,13 @@ namespace SlackConnector.Extensions
                 Name = user.Name,
                 Email = user.Profile?.Email,
                 TimeZoneOffset = user.TimeZoneOffset,
-                IsBot = user.IsBot
+                IsBot = user.IsBot,
+                FirstName = user.Profile?.FirstName,
+                LastName = user.Profile?.LastName,
+                Image = user.Profile?.Image,
+                WhatIDo = user.Profile?.Title,
+                Deleted = user.Deleted,
+                IsGuest = user.IsGuest
             };
 
             if (!string.IsNullOrWhiteSpace(user.Presence))

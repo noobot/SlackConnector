@@ -17,6 +17,9 @@ namespace SlackConnector.Connections.Models
         [JsonProperty("is_bot")]
         public bool IsBot { get; set; }
 
+        [JsonProperty("is_restricted")]
+        public bool IsGuest { get; set; }
+
         [JsonProperty("presence")]
         public string Presence { get; set; }
     }
