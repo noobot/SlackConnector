@@ -22,5 +22,8 @@ namespace SlackConnector.Connections.Models
         public string Email { get; set; }
 
         public string Title { get; set; }
+
+        [JsonProperty("status_text")]
+        public string StatusText { get; set;  }
     }
 }
