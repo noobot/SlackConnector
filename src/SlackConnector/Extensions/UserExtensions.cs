@@ -19,7 +19,8 @@ namespace SlackConnector.Extensions
                 Image = user.Profile?.Image,
                 WhatIDo = user.Profile?.Title,
                 Deleted = user.Deleted,
-                IsGuest = user.IsGuest
+                IsGuest = user.IsGuest,
+                StatusText = user.Profile?.StatusText
             };
 
             if (!string.IsNullOrWhiteSpace(user.Presence))
