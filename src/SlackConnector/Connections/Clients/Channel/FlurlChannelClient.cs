@@ -10,6 +10,8 @@ namespace SlackConnector.Connections.Clients.Channel
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string JOIN_DM_PATH = "/api/im.open";
+        internal const string CLOSE_DM_PATH = "/api/im.close";
+        internal const string LEAVE_CHANNEL_PATH = "/api/channels.leave";
         internal const string CHANNELS_LIST_PATH = "/api/channels.list";
         internal const string GROUPS_LIST_PATH = "/api/groups.list";
         internal const string USERS_LIST_PATH = "/api/users.list";
@@ -31,6 +33,32 @@ namespace SlackConnector.Connections.Clients.Channel
             _responseVerifier.VerifyResponse(response);
             return response.Channel;
         }
+
+        public async Task CloseDirectMessageChannel(string slackKey, string channel)
+        {
+            var response = await ClientConstants
+                       .SlackApiHost
+                       .AppendPathSegment(CLOSE_DM_PATH)
+                       .SetQueryParam("token", slackKey)
+                       .SetQueryParam("channel", channel)
+                       .GetJsonAsync<StandardResponse>();
+
+            _responseVerifier.VerifyResponse(response);
+        }
+
+
+        public async Task LeaveChannel(string slackKey, string channel)
+        {
+            var response = await ClientConstants
+                .SlackApiHost
+                .AppendPathSegment(LEAVE_CHANNEL_PATH)
+                .SetQueryParam("token", slackKey)
+                .SetQueryParam("channel", channel)
+                .GetJsonAsync<StandardResponse>();
+
+            _responseVerifier.VerifyResponse(response);
+        }
+
 
         public async Task<Models.Channel[]> GetChannels(string slackKey)
         {

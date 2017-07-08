@@ -12,18 +12,19 @@ namespace SlackConnector.Connections.Clients.Chat
     internal class FlurlChatClient : IChatClient
     {
         private readonly IResponseVerifier _responseVerifier;
-        internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
+        internal const string POST_MESSAGE_PATH = "/api/chat.postMessage";
+        internal const string UPDATE_MESSAGE_PATH = "/api/chat.update";
 
         public FlurlChatClient(IResponseVerifier responseVerifier)
         {
             _responseVerifier = responseVerifier;
         }
 
-        public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
+        public async Task<string> PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
         {
             var request = ClientConstants
                        .SlackApiHost
-                       .AppendPathSegment(SEND_MESSAGE_PATH)
+                       .AppendPathSegment(POST_MESSAGE_PATH)
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channel", channel)
                        .SetQueryParam("text", text)
@@ -36,6 +37,29 @@ namespace SlackConnector.Connections.Clients.Chat
 
             var response = await request.GetJsonAsync<StandardResponse>();
             _responseVerifier.VerifyResponse(response);
+            return response.Ts;
+        }
+
+
+        public async Task<string> UpdateMessage(string slackKey, string timeStamp, string channel, string text, IList<SlackAttachment> attachments)
+        {
+            var request = ClientConstants
+                .SlackApiHost
+                .AppendPathSegment(UPDATE_MESSAGE_PATH)
+                .SetQueryParam("token", slackKey)
+                .SetQueryParam("ts", timeStamp)
+                .SetQueryParam("channel", channel)
+                .SetQueryParam("text", text)
+                .SetQueryParam("as_user", "true");
+
+            if (attachments != null && attachments.Any())
+            {
+                request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
+            }
+
+            var response = await request.GetJsonAsync<StandardResponse>();
+            _responseVerifier.VerifyResponse(response);
+            return response.Ts;
         }
     }
 }
