@@ -66,7 +66,14 @@ namespace SlackConnector
             ConnectedSince = DateTime.Now;
 
             _pingPongMonitor = _monitoringFactory.CreatePingPongMonitor();
-            await _pingPongMonitor.StartMonitor(Ping, () => Task.CompletedTask, TimeSpan.FromMinutes(2));
+            await _pingPongMonitor.StartMonitor(Ping, Reconnect, TimeSpan.FromMinutes(2));
+        }
+
+        private async Task Reconnect()
+        {
+            var handshakeClient = _connectionFactory.CreateHandshakeClient();
+            var handshake = await handshakeClient.FirmShake(SlackKey);
+            await _webSocketClient.Connect(handshake.WebSocketUrl);
         }
 
         private Task ListenTo(InboundMessage inboundMessage)
