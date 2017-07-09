@@ -31,7 +31,8 @@ namespace SlackConnector.Connections.Monitoring
             _pongTimeout = pongTimeout;
 
             _timer.RunEvery(TimerTick, TimeSpan.FromSeconds(5));
-            await pingMethod();
+
+            await pingMethod().ConfigureAwait(false);
         }
 
         private void TimerTick()
@@ -41,7 +42,9 @@ namespace SlackConnector.Connections.Monitoring
                 _isReconnecting = true;
                 _reconnectMethod()
                     .ContinueWith(task => _isReconnecting = false)
-                    .Wait();
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
             }
 
             _pingMethod();
