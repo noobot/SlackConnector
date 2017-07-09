@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using IWebsocketClientLite.PCL;
 using Newtonsoft.Json;
@@ -31,11 +32,11 @@ namespace SlackConnector.Connections.Sockets
             }
 
             _webSocket = new MessageWebSocketRx();
-            _subscriptions.Add(_webSocket.ObserveTextMessagesReceived.Subscribe(OnWebSocketOnMessage));
             _subscriptions.Add(_webSocket.ObserveConnectionStatus.Subscribe(OnConnectionChange));
 
             var uri = new Uri(webSockerUrl);
-            await _webSocket.ConnectAsync(uri, excludeZeroApplicationDataInPong: true);
+            var messageObserver = await _webSocket.CreateObservableMessageReceiver(uri, excludeZeroApplicationDataInPong: true);
+            _subscriptions.Add(messageObserver.Subscribe(OnWebSocketOnMessage));
         }
 
         public async Task SendMessage(BaseMessage message)
