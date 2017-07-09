@@ -30,5 +30,7 @@
         public bool IsBot { get; set; }
 
         public bool IsGuest { get; set; }
+
+        public string StatusText { get; set; }
     }
 }

@@ -24,7 +24,8 @@ namespace SlackConnector.Tests.Unit.Extensions
                     FirstName = "First",
                     LastName = "Last",
                     Image = "http://image.com",
-                    Title = "Developer"
+                    Title = "Developer", 
+                    StatusText = "Vacationing"
                 }
             };
 
@@ -43,6 +44,7 @@ namespace SlackConnector.Tests.Unit.Extensions
             Assert.IsNotNull(slackUser.Online);
             Assert.IsTrue(slackUser.Online.Value);
             Assert.IsFalse(slackUser.IsGuest);
+            Assert.AreEqual("Vacationing", slackUser.StatusText);
         }
 
         [Test]
