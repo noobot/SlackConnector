@@ -158,10 +158,6 @@
       <HintPath>..\..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="websocket-sharp-with-proxy-support, Version=1.0.2.28248, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\websocket-sharp-with-proxy-support.1.9.1\lib\net35-client\websocket-sharp-with-proxy-support.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="WebsocketClientLite.PCL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\WebsocketClientLite.PCL.4.0.6\lib\netstandard1.2\WebsocketClientLite.PCL.dll</HintPath>
     </Reference>
@@ -256,7 +252,6 @@
     <Compile Include="Connections\Sockets\Messages\Inbound\MessageInterpreter.cs" />
     <Compile Include="Connections\Sockets\Messages\Inbound\MessageSubType.cs" />
     <Compile Include="Connections\Sockets\Messages\Inbound\MessageType.cs" />
-    <Compile Include="Connections\Sockets\WebSocketClient.cs" />
     <Compile Include="SlackConnectionExtensions.cs" />
     <Compile Include="SlackConnectionFactory.cs" />
     <Compile Include="SlackConnector.cs" />
