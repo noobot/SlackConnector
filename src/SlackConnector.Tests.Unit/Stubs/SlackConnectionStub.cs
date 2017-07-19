@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using NUnit.Core;
 using SlackConnector.EventHandlers;
 using SlackConnector.Models;
 
@@ -86,12 +85,23 @@ namespace SlackConnector.Tests.Unit.Stubs
             OnUserJoined?.Invoke(null);
         }
 
+        public event PongEventHandler OnPong;
+        public void RaiseOnPong()
+        {
+            OnPong?.Invoke(DateTime.MinValue);
+        }
+
         public Task Upload(SlackChatHub chatHub, string filePath)
         {
             throw new NotImplementedException();
         }
 
         public Task Upload(SlackChatHub chatHub, Stream stream, string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Close()
         {
             throw new NotImplementedException();
         }

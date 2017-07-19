@@ -1,303 +1,287 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
 using Should;
 using SlackConnector.BotHelpers;
-using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor.ShouldExtensions;
+using SlackConnector.Tests.Unit.TestExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
-    internal abstract class ChatMessageTest : BaseTest<ChatMessage>
+    internal class ChatMessageTests
     {
-        protected override void When()
+        [Test, AutoMoqData]
+        public async Task should_raise_event(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            SUT.Initialise(ConnectionInfo);
-
-            if (!string.IsNullOrEmpty(InboundMessage?.Channel))
+            // given
+            var connectionInfo = new ConnectionInformation
             {
-                GetMockFor<IWebSocketClient>()
-                    .Raise(x => x.OnMessage += null, null, new ChannelJoinedMessage { Channel = new Channel { Id = InboundMessage.Channel } });
-            }
+                Users = { { "userABC", new SlackUser { Id = "userABC", Name = "i-have-a-name" } } },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
 
-            GetMockFor<IWebSocketClient>()
-                .Raise(x => x.OnMessage += null, null, InboundMessage);
-        }
-    }
-
-    internal class given_connector_is_setup_when_inbound_message_arrives : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            ConnectionInfo.Users.Add("userABC", new SlackUser() { Id = "userABC", Name = "i-have-a-name" });
-
-            InboundMessage = new ChatMessage
+            var inboundMessage = new ChatMessage
             {
                 User = "userABC",
                 MessageType = MessageType.Message,
                 Text = "amazing-text",
                 RawData = "I am raw data yo"
             };
-        }
 
-        [Test]
-        public void then_should_raise_event()
-        {
-            MessageRaised.ShouldBeTrue();
-        }
-
-        [Test]
-        public void then_should_pass_through_expected_message()
-        {
-            var expected = new SlackMessage
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message =>
             {
-                Text = "amazing-text",
-                User = new SlackUser
-                {
-                    Id = "userABC",
-                    Name = "i-have-a-name"
-                },
-                RawData = InboundMessage.RawData
+                receivedMessage = message;
+                return Task.CompletedTask;
             };
 
-            Result.ShouldLookLike(expected);
-        }
-    }
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
 
-    internal class given_connector_is_setup_when_inbound_direct_message_arrives_from_a_user_for_the_first_time : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            ConnectionInfo.Users.Add("userABC", new SlackUser() { Id = "userABC", Name = "i-have-a-name" });
-
-            InboundMessage = new ChatMessage
-            {
-                User = "userABC",
-                MessageType = MessageType.Message,
-                Text = "amazing-text",
-                RawData = "I am raw data yo"
-            };
-        }
-
-        [Test]
-        public void then_should_raise_event()
-        {
-            MessageRaised.ShouldBeTrue();
-        }
-
-        [Test]
-        public void then_should_pass_through_expected_message()
-        {
-            var expected = new SlackMessage
+            // then
+            receivedMessage.ShouldLookLike(new SlackMessage
             {
                 Text = "amazing-text",
-                User = new SlackUser
-                {
-                    Id = "userABC",
-                    Name = "i-have-a-name"
-                },
-                RawData = InboundMessage.RawData
-            };
-
-            Result.ShouldLookLike(expected);
+                User = new SlackUser { Id = "userABC", Name = "i-have-a-name" },
+                RawData = inboundMessage.RawData
+            });
         }
-    }
 
-    internal class given_connector_is_missing_use_when_inbound_message_arrives : ChatMessageTest
-    {
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_raise_event_given_user_information_is_missing_from_cache(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
 
-            InboundMessage = new ChatMessage
+            var inboundMessage = new ChatMessage
             {
                 User = "userABC",
                 MessageType = MessageType.Message
             };
-        }
 
-        [Test]
-        public void then_should_pass_through_expected_message()
-        {
-            var expected = new SlackMessage
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message =>
             {
-                User = new SlackUser
-                {
-                    Id = "userABC",
-                    Name = string.Empty
-                }
+                receivedMessage = message;
+                return Task.CompletedTask;
             };
 
-            Result.ShouldLookLike(expected);
-        }
-    }
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
 
-    internal class given_connector_is_setup_when_inbound_message_arrives_that_isnt_message_type : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            InboundMessage = new ChatMessage
+            // then
+            receivedMessage.ShouldLookLike(new SlackMessage
             {
-                MessageType = MessageType.Unknown
+                User = new SlackUser { Id = "userABC", Name = string.Empty }
+            });
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_not_raise_message_event_given_incorrect_message_type(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage { MessageType = MessageType.Unknown };
+
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
+            {
+                messageRaised = true;
+                return Task.CompletedTask;
             };
 
-            base.Given();
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            messageRaised.ShouldBeFalse();
         }
 
-        [Test]
-        public void then_should_not_call_callback()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_message_event_given_null_message(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            MessageRaised.ShouldBeFalse();
-        }
-    }
-
-    internal class given_null_message_when_inbound_message_arrives : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            InboundMessage = null;
-
-            base.Given();
-        }
-
-        [Test]
-        public void then_should_not_call_callback()
-        {
-            MessageRaised.ShouldBeFalse();
-        }
-    }
-
-    internal class given_channel_already_defined_when_inbound_message_arrives_with_channel : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            ConnectionInfo.SlackChatHubs.Add("channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" });
-
-            InboundMessage = new ChatMessage
+            // given
+            var connectionInfo = new ConnectionInformation
             {
-                Channel = ConnectionInfo.SlackChatHubs.First().Key,
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
+            {
+                messageRaised = true;
+                return Task.CompletedTask;
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, null);
+
+            // then
+            messageRaised.ShouldBeFalse();
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_return_expected_channel_inf0(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                SlackChatHubs = { { "channelId", new SlackChatHub { Id = "channelId", Name = "NaMe23" } } },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage
+            {
+                Channel = connectionInfo.SlackChatHubs.First().Key,
                 MessageType = MessageType.Message,
                 User = "irmBrady"
             };
-        }
 
-        [Test]
-        public void then_should_return_expected_channel_information()
-        {
-            SlackChatHub expected = ConnectionInfo.SlackChatHubs.First().Value;
-            Result.ChatHub.ShouldEqual(expected);
-        }
-    }
-
-
-    internal class given_bot_was_mentioned_in_text : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
-
-            InboundMessage = new ChatMessage
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message =>
             {
-                Channel = "idy",
+                receivedMessage = message;
+                return Task.CompletedTask;
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            SlackChatHub expected = connectionInfo.SlackChatHubs.First().Value;
+            receivedMessage.ChatHub.ShouldEqual(expected);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_detect_bot_is_mentioned_in_message([Frozen]Mock<IMentionDetector> mentionDetector, Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                Self = new ContactDetails { Id = "self-id", Name = "self-name" },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage
+            {
                 MessageType = MessageType.Message,
                 Text = "please send help... :-p",
                 User = "lalala"
             };
 
-            GetMockFor<IMentionDetector>()
-                .Setup(x => x.WasBotMentioned(ConnectionInfo.Self.Name, ConnectionInfo.Self.Id, InboundMessage.Text))
+            mentionDetector
+                .Setup(x => x.WasBotMentioned(connectionInfo.Self.Name, connectionInfo.Self.Id, inboundMessage.Text))
                 .Returns(true);
+
+            SlackMessage receivedMessage = null;
+            slackConnection.OnMessageReceived += message => { receivedMessage = message; return Task.CompletedTask; };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            receivedMessage.MentionsBot.ShouldBeTrue();
         }
 
-        [Test]
-        public void then_should_return_expected_channel_information()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_message_event_given_message_from_self(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            Result.MentionsBot.ShouldBeTrue();
-        }
-    }
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                Self = new ContactDetails { Id = "self-id", Name = "self-name" },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
 
-    internal class given_message_is_from_self : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            ConnectionInfo.Self = new ContactDetails { Id = "self-id", Name = "self-name" };
-
-            InboundMessage = new ChatMessage
+            var inboundMessage = new ChatMessage
             {
                 MessageType = MessageType.Message,
-                User = ConnectionInfo.Self.Id
+                User = connectionInfo.Self.Id
             };
+
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
+            {
+                messageRaised = true;
+                return Task.CompletedTask;
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            messageRaised.ShouldBeFalse();
         }
 
-        [Test]
-        public void then_should_not_raise_message()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_event_given_message_is_missing_user_information(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            MessageRaised.ShouldBeFalse();
-        }
-    }
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
 
-    internal class given_message_is_missing_user_information : ChatMessageTest
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            InboundMessage = new ChatMessage
+            var inboundMessage = new ChatMessage
             {
                 MessageType = MessageType.Message,
                 User = null
             };
-        }
 
-        [Test]
-        public void then_should_not_raise_message()
-        {
-            MessageRaised.ShouldBeFalse();
-        }
-    }
-
-    [TestFixture]
-    internal class given_exception_thrown_when_handling_inbound_message : ChatMessageTest
-    {
-        private WebSocketClientStub WebSocket { get; set; }
-
-        protected override void Given()
-        {
-            base.Given();
-
-            WebSocket = new WebSocketClientStub();
-            ConnectionInfo.WebSocket = WebSocket;
-
-            SUT.OnMessageReceived += message =>
+            bool messageRaised = false;
+            slackConnection.OnMessageReceived += message =>
             {
-                throw new NotImplementedException();
-            };
-        }
-
-        [Test]
-        public void should_not_throw_exception_when_error_is_thrown()
-        {
-            var message = new ChatMessage
-            {
-                User = "something",
-                MessageType = MessageType.Message
+                messageRaised = true;
+                return Task.CompletedTask;
             };
 
-            WebSocket.RaiseOnMessage(message);
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            messageRaised.ShouldBeFalse();
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_not_raise_exception(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation
+            {
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            var inboundMessage = new ChatMessage
+            {
+                MessageType = MessageType.Message,
+                User = "lalala"
+            };
+
+            slackConnection.OnMessageReceived += message => throw new Exception("EMPORER OF THE WORLD");
+
+            // when & then
+            Assert.DoesNotThrow(() => webSocket.Raise(x => x.OnMessage += null, null, inboundMessage));
         }
     }
 }

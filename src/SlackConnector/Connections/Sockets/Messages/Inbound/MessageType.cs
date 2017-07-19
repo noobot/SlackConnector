@@ -7,6 +7,7 @@
         Group_Joined,
         Channel_Joined,
         Im_Created,
-        Team_Join
+        Team_Join,
+        Pong
     }
 }

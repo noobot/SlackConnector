@@ -1,46 +1,33 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using SlackConnector.Tests.Integration.Configuration;
 
 namespace SlackConnector.Tests.Integration
 {
-    public class SlackGetChannels
+    public class SlackGetChannels : IntegrationTest
     {
-        [TestFixture]
-        public class SlackConnectorTests
+        [Test]
+        public async Task should_connect_and_get_channels()
         {
-            [Test]
-            public async Task should_connect_and_get_channels()
-            {
-                // given
-                var config = new ConfigReader().GetConfig();
+            // given
 
-                var slackConnector = new SlackConnector();
+            // when
+            var channels = await SlackConnection.GetChannels();
 
-                // when
-                var connection = await slackConnector.Connect(config.Slack.ApiToken);
-                var channels = await connection.GetChannels();
+            // then
+            Assert.That(channels.Any(), Is.True);
+        }
 
-                // then
-                Assert.That(channels.Any(), Is.True);
-            }
+        [Test]
+        public async Task should_connect_and_get_users()
+        {
+            // given
 
-            [Test]
-            public async Task should_connect_and_get_users()
-            {
-                // given
-                var config = new ConfigReader().GetConfig();
+            // when
+            var users = await SlackConnection.GetUsers();
 
-                var slackConnector = new SlackConnector();
-
-                // when
-                var connection = await slackConnector.Connect(config.Slack.ApiToken);
-                var users = await connection.GetUsers();
-
-                // then
-                Assert.That(users.Any(u => u.Online == true), Is.True);
-            }
+            // then
+            Assert.That(users.Any(u => u.Online == true), Is.True);
         }
     }
 }

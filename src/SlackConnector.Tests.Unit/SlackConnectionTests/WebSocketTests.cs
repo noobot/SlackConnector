@@ -1,46 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class WebSocketTests
+    internal class WebSocketTests
     {
-        internal class when_socket_disconnects_given_valid_setup : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_detect_disconnect(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            private bool ConnectionChangedValue { get; set; }
+            // given
+            bool connectionChangedValue = false;
+            slackConnection.OnDisconnect += () => connectionChangedValue = true;
 
-            protected override void Given()
-            {
-                base.Given();
-                SUT.OnDisconnect += () => ConnectionChangedValue = true;
+            var info = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(info);
 
-                var info = new ConnectionInformation { WebSocket = GetMockFor<IWebSocketClient>().Object };
-                SUT.Initialise(info);
-            }
+            // when
+            webSocket.Raise(x => x.OnClose += null, new EventArgs());
 
-            protected override void When()
-            {
-                GetMockFor<IWebSocketClient>()
-                    .Raise(x => x.OnClose += null, new EventArgs());
-            }
-
-            [Test]
-            public void then_should_detect_diconnect()
-            {
-                ConnectionChangedValue.ShouldBeTrue();
-            }
-
-            [Test]
-            public void then_should_not_detect_as_connected()
-            {
-                SUT.IsConnected.ShouldBeFalse();
-                SUT.ConnectedSince.ShouldBeNull();
-            }
+            // then
+            connectionChangedValue.ShouldBeTrue();
+            slackConnection.IsConnected.ShouldBeFalse();
+            slackConnection.ConnectedSince.ShouldBeNull();
         }
     }
 }

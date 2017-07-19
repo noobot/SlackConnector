@@ -1,115 +1,83 @@
-﻿using Newtonsoft.Json;
+﻿using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
 using Should;
-using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Serialising;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.Serialising
 {
-    public static class EnumConverterTests
+    internal class EnumConverterTests
     {
-        internal class given_enum_type_when_checking_can_convert : SpecsFor<EnumConverter>
+        [Test, AutoMoqData]
+        public void should_return_true_given_enum_type_when_checking_can_convert(EnumConverter converter)
         {
-            private bool _result;
+            // given
 
-            protected override void When()
-            {
-                _result = SUT.CanConvert(typeof(TestControl));
-            }
+            // when
+            var result = converter.CanConvert(typeof(TestControl));
 
-            [Test]
-            public void then_should_return_true()
-            {
-                _result.ShouldBeTrue();
-            }
+            // then
+            result.ShouldBeTrue();
         }
 
-        internal class given_non_enum_type_when_checking_can_convert : SpecsFor<EnumConverter>
+        [Test, AutoMoqData]
+        public void should_return_false_given_non_enum_type_when_checking_can_convert(EnumConverter converter)
         {
-            private bool _result;
+            // given
 
-            protected override void When()
-            {
-                _result = SUT.CanConvert(typeof(EnumConverter));
-            }
+            // when
+            var result = converter.CanConvert(typeof(EnumConverter));
 
-            [Test]
-            public void then_should_return_false()
-            {
-                _result.ShouldBeFalse();
-            }
+            // then
+            result.ShouldBeFalse();
         }
 
-        internal class given_valid_enum_value_when_converting_to_enum : SpecsFor<EnumConverter>
+        [Test, AutoMoqData]
+        public void should_ruturn_enum_given_valid_enum_value_when_converting_to_enum([Frozen]Mock<JsonReader> jsonReader, EnumConverter converter)
         {
-            private object _result;
+            // given
+            jsonReader
+                .Setup(x => x.Value)
+                .Returns(TestControl.SomethingElse.ToString);
 
-            protected override void Given()
-            {
-                GetMockFor<JsonReader>()
-                    .Setup(x => x.Value)
-                    .Returns(TestControl.SomethingElse.ToString);
-            }
+            // when
+            var result = converter.ReadJson(jsonReader.Object, typeof(TestControl), null, null);
 
-            protected override void When()
-            {
-                _result = SUT.ReadJson(GetMockFor<JsonReader>().Object, typeof(TestControl), null, null);
-            }
-
-            [Test]
-            public void then_should_return_enum()
-            {
-                Assert.That(_result, Is.EqualTo(TestControl.SomethingElse));
-            }
+            // then
+            Assert.That(result, Is.EqualTo(TestControl.SomethingElse));
         }
 
-        internal class given_valid_enum_with_different_casing_when_converting_to_enum : SpecsFor<EnumConverter>
+        [Test, AutoMoqData]
+        public void should_ruturn_enum_given_valid_enum_with_different_casing_when_converting_to_enum([Frozen]Mock<JsonReader> jsonReader, EnumConverter converter)
         {
-            private object _result;
+            // given
+            jsonReader
+                .Setup(x => x.Value)
+                .Returns(TestControl.ThirdOption.ToString().ToLower);
 
-            protected override void Given()
-            {
-                GetMockFor<JsonReader>()
-                    .Setup(x => x.Value)
-                    .Returns(TestControl.ThirdOption.ToString().ToLower);
-            }
+            // when
+            var result = converter.ReadJson(jsonReader.Object, typeof(TestControl), null, null);
 
-            protected override void When()
-            {
-                _result = SUT.ReadJson(GetMockFor<JsonReader>().Object, typeof(TestControl), null, null);
-            }
-
-            [Test]
-            public void then_should_return_enum()
-            {
-                Assert.That(_result, Is.EqualTo(TestControl.ThirdOption));
-            }
+            // then
+            Assert.That(result, Is.EqualTo(TestControl.ThirdOption));
         }
 
-        internal class given_invalid_enum_when_converting_to_enum : SpecsFor<EnumConverter>
+        [Test, AutoMoqData]
+        public void should_return_default_enum_given_invalid_enum_when_converting_to_enum([Frozen]Mock<JsonReader> jsonReader, EnumConverter converter)
         {
-            private object _result;
+            // given
+            jsonReader
+                .Setup(x => x.Value)
+                .Returns("I AM NOT AN ENUM");
 
-            protected override void Given()
-            {
-                GetMockFor<JsonReader>()
-                    .Setup(x => x.Value)
-                    .Returns("I AM NOT AN ENUM");
-            }
+            // when
+            var result = converter.ReadJson(jsonReader.Object, typeof(TestControl), null, null);
 
-            protected override void When()
-            {
-                _result = SUT.ReadJson(GetMockFor<JsonReader>().Object, typeof(TestControl), null, null);
-            }
-
-            [Test]
-            public void then_should_return_enum()
-            {
-                Assert.That(_result, Is.EqualTo(TestControl.Default));
-            }
+            // then
+            Assert.That(result, Is.EqualTo(TestControl.Default));
         }
-
+        
         private enum TestControl
         {
             Default = 0,

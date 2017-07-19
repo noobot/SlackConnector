@@ -47,11 +47,17 @@ namespace SlackConnector
         ContactDetails Self { get; }
 
         #endregion
-        
+
         /// <summary>
         /// Disconnect from Slack.
         /// </summary>
+        [Obsolete("Please use Close async method", true)]
         void Disconnect();
+
+        /// <summary>
+        /// Close websocket connection to Slack
+        /// </summary>
+        Task Close();
 
         /// <summary>
         /// Send message to Slack channel.
@@ -115,5 +121,10 @@ namespace SlackConnector
         /// Raised when a new user joins the team
         /// </summary>
         event UserJoinedEventHandler OnUserJoined;
+
+        /// <summary>
+        /// Raised when SlackApi sends a pong to our ping
+        /// </summary>
+        event PongEventHandler OnPong;
     }
 }

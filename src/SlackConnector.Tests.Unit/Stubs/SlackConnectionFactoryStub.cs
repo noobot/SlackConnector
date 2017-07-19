@@ -1,4 +1,5 @@
-﻿using SlackConnector.Models;
+﻿using System.Threading.Tasks;
+using SlackConnector.Models;
 
 namespace SlackConnector.Tests.Unit.Stubs
 {
@@ -7,10 +8,10 @@ namespace SlackConnector.Tests.Unit.Stubs
         public ConnectionInformation Create_ConnectionInformation { get; private set; }
         public SlackConnectionStub Create_Value { get; set; }
 
-        public ISlackConnection Create(ConnectionInformation connectionInformation)
+        public Task<ISlackConnection> Create(ConnectionInformation connectionInformation)
         {
             Create_ConnectionInformation = connectionInformation;
-            return Create_Value;
+            return Task.FromResult<ISlackConnection>(Create_Value);
         }
     }
 }

@@ -36,6 +36,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                     case MessageType.Im_Created:
                         message = JsonConvert.DeserializeObject<DmChannelJoinedMessage>(json);
                         break;
+                    case MessageType.Pong:
+                        message = JsonConvert.DeserializeObject<PongMessage>(json);
+                        break;
                     default:
                         message = GetChatMessage(json);
                         break;

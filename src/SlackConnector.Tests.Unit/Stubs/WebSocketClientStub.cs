@@ -23,21 +23,26 @@ namespace SlackConnector.Tests.Unit.Stubs
             OnClose.Invoke(this, null);
         }
 
+        public Task Connect(string webSockerUrl)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task Connect()
         {
-            return Task.Factory.StartNew(() => { });
+            return Task.CompletedTask;
         }
 
         public BaseMessage SendMessage_Message { get; private set; }
         public Task SendMessage(BaseMessage message)
         {
             SendMessage_Message = message;
-            return Task.Factory.StartNew(() => { });
+            return Task.CompletedTask;
         }
         
-        public void Close()
+        public Task Close()
         {
-
+            return Task.CompletedTask;
         }
     }
 }

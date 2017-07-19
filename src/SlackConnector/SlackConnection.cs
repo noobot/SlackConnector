@@ -7,6 +7,7 @@ using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Monitoring;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
@@ -21,28 +22,31 @@ namespace SlackConnector
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly IMentionDetector _mentionDetector;
+        private readonly IMonitoringFactory _monitoringFactory;
         private IWebSocketClient _webSocketClient;
+        private IPingPongMonitor _pingPongMonitor;
 
         private Dictionary<string, SlackChatHub> _connectedHubs { get; set; }
         public IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs => _connectedHubs;
 
         private Dictionary<string, SlackUser> _userCache { get; set; }
         public IReadOnlyDictionary<string, SlackUser> UserCache => _userCache;
-        
-        public bool IsConnected => ConnectedSince.HasValue;
+
+        public bool IsConnected => _webSocketClient.IsAlive;
         public DateTime? ConnectedSince { get; private set; }
         public string SlackKey { get; private set; }
 
         public ContactDetails Team { get; private set; }
         public ContactDetails Self { get; private set; }
 
-        public SlackConnection(IConnectionFactory connectionFactory, IMentionDetector mentionDetector)
+        public SlackConnection(IConnectionFactory connectionFactory, IMentionDetector mentionDetector, IMonitoringFactory monitoringFactory)
         {
             _connectionFactory = connectionFactory;
             _mentionDetector = mentionDetector;
+            _monitoringFactory = monitoringFactory;
         }
 
-        public void Initialise(ConnectionInformation connectionInformation)
+        public async Task Initialise(ConnectionInformation connectionInformation)
         {
             SlackKey = connectionInformation.SlackKey;
             Team = connectionInformation.Team;
@@ -60,6 +64,16 @@ namespace SlackConnector
             _webSocketClient.OnMessage += async (sender, message) => await ListenTo(message);
 
             ConnectedSince = DateTime.Now;
+
+            _pingPongMonitor = _monitoringFactory.CreatePingPongMonitor();
+            await _pingPongMonitor.StartMonitor(Ping, Reconnect, TimeSpan.FromMinutes(2));
+        }
+
+        private async Task Reconnect()
+        {
+            var handshakeClient = _connectionFactory.CreateHandshakeClient();
+            var handshake = await handshakeClient.FirmShake(SlackKey);
+            await _webSocketClient.Connect(handshake.WebSocketUrl);
         }
 
         private Task ListenTo(InboundMessage inboundMessage)
@@ -76,6 +90,7 @@ namespace SlackConnector
                 case MessageType.Channel_Joined: return HandleChannelJoined((ChannelJoinedMessage)inboundMessage);
                 case MessageType.Im_Created: return HandleDmJoined((DmChannelJoinedMessage)inboundMessage);
                 case MessageType.Team_Join: return HandleUserJoined((UserJoinedMessage)inboundMessage);
+                case MessageType.Pong: return HandlePong((PongMessage)inboundMessage);
             }
 
             return Task.CompletedTask;
@@ -86,7 +101,7 @@ namespace SlackConnector
             if (string.IsNullOrEmpty(inboundMessage.User))
                 return Task.CompletedTask;
 
-            if(!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
+            if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return Task.CompletedTask;
 
             //TODO: Insert into connectedHubs when DM is missing
@@ -94,7 +109,7 @@ namespace SlackConnector
             var message = new SlackMessage
             {
                 User = GetMessageUser(inboundMessage.User),
-                TimeStamp = inboundMessage.TimeStamp,
+                Timestamp = inboundMessage.Timestamp,
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
                 RawData = inboundMessage.RawData,
@@ -145,6 +160,12 @@ namespace SlackConnector
             return RaiseUserJoined(slackUser);
         }
 
+        private Task HandlePong(PongMessage inboundMessage)
+        {
+            _pingPongMonitor.Pong();
+            return RaisePong(inboundMessage.Timestamp);
+        }
+
         private SlackUser GetMessageUser(string userId)
         {
             return UserCache.ContainsKey(userId) ?
@@ -152,12 +173,18 @@ namespace SlackConnector
                 new SlackUser { Id = userId, Name = string.Empty };
         }
 
-        public void Disconnect()
+        public async Task Close()
         {
             if (_webSocketClient != null && _webSocketClient.IsAlive)
             {
-                _webSocketClient.Close();
+                await _webSocketClient.Close();
             }
+        }
+
+        [Obsolete("Please use Close async method", true)]
+        public void Disconnect()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Say(BotMessage message)
@@ -266,7 +293,6 @@ namespace SlackConnector
         private async Task RaiseChatHubJoined(SlackChatHub hub)
         {
             var e = OnChatHubJoined;
-
             if (e != null)
             {
                 try
@@ -283,10 +309,31 @@ namespace SlackConnector
         private async Task RaiseUserJoined(SlackUser user)
         {
             var e = OnUserJoined;
+            try
+            {
+                if (e != null)
+                {
+                    await e(user);
+                }
+            }
+            catch
+            {
+            }
+        }
 
+        public event PongEventHandler OnPong;
+        private async Task RaisePong(DateTime timestamp)
+        {
+            var e = OnPong;
             if (e != null)
             {
-                await e(user);
+                try
+                {
+                    await e(timestamp);
+                }
+                catch
+                {
+                }
             }
         }
 

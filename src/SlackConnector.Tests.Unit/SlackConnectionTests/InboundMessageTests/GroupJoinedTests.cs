@@ -1,78 +1,68 @@
 ﻿using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Models;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
-    internal class given_bot_joins_group : BaseTest<GroupJoinedMessage>
+    internal class GroupJoinedTests
     {
-        private readonly string _hubId = "Woozah";
-        private SlackChatHub _lastHub;
-
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_raise_event(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-            SUT.OnChatHubJoined += hub =>
+            const string hubId = "this-is-the-id";
+            SlackChatHub lastHub = null;
+            slackConnection.OnChatHubJoined += hub =>
             {
-                _lastHub = hub;
+                lastHub = hub;
                 return Task.CompletedTask;
             };
 
-            InboundMessage = new GroupJoinedMessage
+            var inboundMessage = new GroupJoinedMessage
             {
-                Channel = new Group { Id = _hubId }
+                Channel = new Group { Id = hubId }
             };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            lastHub.Id.ShouldEqual(hubId);
+            lastHub.Type.ShouldEqual(SlackChatHubType.Group);
+            slackConnection.ConnectedHubs.ContainsKey(hubId).ShouldBeTrue();
+            slackConnection.ConnectedHubs[hubId].ShouldEqual(lastHub);
         }
 
-        [Test]
-        public void then_should_raised_event_with_expected_channel_information()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_event_given_missing_data(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            _lastHub.Id.ShouldEqual(_hubId);
-            _lastHub.Type.ShouldEqual(SlackChatHubType.Group);
-        }
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-        [Test]
-        public void then_should_add_channel_to_connected_hubs()
-        {
-            SUT.ConnectedHubs.ContainsKey(_hubId).ShouldBeTrue();
-            SUT.ConnectedHubs[_hubId].ShouldEqual(_lastHub);
-        }
-    }
-
-    internal class given_missing_channel_info_when_bot_joins_a_group : BaseTest<GroupJoinedMessage>
-    {
-        private SlackChatHub _lastHub;
-
-        protected override void Given()
-        {
-            base.Given();
-
-            SUT.OnChatHubJoined += hub =>
+            SlackChatHub lastHub = null;
+            slackConnection.OnChatHubJoined += hub =>
             {
-                _lastHub = hub;
+                lastHub = hub;
                 return Task.CompletedTask;
             };
 
-            InboundMessage = new GroupJoinedMessage
-            {
-                Channel = null
-            };
-        }
+            var inboundMessage = new GroupJoinedMessage { Channel = null };
 
-        [Test]
-        public void then_should_not_raise_evnet()
-        {
-            _lastHub.ShouldBeNull();
-        }
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
 
-        [Test]
-        public void then_should_not_modify_connect_hubs()
-        {
-            SUT.ConnectedHubs.ShouldBeEmpty();
+            // then
+            lastHub.ShouldBeNull();
+            slackConnection.ConnectedHubs.ShouldBeEmpty();
         }
     }
 }

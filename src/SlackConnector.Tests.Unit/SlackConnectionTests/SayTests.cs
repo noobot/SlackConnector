@@ -1,103 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
 using SlackConnector.Connections;
-using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class SayTests
+    internal class SayTests
     {
-        internal class given_valid_bot_message : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_send_message([Frozen]Mock<IConnectionFactory> connectionFactory,
+            Mock<IChatClient> chatClient, Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            private string SlackKey = "doobeedoo";
-            private BotMessage Message { get; set; }
+            // given
+            const string slackKey = "key-yay";
 
-            protected override void Given()
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey };
+            await slackConnection.Initialise(connectionInfo);
+
+            connectionFactory
+                .Setup(x => x.CreateChatClient())
+                .Returns(chatClient.Object);
+
+            var message = new BotMessage
             {
-                Message = new BotMessage
-                {
-                    Text = "some text",
-                    ChatHub = new SlackChatHub { Id = "channel-id" },
-                    Attachments = new List<SlackAttachment>()
-                };
+                Text = "some text",
+                ChatHub = new SlackChatHub { Id = "channel-id" },
+                Attachments = new List<SlackAttachment>()
+            };
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChatClient())
-                    .Returns(GetMockFor<IChatClient>().Object);
+            // when
+            await slackConnection.Say(message);
 
-                var connectionInfo = new ConnectionInformation
-                {
-                    SlackKey = SlackKey,
-                    WebSocket = GetMockFor<IWebSocketClient>().Object
-                };
-
-                SUT.Initialise(connectionInfo);
-            }
-
-            protected override void When()
-            {
-                SUT.Say(Message).Wait();
-            }
-
-            [Test]
-            public void then_should_call_messenger()
-            {
-                GetMockFor<IChatClient>()
-                    .Verify(x => x.PostMessage(SlackKey, Message.ChatHub.Id, Message.Text, Message.Attachments), Times.Once);
-            }
+            // then
+            chatClient
+                .Verify(x => x.PostMessage(slackKey, message.ChatHub.Id, message.Text, message.Attachments), Times.Once);
         }
 
-        internal class given_no_valid_chathub_id : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_throw_exception_given_null_chat_hub(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            protected override void Given()
-            {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateChatClient())
-                    .Returns(GetMockFor<IChatClient>().Object);
-            }
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-            [Test]
-            public void should_throw_exception_when_no_chathub_given()
-            {
-                MissingChannelException exception = null;
+            // when
+            var exception = Assert.ThrowsAsync<MissingChannelException>(() => slackConnection.Say(new BotMessage { ChatHub = null }));
 
-                try
-                {
-                    SUT.Say(new BotMessage { ChatHub = null }).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as MissingChannelException;
-                }
+            // then
+            Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
+        }
 
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
-            }
+        [Test, AutoMoqData]
+        public async Task should_throw_exception_given_empty_chat_hub_id(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
+        {
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-            [Test]
-            public void should_throw_exception_when_no_chathub_id_given()
-            {
-                MissingChannelException exception = null;
+            // when
+            var exception = Assert.ThrowsAsync<MissingChannelException>(() => slackConnection.Say(new BotMessage { ChatHub = new SlackChatHub { Id = string.Empty } }));
 
-                try
-                {
-                    SUT.Say(new BotMessage { ChatHub = new SlackChatHub { Id = "" } }).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exception = ex.InnerExceptions[0] as MissingChannelException;
-                }
-
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
-            }
+            // then
+            Assert.That(exception.Message, Is.EqualTo("When calling the Say() method, the message parameter must have its ChatHub property set."));
         }
     }
 }

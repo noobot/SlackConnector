@@ -1,4 +1,5 @@
-﻿using SlackConnector.Connections.Clients;
+﻿using System.Threading.Tasks;
+using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Clients.File;
@@ -11,9 +12,11 @@ namespace SlackConnector.Connections
 {
     internal class ConnectionFactory : IConnectionFactory
     {
-        public IWebSocketClient CreateWebSocketClient(string url, ProxySettings proxySettings)
+        public async Task<IWebSocketClient> CreateWebSocketClient(string url, ProxySettings proxySettings)
         {
-            return new WebSocketClient(new MessageInterpreter(new Logger()), url, proxySettings);
+            var socket = new WebSocketClientLite(new MessageInterpreter(new Logger()));
+            await socket.Connect(url);
+            return socket;
         }
 
         public IHandshakeClient CreateHandshakeClient()

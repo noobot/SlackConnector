@@ -9,9 +9,9 @@ namespace SlackConnector.Connections.Sockets
     {
         bool IsAlive { get; }
 
-        Task Connect();
+        Task Connect(string webSockerUrl);
         Task SendMessage(BaseMessage message);
-        void Close();
+        Task Close();
 
         event EventHandler<InboundMessage> OnMessage;
         event EventHandler OnClose;

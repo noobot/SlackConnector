@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -11,296 +10,325 @@ using SlackConnector.Connections.Responses;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
-    public static class ConnectedStatusTests
+    public class ConnectedStatusTests
     {
-        public class given_valid_setup_when_connected : SpecsFor<SlackConnector>
+        private string _slackKey = "slacKing-off-ey?";
+        private string _webSocketUrl = "https://some-web-url";
+        private Mock<IHandshakeClient> _handshakeClient;
+        private Mock<IWebSocketClient> _webSocketClient;
+        private Mock<IConnectionFactory> _connectionFactory;
+        private Mock<ISlackConnectionFactory> _slackConnectionFactory;
+        private SlackConnector _slackConnector;
+
+        [SetUp]
+        public void Setup()
         {
-            private const string SlackKey = "slacKing-off-ey?";
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-            private SlackConnectionStub Connection { get; set; }
-            private HandshakeResponse HandshakeResponse { get; set; }
-            private ISlackConnection Result { get; set; }
+            _handshakeClient = new Mock<IHandshakeClient>();
+            _webSocketClient = new Mock<IWebSocketClient>();
+            _connectionFactory = new Mock<IConnectionFactory>();
+            _slackConnectionFactory = new Mock<ISlackConnectionFactory>();
+            _slackConnector = new SlackConnector(_connectionFactory.Object, _slackConnectionFactory.Object);
 
-            protected override void InitializeClassUnderTest()
-            {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
+            _connectionFactory
+                .Setup(x => x.CreateHandshakeClient())
+                .Returns(_handshakeClient.Object);
 
-            protected override void Given()
-            {
-                HandshakeResponse = new HandshakeResponse
-                {
-                    Ok = true,
-                    Self = new Detail { Id = "my-id", Name = "my-name" },
-                    Team = new Detail { Id = "team-id", Name = "team-name" },
-                    Users = new[]
-                    {
-                        new User { Id = "user-1-id", Name = "user-1-name" },
-                        new User { Id = "user-2-id", Name = "user-2-name" },
-                    },
-                    Channels = new[]
-                    {
-                        new Channel { Id = "i-am-a-channel", Name = "channel-name" , IsMember = true }
-                    },
-                    Groups = new[]
-                    {
-                        new Group { Id = "i-am-a-group", Name = "group-name", Members = new [] {"my-id"} },
-                    },
-                    Ims = new[]
-                    {
-                        new Im { Id = "i-am-a-im", User = "user-i-am_yup"}
-                    },
-                    WebSocketUrl = "some-valid-url"
-                };
-
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(SlackKey))
-                    .ReturnsAsync(HandshakeResponse);
-
-                Connection = new SlackConnectionStub();
-                SlackFactoryStub.Create_Value = Connection;
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
-
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(HandshakeResponse.WebSocketUrl, null))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
-
-                GetMockFor<IWebSocketClient>()
-                    .Setup(x => x.Connect())
-                    .Returns(Task.Factory.StartNew(() => { }));
-            }
-
-            protected override void When()
-            {
-                Result = SUT.Connect(SlackKey).Result;
-            }
-
-            [Test]
-            public void then_should_return_expected_connection()
-            {
-                Result.ShouldEqual(Connection);
-            }
-
-            [Test]
-            public void then_should_pass_in_self_details()
-            {
-                ContactDetails self = SlackFactoryStub.Create_ConnectionInformation.Self;
-                self.ShouldNotBeNull();
-                self.Id.ShouldEqual(HandshakeResponse.Self.Id);
-                self.Name.ShouldEqual(HandshakeResponse.Self.Name);
-            }
-
-            [Test]
-            public void then_should_pass_in_team_details()
-            {
-                ContactDetails team = SlackFactoryStub.Create_ConnectionInformation.Team;
-                team.ShouldNotBeNull();
-                team.Id.ShouldEqual(HandshakeResponse.Team.Id);
-                team.Name.ShouldEqual(HandshakeResponse.Team.Name);
-            }
-
-            [Test]
-            public void then_should_pass_expected_users()
-            {
-                var users = SlackFactoryStub.Create_ConnectionInformation.Users;
-                users.ShouldNotBeNull();
-                users.Count.ShouldEqual(2);
-                users[HandshakeResponse.Users[0].Id].Name.ShouldEqual(HandshakeResponse.Users[0].Name);
-                users[HandshakeResponse.Users[1].Id].Name.ShouldEqual(HandshakeResponse.Users[1].Name);
-            }
-
-            [Test]
-            public void then_should_pass_expected_channels()
-            {
-                Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
-                hubs.ShouldNotBeNull();
-                hubs.Count.ShouldBeGreaterThan(0);
-
-                var hub = hubs[HandshakeResponse.Channels[0].Id];
-                hub.ShouldNotBeNull();
-                hub.Id.ShouldEqual(HandshakeResponse.Channels[0].Id);
-                hub.Name.ShouldEqual("#" + HandshakeResponse.Channels[0].Name);
-                hub.Type.ShouldEqual(SlackChatHubType.Channel);
-            }
-
-            [Test]
-            public void then_should_pass_expected_groups()
-            {
-                Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
-                hubs.ShouldNotBeNull();
-                hubs.Count.ShouldBeGreaterThan(0);
-
-                var hub = hubs[HandshakeResponse.Groups[0].Id];
-                hub.ShouldNotBeNull();
-                hub.Id.ShouldEqual(HandshakeResponse.Groups[0].Id);
-                hub.Name.ShouldEqual("#" + HandshakeResponse.Groups[0].Name);
-                hub.Type.ShouldEqual(SlackChatHubType.Group);
-            }
-
-            [Test]
-            public void then_should_pass_expected_ims()
-            {
-                Dictionary<string, SlackChatHub> hubs = SlackFactoryStub.Create_ConnectionInformation.SlackChatHubs;
-                hubs.ShouldNotBeNull();
-                hubs.Count.ShouldBeGreaterThan(0);
-
-                var hub = hubs[HandshakeResponse.Ims[0].Id];
-                hub.ShouldNotBeNull();
-                hub.Id.ShouldEqual(HandshakeResponse.Ims[0].Id);
-                hub.Name.ShouldEqual("@" + HandshakeResponse.Ims[0].User);
-                hub.Type.ShouldEqual(SlackChatHubType.DM);
-            }
-
-            [Test]
-            public void then_should_pass_in_expected_websocket()
-            {
-                var webSocket = SlackFactoryStub.Create_ConnectionInformation.WebSocket;
-                webSocket.ShouldEqual(GetMockFor<IWebSocketClient>().Object);
-            }
-
-            [Test]
-            public void then_should_connect_websocket()
-            {
-                GetMockFor<IWebSocketClient>()
-                    .Verify(x => x.Connect());
-            }
-
-            [Test]
-            public void then_should_pass_in_slack_key()
-            {
-                string key = SlackFactoryStub.Create_ConnectionInformation.SlackKey;
-                key.ShouldEqual(SlackKey);
-            }
+            _connectionFactory
+                .Setup(x => x.CreateWebSocketClient(_webSocketUrl, null))
+                .ReturnsAsync(_webSocketClient.Object);
         }
 
-        public class given_handshake_was_not_ok : SpecsFor<SlackConnector>
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_websocket_and_return_expected_connection()
         {
-            private HandshakeResponse HandshakeResponse { get; set; }
-
-            protected override void InitializeClassUnderTest()
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<ISlackConnectionFactory>().Object);
-            }
+                Ok = true,
+                WebSocketUrl = _webSocketUrl
+            };
 
-            protected override void Given()
-            {
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
 
-                HandshakeResponse = new HandshakeResponse { Ok = false, Error = "I AM A ERROR" };
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(It.IsAny<string>()))
-                    .ReturnsAsync(HandshakeResponse);
-            }
+            var expectedConnection = new Mock<ISlackConnection>().Object;
+            _slackConnectionFactory
+                .Setup(x => x.Create(It.IsAny<ConnectionInformation>()))
+                .ReturnsAsync(expectedConnection);
 
-            [Test]
-            public void then_should_throw_exception()
-            {
-                HandshakeException exception = null;
+            // when
+            var result = await _slackConnector.Connect(_slackKey);
 
-                try
-                {
-                    SUT.Connect("something").Wait();
-                }
-                catch (AggregateException ex)
-                {
+            // then
+            result.ShouldEqual(expectedConnection);
 
-                    exception = ex.InnerExceptions[0] as HandshakeException;
-                }
-
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo(HandshakeResponse.Error));
-            }
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.WebSocket == _webSocketClient.Object)), Times.Once);
+            _connectionFactory.Verify(x => x.CreateWebSocketClient(_webSocketUrl, null));
         }
 
-        public class given_empty_api_key : SpecsFor<SlackConnector>
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_self_details()
         {
-            protected override void InitializeClassUnderTest()
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, GetMockFor<ISlackConnectionFactory>().Object);
-            }
+                Ok = true,
+                Self = new Detail { Id = "my-id", Name = "my-name" },
+                WebSocketUrl = _webSocketUrl
+            };
 
-            [Test]
-            public void then_should_be_aware_of_current_state()
-            {
-                bool exceptionDetected = false;
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
 
-                try
-                {
-                    SUT.Connect("").Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    exceptionDetected = ex.InnerExceptions[0] is ArgumentNullException;
-                }
+            // when
+            await _slackConnector.Connect(_slackKey);
 
-                Assert.That(exceptionDetected, Is.True);
-            }
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Self.Id == handshakeResponse.Self.Id)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Self.Name == handshakeResponse.Self.Name)), Times.Once);
         }
-        
-        public class given_valid_setup_when_connecting_with_a_proxy_connection : SpecsFor<SlackConnector>
+
+        [Test, AutoMoqData]
+        public async Task should_return_expected_connection()
         {
-            private const string SlackKey = "slacKing-off-ey?";
-            private SlackConnectionFactoryStub SlackFactoryStub { get; set; }
-            private SlackConnectionStub Connection { get; set; }
-            private ISlackConnection Result { get; set; }
-            private ProxySettings ProxySettings { get; set; }
-
-            protected override void InitializeClassUnderTest()
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                SlackFactoryStub = new SlackConnectionFactoryStub();
-                SUT = new SlackConnector(GetMockFor<IConnectionFactory>().Object, SlackFactoryStub);
-            }
+                Ok = true,
+                Self = new Detail { Id = "my-id", Name = "my-name" },
+                WebSocketUrl = _webSocketUrl
+            };
 
-            protected override void Given()
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            var expectedConnection = new Mock<ISlackConnection>().Object;
+            _slackConnectionFactory
+                .Setup(x => x.Create(It.IsAny<ConnectionInformation>()))
+                .ReturnsAsync(expectedConnection);
+
+            // when
+            var result = await _slackConnector.Connect(_slackKey);
+
+            // then
+            result.ShouldEqual(expectedConnection);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_team_details()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                var handshakeResponse = new HandshakeResponse
+                Ok = true,
+                Team = new Detail { Id = "team-id", Name = "team-name" },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Team.Id == handshakeResponse.Team.Id)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Team.Name == handshakeResponse.Team.Name)), Times.Once);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_users_details()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                Users = new[]
                 {
-                    Ok = true,
-                    WebSocketUrl = "some-valid-url"
-                };
+                    new User { Id = "user-1-id", Name = "user-1-name" },
+                    new User { Id = "user-2-id", Name = "user-2-name" },
+                },
+                WebSocketUrl = _webSocketUrl
+            };
 
-                GetMockFor<IHandshakeClient>()
-                    .Setup(x => x.FirmShake(SlackKey))
-                    .ReturnsAsync(handshakeResponse);
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
 
-                Connection = new SlackConnectionStub();
-                SlackFactoryStub.Create_Value = Connection;
+            // when
+            await _slackConnector.Connect(_slackKey);
 
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateHandshakeClient())
-                    .Returns(GetMockFor<IHandshakeClient>().Object);
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Users.Count == 2)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Users["user-1-id"].Name == "user-1-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.Users["user-2-id"].Name == "user-2-name")), Times.Once);
+        }
 
-                ProxySettings = new ProxySettings("hi", "you", "ok?");
-                GetMockFor<IConnectionFactory>()
-                    .Setup(x => x.CreateWebSocketClient(handshakeResponse.WebSocketUrl, ProxySettings))
-                    .Returns(GetMockFor<IWebSocketClient>().Object);
-
-                GetMockFor<IWebSocketClient>()
-                    .Setup(x => x.Connect())
-                    .Returns(Task.Factory.StartNew(() => { }));
-            }
-
-            protected override void When()
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_channel_that_bot_is_a_member_of()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                Result = SUT.Connect(SlackKey, ProxySettings).Result;
-            }
+                Ok = true,
+                Channels = new[]
+                {
+                    new Channel { Id = "i-am-a-channel", Name = "channel-name" , IsMember = true, Members = new [] { "member1", "member2" }},
+                    new Channel { Id = "i-am-another-channel", Name = "but-you-aint-invited" , IsMember = false },
+                    new Channel { Id = "i-am-archived-channel", Name = "please-ignore-me" , IsMember = true, IsArchived = true },
+                },
+                WebSocketUrl = _webSocketUrl
+            };
 
-            [Test]
-            public void then_should_return_expected_connection()
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 1)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-channel"].Id == "i-am-a-channel")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-channel"].Name == "#channel-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-channel"].Type == SlackChatHubType.Channel)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-channel"].Members == handshakeResponse.Channels[0].Members)), Times.Once);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_groups_that_bot_is_a_member_of()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
             {
-                Result.ShouldEqual(Connection);
-            }
+                Ok = true,
+                Self = new Detail { Id = "my-id" },
+                Groups = new[]
+                {
+                    new Group { Id = "i-am-a-group", Name = "group-name", Members = new [] {"my-id", "another-member"} },
+                    new Group { Id = "i-am-another-group", Name = "and-you-aint-a-member-of-it", Members = null },
+                    new Group { Id = "i-am-a-group", Name = "group-name", Members = new [] {"my-id"}, IsArchived = true },
+                },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 1)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-group"].Id == "i-am-a-group")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-group"].Name == "#group-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-group"].Type == SlackChatHubType.Group)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-group"].Members == handshakeResponse.Groups[0].Members)), Times.Once);
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_initialise_connection_with_expected_ims()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = true,
+                Self = new Detail { Id = "my-id" },
+                Users = new[]
+                {
+                    new User { Id = "user-guid-thingy", Name = "expected-name" },
+                },
+                Ims = new[]
+                {
+                    new Im { Id = "i-am-a-im", User = "user-i-am_yup" },
+                    new Im { Id = "user-with-name", User = "user-guid-thingy" },
+                },
+                WebSocketUrl = _webSocketUrl
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            await _slackConnector.Connect(_slackKey);
+
+            // then
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs.Count == 2)), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-im"].Id == "i-am-a-im")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-im"].Name == "@user-i-am_yup")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["i-am-a-im"].Type == SlackChatHubType.DM)), Times.Once);
+
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Id == "user-with-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Name == "@expected-name")), Times.Once);
+            _slackConnectionFactory
+                .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.SlackChatHubs["user-with-name"].Type == SlackChatHubType.DM)), Times.Once);
+        }
+
+        [Test]
+        public void should_throw_exception_when_handshake_is_not_ok()
+        {
+            // given
+            var handshakeResponse = new HandshakeResponse
+            {
+                Ok = false,
+                Error = "I AM A ERROR"
+            };
+
+            _handshakeClient
+                .Setup(x => x.FirmShake(_slackKey))
+                .ReturnsAsync(handshakeResponse);
+
+            // when
+            var exception = Assert.ThrowsAsync<HandshakeException>(() => _slackConnector.Connect(_slackKey));
+
+            // then
+            Assert.That(exception.Message, Is.EqualTo(handshakeResponse.Error));
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        public void should_throw_exception_given_empty_api_key(string slackKey)
+        {
+            // given
+            
+            // when
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => _slackConnector.Connect(slackKey));
+
+            // then
+            Assert.That(exception.Message, Does.Contain("slackKey"));
         }
     }
 }

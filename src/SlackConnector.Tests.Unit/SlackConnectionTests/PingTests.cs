@@ -1,46 +1,28 @@
-﻿using NUnit.Framework;
-using Should;
+﻿using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class PingTests
+    internal class PingTests
     {
-        internal class given_valid_connection_when_initiating_a_ping : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_send_ping(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            private string SlackKey = "doobeedoo";
-            private SlackChatHub _chatHub;
-            private WebSocketClientStub _webSocketClient;
+            // given
+            const string slackKey = "key-yay";
 
-            protected override void Given()
-            {
-                _webSocketClient = new WebSocketClientStub();
-                _chatHub = new SlackChatHub { Id = "channelz-id" };
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey };
+            await slackConnection.Initialise(connectionInfo);
+            
+            // when
+            await slackConnection.Ping();
 
-                var connectionInfo = new ConnectionInformation
-                {
-                    SlackKey = SlackKey,
-                    WebSocket = _webSocketClient
-                };
-                SUT.Initialise(connectionInfo);
-            }
-
-            protected override void When()
-            {
-                SUT.Ping().Wait();
-            }
-
-            [Test]
-            public void then_should_send_ping_message_with_expected_type()
-            {
-                var typingMessage = _webSocketClient.SendMessage_Message as PingMessage;
-                typingMessage.ShouldNotBeNull();
-
-                typingMessage.Type.ShouldEqual("ping");
-            }
+            // then
+            webSocket.Verify(x => x.SendMessage(It.IsAny<PingMessage>()));
         }
     }
 }

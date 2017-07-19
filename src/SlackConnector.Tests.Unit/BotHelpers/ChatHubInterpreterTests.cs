@@ -2,7 +2,7 @@
 using Should;
 using SlackConnector.BotHelpers;
 using SlackConnector.Models;
-using SpecsFor.ShouldExtensions;
+using SlackConnector.Tests.Unit.TestExtensions;
 
 namespace SlackConnector.Tests.Unit.BotHelpers
 {

@@ -1,31 +1,33 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using Should;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
-using SpecsFor.ShouldExtensions;
+using SlackConnector.Tests.Unit.TestExtensions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
-    internal class given_new_user_joins_team : BaseTest<UserJoinedMessage>
+    internal class UserJoinedTests
     {
-        private SlackUser _expectedUser;
-        private SlackUser _lastUser;
-
-        protected override void Given()
+        [Test, AutoMoqData]
+        public async Task should_raise_event(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            base.Given();
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-            SUT.OnUserJoined += user =>
+            SlackUser lastUser = null;
+            slackConnection.OnUserJoined += user =>
             {
-                _lastUser = user;
+                lastUser = user;
                 return Task.CompletedTask;
             };
 
-            InboundMessage = new UserJoinedMessage
+            var inboundMessage = new UserJoinedMessage
             {
                 MessageType = MessageType.Team_Join,
                 User = new User
@@ -42,7 +44,11 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                 }
             };
 
-            _expectedUser = new SlackUser
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            lastUser.ShouldLookLike(new SlackUser
             {
                 Id = "some-id",
                 Name = "my-name",
@@ -50,91 +56,62 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                 IsBot = true,
                 Online = true,
                 Email = "some-email@mail.com"
-            };
+            });
+
+            slackConnection.UserCache.ContainsKey(inboundMessage.User.Id).ShouldBeTrue();
+            slackConnection.UserCache[inboundMessage.User.Id].ShouldEqual(lastUser);
         }
 
-        [Test]
-        public void then_should_raise_event_with_user_info()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_event_given_missing_user_info(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            _lastUser.ShouldLookLike(_expectedUser);
-        }
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
 
-        [Test]
-        public void then_should_add_add_user_to_user_cache()
-        {
-            SUT.UserCache.ContainsKey(InboundMessage.User.Id).ShouldBeTrue();
-            SUT.UserCache[InboundMessage.User.Id].ShouldEqual(_lastUser);
-        }
-    }
-
-    internal class given_missing_user_id_when_new_user_joins_team : BaseTest<UserJoinedMessage>
-    {
-        private SlackUser _lastUser;
-
-        protected override void Given()
-        {
-            base.Given();
-
-            SUT.OnUserJoined += slackUser =>
+            SlackUser lastUser = null;
+            slackConnection.OnUserJoined += user =>
             {
-                _lastUser = slackUser;
+                lastUser = user;
                 return Task.CompletedTask;
             };
 
-            InboundMessage = new UserJoinedMessage
+            var inboundMessage = new UserJoinedMessage
             {
                 User = new User
                 {
                     Id = null
                 }
             };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            lastUser.ShouldBeNull();
+            slackConnection.UserCache.ShouldBeEmpty();
         }
 
-        [Test]
-        public void then_should_not_raise_evnet()
+        [Test, AutoMoqData]
+        public async Task should_not_raise_exception(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            _lastUser.ShouldBeNull();
-        }
+            // given
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object };
+            await slackConnection.Initialise(connectionInfo);
+            slackConnection.OnUserJoined += user => throw new NotImplementedException("THIS SHOULDN'T BUBBLE UP");
 
-        [Test]
-        public void then_should_not_modify_connect_hubs()
-        {
-            SUT.UserCache.ShouldBeEmpty();
-        }
-    }
-
-    internal class given_exception_in_user_joined_event : BaseTest<UserJoinedMessage>
-    {
-        protected override void Given()
-        {
-            base.Given();
-
-            SUT.OnUserJoined += slackUser =>
-            {
-                throw new NotImplementedException("THIS SHOULDN'T BUBBLE UP");
-            };
-
-            InboundMessage = new UserJoinedMessage
+            var inboundMessage = new UserJoinedMessage
             {
                 User = new User
                 {
-                    Id = "something"
+                    Id = null
                 }
             };
-        }
 
-        protected override void When()
-        {
-            SUT.Initialise(ConnectionInfo);
-        }
-
-        [Test]
-        public void then_shouldnt_bubble_exception()
-        {
+            // when & then
             Assert.DoesNotThrow(() =>
             {
-                GetMockFor<IWebSocketClient>()
-                    .Raise(x => x.OnMessage += null, null, InboundMessage);
+                webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
             });
         }
     }

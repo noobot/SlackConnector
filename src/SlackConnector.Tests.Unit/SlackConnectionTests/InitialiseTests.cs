@@ -1,65 +1,84 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
+using Ploeh.AutoFixture.NUnit3;
 using Should;
+using SlackConnector.Connections.Monitoring;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class InitialiseTests
+    internal class given_valid_connection_info
     {
-        internal class given_valid_connection_info : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public void should_initialise_slack_connection(SlackConnection connection)
         {
-            private ConnectionInformation Info { get; set; }
-
-            protected override void Given()
+            // given
+            var info = new ConnectionInformation
             {
-                Info = new ConnectionInformation
-                {
-                    Self = new ContactDetails { Id = "self-id" },
-                    Team = new ContactDetails { Id = "team-id" },
-                    Users = new Dictionary<string, SlackUser> { { "userid", new SlackUser() { Name = "userName" } } },
-                    SlackChatHubs = new Dictionary<string, SlackChatHub> { { "some-hub", new SlackChatHub() } },
-                    WebSocket = GetMockFor<IWebSocketClient>().Object
-                };
-            }
+                Self = new ContactDetails { Id = "self-id" },
+                Team = new ContactDetails { Id = "team-id" },
+                Users = new Dictionary<string, SlackUser> { { "userid", new SlackUser() { Name = "userName" } } },
+                SlackChatHubs = new Dictionary<string, SlackChatHub> { { "some-hub", new SlackChatHub() } },
+                WebSocket = new Mock<IWebSocketClient>().Object
+            };
 
-            protected override void When()
-            {
-                SUT.Initialise(Info);
-            }
+            // when
+            connection.Initialise(info).Wait();
 
-            [Test]
-            public void then_should_populate_self()
-            {
-                SUT.Self.ShouldEqual(Info.Self);
-            }
+            // then
+            connection.Self.ShouldEqual(info.Self);
+            connection.Team.ShouldEqual(info.Team);
+            connection.UserCache.ShouldEqual(info.Users);
+            connection.ConnectedHubs.ShouldEqual(info.SlackChatHubs);
+            connection.ConnectedSince.HasValue.ShouldBeTrue();
+        }
 
-            [Test]
-            public void then_should_populate_team()
+        [Test, AutoMoqData]
+        public void should_be_connected_if_websocket_is_alive(Mock<IWebSocketClient> webSocketClient, SlackConnection connection)
+        {
+            // given
+            var info = new ConnectionInformation
             {
-                SUT.Team.ShouldEqual(Info.Team);
-            }
+                WebSocket = webSocketClient.Object
+            };
 
-            [Test]
-            public void then_should_populate_users()
-            {
-                SUT.UserCache.ShouldEqual(Info.Users);
-            }
+            webSocketClient
+                .Setup(x => x.IsAlive)
+                .Returns(true);
 
-            [Test]
-            public void then_should_slack_hubs()
-            {
-                SUT.ConnectedHubs.ShouldEqual(Info.SlackChatHubs);
-            }
+            // when
+            connection.Initialise(info).Wait();
 
-            [Test]
-            public void then_should_detect_as_connected()
+            // then
+            connection.IsConnected.ShouldBeTrue();
+        }
+
+        [Test, AutoMoqData]
+        public async Task should_initialise_ping_pong_monitor([Frozen]Mock<IMonitoringFactory> monitoringFactory, Mock<IPingPongMonitor> pingPongMonitor, SlackConnection connection)
+        {
+            // given
+            var info = new ConnectionInformation
             {
-                SUT.IsConnected.ShouldBeTrue();
-                SUT.ConnectedSince.HasValue.ShouldBeTrue();
-            }
+                WebSocket = new Mock<IWebSocketClient>().Object
+            };
+
+            pingPongMonitor
+                .Setup(x => x.StartMonitor(It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(), It.IsAny<TimeSpan>()))
+                .Returns(Task.CompletedTask);
+
+            monitoringFactory
+                .Setup(x => x.CreatePingPongMonitor())
+                .Returns(pingPongMonitor.Object);
+
+            // when
+            await connection.Initialise(info);
+
+            // then
+            pingPongMonitor.Verify(x => x.StartMonitor(It.IsNotNull<Func<Task>>(), It.IsNotNull<Func<Task>>(), TimeSpan.FromMinutes(2)), Times.Once);
         }
     }
 }

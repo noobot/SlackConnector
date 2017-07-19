@@ -28,7 +28,7 @@ namespace SlackConnector
             _slackConnectionFactory = slackConnectionFactory;
         }
 
-        public async Task<ISlackConnection> Connect(string slackKey, ProxySettings proxySettings = null)
+        public async Task<ISlackConnection> Connect(string slackKey)
         {
             if (string.IsNullOrEmpty(slackKey))
             {
@@ -52,17 +52,11 @@ namespace SlackConnector
                 Team = new ContactDetails { Id = handshakeResponse.Team.Id, Name = handshakeResponse.Team.Name },
                 Users = users,
                 SlackChatHubs = GetChatHubs(handshakeResponse, users.Values.ToArray()),
-                WebSocket = await GetWebSocket(handshakeResponse, proxySettings)
+                WebSocket = await _connectionFactory.CreateWebSocketClient(handshakeResponse.WebSocketUrl, null)
             };
 
-            return _slackConnectionFactory.Create(connectionInfo);
-        }
-
-        private async Task<IWebSocketClient> GetWebSocket(HandshakeResponse handshakeResponse, ProxySettings proxySettings)
-        {
-            var webSocketClient = _connectionFactory.CreateWebSocketClient(handshakeResponse.WebSocketUrl, proxySettings);
-            await webSocketClient.Connect();
-            return webSocketClient;
+            var connection = await _slackConnectionFactory.Create(connectionInfo);
+            return connection;
         }
 
         private Dictionary<string, SlackUser> GenerateUsers(User[] users)
@@ -85,7 +79,7 @@ namespace SlackConnector
 
             foreach (Group group in handshakeResponse.Groups.Where(x => !x.IsArchived))
             {
-                if (group.Members.Any(x => x == handshakeResponse.Self.Id))
+                if ((group.Members ?? new string[0]).Any(x => x == handshakeResponse.Self.Id))
                 {
                     var newGroup = group.ToChatHub();
                     hubs.Add(group.Id, newGroup);

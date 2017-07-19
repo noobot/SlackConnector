@@ -1,47 +1,29 @@
-﻿using NUnit.Framework;
-using Should;
+﻿using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Outbound;
 using SlackConnector.Models;
-using SlackConnector.Tests.Unit.Stubs;
-using SpecsFor;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
-    public static class TypingIndicatorTests
+    internal class TypingIndicatorTests
     {
-        internal class given_valid_bot_message : SpecsFor<SlackConnection>
+        [Test, AutoMoqData]
+        public async Task should_send_ping(Mock<IWebSocketClient> webSocket, SlackConnection slackConnection)
         {
-            private string SlackKey = "doobeedoo";
-            private SlackChatHub _chatHub;
-            private WebSocketClientStub _webSocketClient;
+            // given
+            const string slackKey = "key-yay";
 
-            protected override void Given()
-            {
-                _webSocketClient = new WebSocketClientStub();
-                _chatHub = new SlackChatHub { Id = "channelz-id" };
+            var connectionInfo = new ConnectionInformation { WebSocket = webSocket.Object, SlackKey = slackKey };
+            await slackConnection.Initialise(connectionInfo);
+            var chatHub = new SlackChatHub { Id = "channelz-id" };
 
-                var connectionInfo = new ConnectionInformation
-                {
-                    SlackKey = SlackKey,
-                    WebSocket = _webSocketClient
-                };
-                SUT.Initialise(connectionInfo);
-            }
+            // when
+            await slackConnection.IndicateTyping(chatHub);
 
-            protected override void When()
-            {
-                SUT.IndicateTyping(_chatHub).Wait();
-            }
-
-            [Test]
-            public void then_should_pass_expected_message_object()
-            {
-                var typingMessage = _webSocketClient.SendMessage_Message as TypingIndicatorMessage;
-                typingMessage.ShouldNotBeNull();
-                typingMessage.Channel.ShouldEqual(_chatHub.Id);
-                typingMessage.Type.ShouldEqual("typing");
-            }
+            // then
+            webSocket.Verify(x => x.SendMessage(It.Is((TypingIndicatorMessage p) => p.Channel == chatHub.Id)));
         }
-
     }
 }
