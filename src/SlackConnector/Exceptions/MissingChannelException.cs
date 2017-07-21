@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace SlackConnector.Exceptions
 {
@@ -12,9 +11,6 @@ namespace SlackConnector.Exceptions
         { }
 
         public MissingChannelException(string message, Exception innerException) : base(message, innerException)
-        { }
-
-        protected MissingChannelException(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
     }
 }

@@ -13,8 +13,5 @@ namespace SlackConnector.Exceptions
 
         public CommunicationException(string message, Exception innerException) : base(message, innerException)
         { }
-
-        protected CommunicationException(SerializationInfo info, StreamingContext context) : base(info, context)
-        { }
     }
 }

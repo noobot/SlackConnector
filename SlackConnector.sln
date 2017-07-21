@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26711.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector", "src\SlackConnector\SlackConnector.csproj", "{83D8B2DB-2033-4EA4-9129-110A20DBA7D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector.Tests.Integration", "src\SlackConnector.Tests.Integration\SlackConnector.Tests.Integration.csproj", "{CD09750C-2BDF-4C61-935E-C4DCF570219A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector.Tests.Unit", "src\SlackConnector.Tests.Unit\SlackConnector.Tests.Unit.csproj", "{1D33C34B-54D1-4F3B-80B9-5B23B9619518}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{01D3C8E6-DA36-4D50-B35E-3B3FC78AFFEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector-Legacy", "src\SlackConnector-Legacy\SlackConnector-Legacy.csproj", "{83D8B2DB-2033-4EA4-9129-110A20DBA7D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector.Tests.Integration", "src\SlackConnector.Tests.Integration-Legacy\SlackConnector.Tests.Integration.csproj", "{CD09750C-2BDF-4C61-935E-C4DCF570219A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector.Tests.Unit", "src\SlackConnector.Tests.Unit-Legacy\SlackConnector.Tests.Unit.csproj", "{1D33C34B-54D1-4F3B-80B9-5B23B9619518}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackConnector", "src\SlackConnector\SlackConnector.csproj", "{90677E16-CD23-4E7A-9CF8-6AD5E9A59678}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{1D33C34B-54D1-4F3B-80B9-5B23B9619518}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D33C34B-54D1-4F3B-80B9-5B23B9619518}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D33C34B-54D1-4F3B-80B9-5B23B9619518}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90677E16-CD23-4E7A-9CF8-6AD5E9A59678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90677E16-CD23-4E7A-9CF8-6AD5E9A59678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90677E16-CD23-4E7A-9CF8-6AD5E9A59678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90677E16-CD23-4E7A-9CF8-6AD5E9A59678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,5 +42,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CD09750C-2BDF-4C61-935E-C4DCF570219A} = {01D3C8E6-DA36-4D50-B35E-3B3FC78AFFEA}
 		{1D33C34B-54D1-4F3B-80B9-5B23B9619518} = {01D3C8E6-DA36-4D50-B35E-3B3FC78AFFEA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69AD9C27-0383-4CCD-9980-75E9D8ACA096}
 	EndGlobalSection
 EndGlobal
