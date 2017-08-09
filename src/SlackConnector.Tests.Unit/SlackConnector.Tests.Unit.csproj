@@ -10,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="autofixture" Version="3.50.3" />
-    <PackageReference Include="AutoFixture.AutoMoq" Version="3.50.3" />
-    <PackageReference Include="AutoFixture.nunit3" Version="3.50.3" />
+    <PackageReference Include="autofixture" Version="3.50.5" />
+    <PackageReference Include="AutoFixture.AutoMoq" Version="3.50.5" />
+    <PackageReference Include="AutoFixture.nunit3" Version="3.50.5" />
     <PackageReference Include="expectedobjects" Version="1.3.0" />
     <PackageReference Include="moq" Version="4.7.99" />
     <PackageReference Include="nunit" Version="3.7.1" />
