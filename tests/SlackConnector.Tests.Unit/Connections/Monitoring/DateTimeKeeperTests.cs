@@ -6,17 +6,17 @@ using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Unit.Connections.Monitoring
 {
-    internal class DateTimeKeeperTests
+    public class DateTimeKeeperTests
     {
         [Theory, AutoMoqData]
-        public void should_throw_exception_if_get_time_is_called_before_being_set(DateTimeKeeper dateTimeKeeper)
+        private void should_throw_exception_if_get_time_is_called_before_being_set(DateTimeKeeper dateTimeKeeper)
         {
             Assert.Throws<DateTimeKeeper.DateTimeNotSetException>(() => dateTimeKeeper.TimeSinceDateTime());
-            dateTimeKeeper.HasDateTime().ShouldBeTrue();
+            dateTimeKeeper.HasDateTime().ShouldBeFalse();
         }
 
         [Theory, AutoMoqData]
-        public void should_return_time_since_if_datetime_has_been_set(DateTimeKeeper dateTimeKeeper)
+        private void should_return_time_since_if_datetime_has_been_set(DateTimeKeeper dateTimeKeeper)
         {
             // given
 

@@ -9,10 +9,10 @@ using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
 {
-    internal class MessageInterpreterTests
+    public class MessageInterpreterTests
     {
         [Theory, AutoMoqData]
-        public void should_return_standard_message(MessageInterpreter interpreter)
+        private void should_return_standard_message(MessageInterpreter interpreter)
         {
             // given
             string json = @"
@@ -45,7 +45,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_return_group_joined_message(MessageInterpreter interpreter)
+        private void should_return_group_joined_message(MessageInterpreter interpreter)
         {
             // given
             string json = @"
@@ -77,7 +77,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_return_channel_joined_message(MessageInterpreter interpreter)
+        private void should_return_channel_joined_message(MessageInterpreter interpreter)
         {
             // given
             string json = @"
@@ -109,7 +109,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_return_dm_channel_joined_message(MessageInterpreter interpreter)
+        private void should_return_dm_channel_joined_message(MessageInterpreter interpreter)
         {
             // given
             string json = @"
@@ -145,7 +145,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_return_user_joined_message(MessageInterpreter interpreter)
+        private void should_return_user_joined_message(MessageInterpreter interpreter)
         {
             // given
             string json = @"
@@ -188,7 +188,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_return_unknown_message_type(MessageInterpreter interpreter)
+        private void should_return_unknown_message_type(MessageInterpreter interpreter)
         {
             // given
             string json = @"{ 'type': 'something_else' }";
@@ -207,7 +207,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void shouldnt_return_message_given_dodge_json(MessageInterpreter interpreter)
+        private void shouldnt_return_message_given_dodge_json(MessageInterpreter interpreter)
         {
             // given
             string json = @"{ 'type': 'something_else', 'channel': { 'isObject': true } }";
@@ -220,7 +220,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_return_message_given_standard_message_with_null_data(MessageInterpreter interpreter)
+        private void should_return_message_given_standard_message_with_null_data(MessageInterpreter interpreter)
         {
             // given
             string json = @"
@@ -253,7 +253,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void shouldnt_log_when_logging_level_is_non([Frozen]Mock<ILogger> logger, MessageInterpreter interpreter)
+        private void shouldnt_log_when_logging_level_is_non([Frozen]Mock<ILogger> logger, MessageInterpreter interpreter)
         {
             // given
             SlackConnector.LoggingLevel = ConsoleLoggingLevel.None;
@@ -267,7 +267,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_log_when_logging_level_is_all([Frozen]Mock<ILogger> logger, MessageInterpreter interpreter)
+        private void should_log_when_logging_level_is_all([Frozen]Mock<ILogger> logger, MessageInterpreter interpreter)
         {
             // given
             SlackConnector.LoggingLevel = ConsoleLoggingLevel.All;
@@ -281,7 +281,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        public void should_return_pong_message(MessageInterpreter interpreter)
+        private void should_return_pong_message(MessageInterpreter interpreter)
         {
             // given
             string json = @"
