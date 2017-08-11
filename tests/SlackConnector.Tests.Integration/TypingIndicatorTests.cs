@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
-using NUnit.Framework;
 using SlackConnector.Models;
+using Xunit;
 
 namespace SlackConnector.Tests.Integration
 {
-    [TestFixture]
     public class TypingIndicatorTests : IntegrationTest
     {
-        [Test]
+        [Fact]
         public async Task should_send_typing_indicator()
         {
             // given

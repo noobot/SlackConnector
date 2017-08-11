@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using SlackConnector.Models;
+using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Integration
 {
-    [TestFixture]
     public class SlackConnectorTests : IntegrationTest
     {
-        [Test]
+        [Fact]
         public async Task should_connect_and_stuff()
         {
             // given
@@ -19,13 +19,13 @@ namespace SlackConnector.Tests.Integration
             SlackConnection.OnMessageReceived += SlackConnectorOnMessageReceived;
 
             // then
-            Assert.That(SlackConnection.IsConnected, Is.True);
+            SlackConnection.IsConnected.ShouldBeTrue();
             //Thread.Sleep(TimeSpan.FromMinutes(1));
 
             // when
             await SlackConnection.Close();
 
-            Assert.That(SlackConnection.IsConnected, Is.False);
+            SlackConnection.IsConnected.ShouldBeFalse();
         }
 
         private void SlackConnector_OnDisconnect()

@@ -1,12 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Integration
 {
     public class SlackGetChannels : IntegrationTest
     {
-        [Test]
+        [Fact]
         public async Task should_connect_and_get_channels()
         {
             // given
@@ -15,10 +16,10 @@ namespace SlackConnector.Tests.Integration
             var channels = await SlackConnection.GetChannels();
 
             // then
-            Assert.That(channels.Any(), Is.True);
+            channels.Any().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public async Task should_connect_and_get_users()
         {
             // given
@@ -27,7 +28,7 @@ namespace SlackConnector.Tests.Integration
             var users = await SlackConnection.GetUsers();
 
             // then
-            Assert.That(users.Any(u => u.Online == true), Is.True);
+           users.Any(u => u.Online == true).ShouldBeTrue();
         }
     }
 }

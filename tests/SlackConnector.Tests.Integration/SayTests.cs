@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
-using NUnit.Framework;
 using SlackConnector.Models;
+using Xunit;
 
 namespace SlackConnector.Tests.Integration
 {
-    [TestFixture]
     public class SayTests : IntegrationTest
     {
-        [Test]
+        [Fact]
         public async Task should_say_something_on_channel()
         {
             // given

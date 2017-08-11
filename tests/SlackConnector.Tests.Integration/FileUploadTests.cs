@@ -1,32 +1,27 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using SlackConnector.Tests.Integration.Resources;
+using Xunit;
 
 namespace SlackConnector.Tests.Integration
 {
-    [TestFixture]
     public class FileUploadTests : IntegrationTest
     {
-        private string _filePath;
-
-        [SetUp]
-        public override async Task SetUp()
+        private readonly string _filePath;
+        
+        public FileUploadTests()
         {
-            await base.SetUp();
-
             _filePath = Path.GetTempFileName();
             File.WriteAllText(_filePath, EmbeddedResourceFileReader.ReadEmbeddedFileAsText("UploadTest.txt"));
         }
-
-        [TearDown]
-        public override async Task TearDown()
+        
+        public override void Dispose()
         {
-            await base.TearDown();
+            base.Dispose();
             File.Delete(_filePath);
         }
 
-        [Test]
+        [Fact]
         public async Task should_upload_to_channel_from_file_system()
         {
             // given
@@ -38,7 +33,7 @@ namespace SlackConnector.Tests.Integration
             // then
         }
 
-        [Test]
+        [Fact]
         public async Task should_upload_to_channel_from_stream()
         {
             // given

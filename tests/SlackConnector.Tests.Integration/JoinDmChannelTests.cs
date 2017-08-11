@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using SlackConnector.Models;
+using SlackConnector.Tests.Integration.Configuration;
+using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Integration
 {
-    [TestFixture]
     public class JoinDmChannelTests : IntegrationTest
     {
-        [Test]
+        [Fact]
         public async Task should_join_channel()
         {
             // given
             if (string.IsNullOrEmpty(Config.Slack.TestUserName))
             {
-                Assert.Inconclusive("TestUserName is missing from config");
+                throw new InvalidConfiguration("TestUserName is missing from config");
             }
             
             var users = await SlackConnection.GetUsers();
@@ -25,10 +26,10 @@ namespace SlackConnector.Tests.Integration
             SlackChatHub result = await SlackConnection.JoinDirectMessageChannel(userId);
 
             // then
-            Assert.That(result, Is.Not.Null);
+            result.ShouldNotBeNull();
 
             var dmChannel = SlackConnection.ConnectedDM($"@{Config.Slack.TestUserName}");
-            Assert.That(dmChannel, Is.Not.Null);
+            dmChannel.ShouldNotBeNull();
             await SlackConnection.Say(new BotMessage { ChatHub = dmChannel, Text = "Wuzzup - testing in da haus" });
         }
     }

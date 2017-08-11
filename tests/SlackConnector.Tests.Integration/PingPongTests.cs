@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Integration
 {
     public class PingPongTests : IntegrationTest
     {
-        [Test]
+        [Fact]
         public async Task should_pong_to_our_ping()
         {
             // given
@@ -28,7 +29,7 @@ namespace SlackConnector.Tests.Integration
                 Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
-            Assert.That(hasPonged, Is.True);
+            hasPonged.ShouldBeTrue();
         }
     }
 }
