@@ -1,5 +1,6 @@
 ﻿using SlackConnector.BotHelpers;
 using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Unit.BotHelpers
 {
@@ -23,7 +24,7 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             bool detected = detector.WasBotMentioned(userName, userId, messageText);
 
             // then
-            Assert.True(detected);
+            detected.ShouldBeTrue();
         }
 
         [Theory]
@@ -41,7 +42,7 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             bool detected = detector.WasBotMentioned(userName, userId, messageText);
 
             // then
-            Assert.False(detected);
+            detected.ShouldBeFalse();
         }
     }
 }

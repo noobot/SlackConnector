@@ -2,6 +2,7 @@
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Unit.BotHelpers
 {
@@ -40,7 +41,7 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             SlackChatHub chatHub = interpreter.FromId(hubId);
 
             // then
-            Assert.Null(chatHub);
+            chatHub.ShouldBeNull();
         }
 
         [Theory]
@@ -55,7 +56,7 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             SlackChatHub chatHub = interpreter.FromId(hubId);
 
             // then
-            Assert.Null(chatHub);
+            chatHub.ShouldBeNull();
         }
     }
 }
