@@ -1,18 +1,17 @@
-﻿using NUnit.Framework;
-using Should;
-using SlackConnector.BotHelpers;
+﻿using SlackConnector.BotHelpers;
+using Xunit;
 
 namespace SlackConnector.Tests.Unit.BotHelpers
 {
-    [TestFixture]
     public class MentionDetectorTests
     {
-        [TestCase("sir-name")]
-        [TestCase("<@my-id>")]
-        [TestCase("SIR-name")]
-        [TestCase("Hello sir-name, how you doing?")]
-        [TestCase("Hello SIR-name, how you doing?")]
-        [TestCase("I love <@my-id>")]
+        [Theory]
+        [InlineData("sir-name")]
+        [InlineData("<@my-id>")]
+        [InlineData("SIR-name")]
+        [InlineData("Hello sir-name, how you doing?")]
+        [InlineData("Hello SIR-name, how you doing?")]
+        [InlineData("I love <@my-id>")]
         public void should_detect_when_mentioned(string messageText)
         {
             // given
@@ -24,14 +23,13 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             bool detected = detector.WasBotMentioned(userName, userId, messageText);
 
             // then
-            detected.ShouldBeTrue();
+            Assert.True(detected);
         }
 
-        //[TestCase("sir-namey")]
-        //[TestCase("with more text sir-namey")]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("something unrelated")]
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("something unrelated")]
         public void should_not_detect_when_not_mentioned(string messageText)
         {
             // given
@@ -43,9 +41,7 @@ namespace SlackConnector.Tests.Unit.BotHelpers
             bool detected = detector.WasBotMentioned(userName, userId, messageText);
 
             // then
-            detected.ShouldBeFalse();
+            Assert.False(detected);
         }
-
-
     }
 }

@@ -3,9 +3,8 @@ using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using Moq;
-using NUnit.Framework;
-using Should;
-using Should.Core.Exceptions;
+using Xunit;
+using Xunit.Sdk;
 
 namespace SlackConnector.Tests.Unit.TestExtensions
 {
@@ -120,11 +119,11 @@ namespace SlackConnector.Tests.Unit.TestExtensions
                 }
                 else if (IsMoqExpression(bindingAsAnotherExpression))
                 {
-                    Assert.Fail("Moq's matchers cannot be used with partial matching. Instead, use the Some.Of and Any.Of methods.");
+                    Assert.Null("Moq's matchers cannot be used with partial matching. Instead, use the Some.Of and Any.Of methods.");
                 }
                 else
                 {
-                    actualValue.ShouldEqual(expectedValue);
+                    Assert.Equal(actualValue, expectedValue);
                 }
             }
         }
@@ -139,7 +138,7 @@ namespace SlackConnector.Tests.Unit.TestExtensions
 
             return true;
         }
-        
+
         private static MethodCallExpression TryUnwrapCallExpression(MemberAssignment bindingAsAnotherExpression)
         {
             var targetExpression = bindingAsAnotherExpression.Expression;
