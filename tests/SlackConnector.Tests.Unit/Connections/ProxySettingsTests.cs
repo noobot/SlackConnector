@@ -37,6 +37,7 @@ namespace SlackConnector.Tests.Unit.Connections
             Assert.Throws<ArgumentNullException>("url", () => new ProxySettings(url, username, password));
         }
 
+        [Theory]
         [InlineData("")]
         [InlineData(null)]
         public void should_throw_exception_when_username_is_missing(string username)
@@ -49,6 +50,7 @@ namespace SlackConnector.Tests.Unit.Connections
             Assert.Throws<ArgumentNullException>("username", () => new ProxySettings(url, username, password));
         }
 
+        [Theory]
         [InlineData("")]
         [InlineData(null)]
         public void should_throw_exception_when_password_is_missing(string password)
