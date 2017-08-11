@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
 using SlackConnector.Connections;
+using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Unit.Connections
 {
-    [TestFixture]
     public class ProxySettingsTests
     {
-        [Test]
+        [Fact]
         public void should_set_properties_when_values_are_given()
         {
             // given
@@ -19,13 +19,14 @@ namespace SlackConnector.Tests.Unit.Connections
             var settings = new ProxySettings(url, username, password);
 
             // then
-            Assert.That(settings.Url, Is.EqualTo(url));
-            Assert.That(settings.Username, Is.EqualTo(username));
-            Assert.That(settings.Password, Is.EqualTo(password));
+            settings.Url.ShouldBe(url);
+            settings.Username.ShouldBe(username);
+            settings.Password.ShouldBe(password);
         }
 
-        [TestCase("")]
-        [TestCase(null)]
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
         public void should_throw_exception_when_url_is_missing(string url)
         {
             // given
@@ -33,11 +34,11 @@ namespace SlackConnector.Tests.Unit.Connections
             const string password = "pwd123";
 
             // when + then
-            Assert.Throws<ArgumentNullException>(() => new ProxySettings(url, username, password), "url");
+            Assert.Throws<ArgumentNullException>("url", () => new ProxySettings(url, username, password));
         }
 
-        [TestCase("")]
-        [TestCase(null)]
+        [InlineData("")]
+        [InlineData(null)]
         public void should_throw_exception_when_username_is_missing(string username)
         {
             // given
@@ -45,11 +46,11 @@ namespace SlackConnector.Tests.Unit.Connections
             const string password = "pwd123";
 
             // when + then
-            Assert.Throws<ArgumentNullException>(() => new ProxySettings(url, username, password), "username");
+            Assert.Throws<ArgumentNullException>("username", () => new ProxySettings(url, username, password));
         }
 
-        [TestCase("")]
-        [TestCase(null)]
+        [InlineData("")]
+        [InlineData(null)]
         public void should_throw_exception_when_password_is_missing(string password)
         {
             // given
@@ -57,7 +58,7 @@ namespace SlackConnector.Tests.Unit.Connections
             const string username = "usernameyy";
 
             // when + then
-            Assert.Throws<ArgumentNullException>(() => new ProxySettings(url, username, password), "password");
+            Assert.Throws<ArgumentNullException>("password", () => new ProxySettings(url, username, password));
         }
     }
 }

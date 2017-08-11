@@ -1,17 +1,17 @@
 ﻿using Moq;
-using NUnit.Framework;
-using Ploeh.AutoFixture.NUnit3;
-using Should;
+using Ploeh.AutoFixture.Xunit2;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Logging;
 using SlackConnector.Tests.Unit.TestExtensions;
+using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
 {
     internal class MessageInterpreterTests
     {
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_standard_message(MessageInterpreter interpreter)
         {
             // given
@@ -44,7 +44,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldLookLike(expected);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_group_joined_message(MessageInterpreter interpreter)
         {
             // given
@@ -76,7 +76,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldLookLike(expected);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_channel_joined_message(MessageInterpreter interpreter)
         {
             // given
@@ -108,7 +108,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldLookLike(expected);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_dm_channel_joined_message(MessageInterpreter interpreter)
         {
             // given
@@ -144,7 +144,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldLookLike(expected);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_user_joined_message(MessageInterpreter interpreter)
         {
             // given
@@ -187,7 +187,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldLookLike(expected);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_unknown_message_type(MessageInterpreter interpreter)
         {
             // given
@@ -206,7 +206,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldLookLike(expected);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void shouldnt_return_message_given_dodge_json(MessageInterpreter interpreter)
         {
             // given
@@ -219,7 +219,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldBeNull();
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_message_given_standard_message_with_null_data(MessageInterpreter interpreter)
         {
             // given
@@ -252,7 +252,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             result.ShouldLookLike(expected);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void shouldnt_log_when_logging_level_is_non([Frozen]Mock<ILogger> logger, MessageInterpreter interpreter)
         {
             // given
@@ -266,7 +266,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             logger.Verify(x => x.LogError(It.IsAny<string>()), Times.Never);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_log_when_logging_level_is_all([Frozen]Mock<ILogger> logger, MessageInterpreter interpreter)
         {
             // given
@@ -280,7 +280,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             logger.Verify(x => x.LogError(It.IsAny<string>()), Times.AtLeastOnce);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_return_pong_message(MessageInterpreter interpreter)
         {
             // given

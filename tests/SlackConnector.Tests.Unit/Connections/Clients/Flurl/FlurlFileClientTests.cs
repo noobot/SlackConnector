@@ -8,6 +8,7 @@ using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.File;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Tests.Unit.TestExtensions;
+using Xunit;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
 {

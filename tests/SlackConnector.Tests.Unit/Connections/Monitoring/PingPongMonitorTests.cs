@@ -2,17 +2,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using NUnit.Framework;
-using Ploeh.AutoFixture.NUnit3;
+using Ploeh.AutoFixture.Xunit2;
 using SlackConnector.Connections.Monitoring;
 using SlackConnector.Tests.Unit.Stubs;
+using Xunit;
+using XunitShouldExtension;
 
 namespace SlackConnector.Tests.Unit.Connections.Monitoring
 {
-    [TestFixture]
     internal class PingPongMonitorTests
     {
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public async Task should_call_ping_when_start_monitor_is_called(PingPongMonitor monitor)
         {
             // given
@@ -23,10 +23,10 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             await monitor.StartMonitor(pingMethod, null, TimeSpan.MinValue);
 
             // then
-            Assert.That(pingCalled, Is.True);
+            pingCalled.ShouldBeTrue();
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public async Task should_start_timer_when_monitor_is_started([Frozen]Mock<ITimer> timerMock, PingPongMonitor monitor)
         {
             // given
@@ -39,7 +39,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
                 .Verify(x => x.RunEvery(It.IsAny<Action>(), TimeSpan.FromSeconds(5)), Times.Once);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public async Task should_call_ping_when_timer_ticks(TimerStub timerStub, Mock<IDateTimeKeeper> dateTimeKeeper)
         {
             // given
@@ -61,11 +61,11 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             timerStub.RunEvery_Action();
 
             // then
-            Assert.That(pingCalls, Is.EqualTo(2));
-            Assert.That(reconnectCalled, Is.False);
+            pingCalls.ShouldBe(2);
+            reconnectCalled.ShouldBeFalse();
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public async Task should_throw_exception_if_start_monitor_is_called_twice([Frozen]Mock<IDateTimeKeeper> dateTimeKeeper, PingPongMonitor monitor)
         {
             // given
@@ -79,10 +79,11 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
                                 monitor.StartMonitor(() => Task.CompletedTask, () => Task.CompletedTask, TimeSpan.MinValue).Wait());
 
             // then
-            Assert.That(exception.InnerExceptions[0], Is.TypeOf<MonitorAlreadyStartedException>());
+
+            Assert.IsType<MonitorAlreadyStartedException>(exception.InnerExceptions);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public async Task should_initiate_reconnect_if_timerkeeper_is_beyond_timeout(TimerStub timerStub, Mock<IDateTimeKeeper> dateTimeKeeperMock)
         {
             // given
@@ -104,10 +105,10 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             timerStub.RunEvery_Action();
 
             // then
-            Assert.That(reconnectCalled, Is.True);
+            reconnectCalled.ShouldBeTrue();
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public async Task should_not_initiate_reconnect_if_reconnection_is_already_underway(TimerStub timerStub, Mock<IDateTimeKeeper> dateTimeKeeperMock)
         {
             // given
@@ -139,10 +140,10 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             timerStub.RunEvery_Action();
             
             // then
-            Assert.That(reconnectCalls, Is.EqualTo(1));
+            reconnectCalls.ShouldBe(1);
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public async Task should_not_initiate_reconnect_if_timerkeeper_hasnt_been_set(TimerStub timerStub, Mock<IDateTimeKeeper> dateTimeKeeperMock)
         {
             // given
@@ -164,10 +165,10 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             timerStub.RunEvery_Action();
 
             // then
-            Assert.That(reconnectCalled, Is.False);
+            reconnectCalled.ShouldBeFalse();
         }
 
-        [Test, AutoMoqData]
+        [Theory, AutoMoqData]
         public void should_update_time_keeper_when_pong_is_received([Frozen]Mock<IDateTimeKeeper> dateTimeKeeperMock, PingPongMonitor monitor)
         {
             // given

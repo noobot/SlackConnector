@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading;
-using NUnit.Framework;
+using Xunit;
+using XunitShouldExtension;
 using Timer = SlackConnector.Connections.Monitoring.Timer;
 
 namespace SlackConnector.Tests.Unit.Connections.Monitoring
 {
-    [TestFixture]
     public class TimerTests
     {
-        [Test]
+        [Fact]
         public void should_run_task_at_least_5_times()
         {
             // given
@@ -25,10 +25,10 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             }
 
             // then
-            Assert.That(calls, Is.AtLeast(5));
+            calls.ShouldBeGreaterThanOrEqualTo(5);
         }
 
-        [Test]
+        [Fact]
         public void should_throw_exception_if_a_second_timer_is_created()
         {
             // given
