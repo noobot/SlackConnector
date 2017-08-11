@@ -12,7 +12,7 @@ namespace SlackConnector
         /// </summary>
         public static SlackChatHub ConnectedDM(this ISlackConnection slackConnection, string userName)
         {
-            return slackConnection.ConnectedDMs().FirstOrDefault(x => x.Name.Equals(userName, StringComparison.InvariantCultureIgnoreCase));
+            return slackConnection.ConnectedDMs().FirstOrDefault(x => x.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static IEnumerable<SlackChatHub> ConnectedDMs(this ISlackConnection slackConnection)
@@ -25,7 +25,7 @@ namespace SlackConnector
         /// </summary>
         public static SlackChatHub ConnectedChannel(this ISlackConnection slackConnection, string channelName)
         {
-            return slackConnection.ConnectedChannels().FirstOrDefault(x => x.Name.Equals(channelName, StringComparison.InvariantCultureIgnoreCase));
+            return slackConnection.ConnectedChannels().FirstOrDefault(x => x.Name.Equals(channelName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static IEnumerable<SlackChatHub> ConnectedChannels(this ISlackConnection slackConnection)
@@ -38,7 +38,7 @@ namespace SlackConnector
         /// </summary>
         public static SlackChatHub ConnectedGroup(this ISlackConnection slackConnection, string groupName)
         {
-            return slackConnection.ConnectedGroups().FirstOrDefault(x => x.Name.Equals(groupName, StringComparison.InvariantCultureIgnoreCase));
+            return slackConnection.ConnectedGroups().FirstOrDefault(x => x.Name.Equals(groupName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static IEnumerable<SlackChatHub> ConnectedGroups(this ISlackConnection slackConnection)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace SlackConnector.Serialising
@@ -13,7 +14,7 @@ namespace SlackConnector.Serialising
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             object result = null;
-            if (objectType.IsEnum && reader.Value != null)
+            if (objectType.GetTypeInfo().IsEnum && reader.Value != null)
             {
                 result = Activator.CreateInstance(objectType);
                 
@@ -30,7 +31,7 @@ namespace SlackConnector.Serialising
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType.IsEnum;
+            return objectType.GetTypeInfo().IsEnum;
         }
     }
 }
