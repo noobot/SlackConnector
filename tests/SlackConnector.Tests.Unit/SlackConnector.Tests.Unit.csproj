@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Inputs\Attachments.json" />
+    <EmbeddedResource Include="Resources\Responses\HandShake.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoFixture" Version="3.50.5" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="3.50.5" />
     <PackageReference Include="AutoFixture.Xunit2" Version="3.50.5" />

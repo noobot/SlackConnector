@@ -1,0 +1,57 @@
+﻿{
+  "ok": true,
+  "self": {
+    "id": "self-id",
+    "name": "self-name"
+  },
+  "team": {
+    "id": "team-id",
+    "name": "team-name"
+  },
+  "channels": [
+    {
+      "id": "channel-id",
+      "name": "channel-name",
+      "is_channel": true,
+      "is_archived": true,
+      "is_member": true
+    }
+  ],
+  "groups": [
+    {
+      "id": "group-id",
+      "name": "group-name",
+      "is_group": true,
+      "is_archived": true,
+      "is_open": true,
+      "members": [
+        "member1"
+      ]
+    }
+  ],
+  "ims": [
+    {
+      "id": "im-id",
+      "user": "im-user",
+      "is_im": true,
+      "is_open": true
+    }
+  ],
+  "users": [
+    {
+      "id": "user-id",
+      "name": "user-name",
+      "deleted": true,
+      "profile": {
+        "first_name": "first-name",
+        "last_name": "last-name",
+        "real_name": "real-name",
+        "real_name_normalized": "real-name-normalized",
+        "email": "email"
+      },
+      "is_admin": true,
+      "is_bot": true
+    }
+  ],
+  "url": "wss:\/\/ms331.slack-msgs.com\/websocket\/999"
+}
