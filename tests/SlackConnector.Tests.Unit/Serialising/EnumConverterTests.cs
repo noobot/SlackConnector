@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Ploeh.AutoFixture.Xunit2;
 using SlackConnector.Serialising;
 using Xunit;
-using XunitShouldExtension;
+using Should;
 
 namespace SlackConnector.Tests.Unit.Serialising
 {
@@ -45,7 +45,7 @@ namespace SlackConnector.Tests.Unit.Serialising
             var result = converter.ReadJson(jsonReader.Object, typeof(TestControl), null, null);
 
             // then
-            result.ShouldBe(TestControl.SomethingElse);
+            result.ShouldEqual(TestControl.SomethingElse);
         }
 
         [Theory, AutoMoqData]
@@ -60,7 +60,7 @@ namespace SlackConnector.Tests.Unit.Serialising
             var result = converter.ReadJson(jsonReader.Object, typeof(TestControl), null, null);
 
             // then
-            result.ShouldBe(TestControl.ThirdOption);
+            result.ShouldEqual(TestControl.ThirdOption);
         }
 
         [Theory, AutoMoqData]
@@ -75,7 +75,7 @@ namespace SlackConnector.Tests.Unit.Serialising
             var result = converter.ReadJson(jsonReader.Object, typeof(TestControl), null, null);
 
             // then
-            result.ShouldBe(TestControl.Default);
+            result.ShouldEqual(TestControl.Default);
         }
         
         private enum TestControl

@@ -2,7 +2,7 @@
 using System.Threading;
 using SlackConnector.Connections.Monitoring;
 using Xunit;
-using XunitShouldExtension;
+using Should;
 
 namespace SlackConnector.Tests.Unit.Connections.Monitoring
 {

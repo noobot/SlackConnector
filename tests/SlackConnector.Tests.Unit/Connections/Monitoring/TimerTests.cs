@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Xunit;
-using XunitShouldExtension;
+using Should;
 using Timer = SlackConnector.Connections.Monitoring.Timer;
 
 namespace SlackConnector.Tests.Unit.Connections.Monitoring

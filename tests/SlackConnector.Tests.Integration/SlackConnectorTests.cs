@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using SlackConnector.Models;
 using Xunit;
-using XunitShouldExtension;
+using Should;
 
 namespace SlackConnector.Tests.Integration
 {

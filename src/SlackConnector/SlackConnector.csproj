@@ -11,6 +11,8 @@
     <RepositoryUrl>https://github.com/noobot/slackconnector</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/noobot/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright />
+    <Authors>Workshop2</Authors>
+    <PackageProjectUrl>https://github.com/noobot/slackconnector</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
