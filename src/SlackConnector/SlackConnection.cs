@@ -71,10 +71,13 @@ namespace SlackConnector
 
         private async Task Reconnect()
         {
+            var reconnectingEvent = RaiseOnReconnecting();
+
             var handshakeClient = _connectionFactory.CreateHandshakeClient();
             var handshake = await handshakeClient.FirmShake(SlackKey);
             await _webSocketClient.Connect(handshake.WebSocketUrl);
-            await RaiseOnReconnect();
+
+            await Task.WhenAll(reconnectingEvent, RaiseOnReconnect()); 
         }
 
         private Task ListenTo(InboundMessage inboundMessage)
@@ -271,6 +274,23 @@ namespace SlackConnector
         private void RaiseOnDisconnect()
         {
             OnDisconnect?.Invoke();
+        }
+
+        public event ReconnectEventHandler OnReconnecting;
+        private async Task RaiseOnReconnecting()
+        {
+            var e = OnReconnecting;
+            if (e != null)
+            {
+                try
+                {
+                    await e();
+                }
+                catch (Exception)
+                {
+
+                }
+            }
         }
 
         public event ReconnectEventHandler OnReconnect;
