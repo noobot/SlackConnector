@@ -13,25 +13,19 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="3.50.5" />
-    <PackageReference Include="AutoFixture.AutoMoq" Version="3.50.5" />
+    <PackageReference Include="autofixture.automoq" Version="3.50.5" />
     <PackageReference Include="AutoFixture.Xunit2" Version="3.50.5" />
     <PackageReference Include="ExpectedObjects" Version="1.3.0" />
     <PackageReference Include="flurl.http" Version="1.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="moq" Version="4.7.99" />
+    <PackageReference Include="should" Version="1.1.20" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <PackageReference Include="Xunit.Should.Extension" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SlackConnector\SlackConnector.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Ploeh.AutoFixture.AutoMoq">
-      <HintPath>..\..\packages\AutoFixture.AutoMoq.3.50.2\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

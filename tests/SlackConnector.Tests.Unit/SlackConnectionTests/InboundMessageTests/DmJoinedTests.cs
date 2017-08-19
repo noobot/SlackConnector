@@ -6,7 +6,7 @@ using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
-using XunitShouldExtension;
+using Should;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
@@ -44,7 +44,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 
             // then
             slackConnection.ConnectedHubs.ContainsKey("channel-id").ShouldBeTrue();
-            slackConnection.ConnectedHubs["channel-id"].ShouldBe(lastHub);
+            slackConnection.ConnectedHubs["channel-id"].ShouldEqual(lastHub);
             lastHub.ShouldLookLike(new SlackChatHub
             {
                 Id = "channel-id",

@@ -9,7 +9,7 @@ using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
-using XunitShouldExtension;
+using Should;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
@@ -176,7 +176,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 
             // then
             SlackChatHub expected = connectionInfo.SlackChatHubs.First().Value;
-            receivedMessage.ChatHub.ShouldBe(expected);
+            receivedMessage.ChatHub.ShouldEqual(expected);
         }
 
         [Theory, AutoMoqData]
