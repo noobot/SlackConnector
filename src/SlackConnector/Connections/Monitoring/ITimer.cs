@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections.Monitoring
 {
-    internal interface ITimer
+    internal interface ITimer : IDisposable
     {
         void RunEvery(Action action, TimeSpan tick);
     }

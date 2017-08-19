@@ -1,42 +1,59 @@
 ﻿using System;
 using System.Threading;
-using Xunit;
 using Should;
+using Xunit;
+using Xunit.Abstractions;
 using Timer = SlackConnector.Connections.Monitoring.Timer;
 
 namespace SlackConnector.Tests.Unit.Connections.Monitoring
 {
-    public class TimerTests
+    public class TimerTests : IDisposable
     {
+        private readonly ITestOutputHelper _output;
+        private readonly Timer _timer = new Timer();
+
+        public TimerTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void should_run_task_at_least_5_times()
         {
             // given
-            var timer = new Timer();
-            int calls = 0;
-            DateTime timeout = DateTime.Now.AddSeconds(20);
+            var eventTriggered = new AutoResetEvent(false);
+            int count = 0;
 
             // when
-            timer.RunEvery(() => calls++, TimeSpan.FromMilliseconds(1));
-
-            while (calls < 5 && DateTime.Now < timeout)
+            _timer.RunEvery(() =>
             {
-                Thread.Sleep(TimeSpan.FromMilliseconds(5));
-            }
-
+               _output.WriteLine("Trigger");
+               eventTriggered.Set();
+               count++;
+            }, TimeSpan.FromMilliseconds(1));
+            
             // then
-            calls.ShouldBeGreaterThanOrEqualTo(5);
+            eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
+            eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
+            eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
+            eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
+            eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
+            count.ShouldBeGreaterThanOrEqualTo(5);
         }
 
         [Fact]
         public void should_throw_exception_if_a_second_timer_is_created()
         {
             // given
-            var timer = new Timer();
-            timer.RunEvery(() => { }, TimeSpan.FromMilliseconds(1));
+            _timer.RunEvery(() => { }, TimeSpan.FromMilliseconds(1));
 
             // when + then
-            Assert.Throws<Timer.TimerAlreadyInitialisedException>(() => timer.RunEvery(() => { }, TimeSpan.FromMinutes(1)));
+            Assert.Throws<Timer.TimerAlreadyInitialisedException>(() => _timer.RunEvery(() => { }, TimeSpan.FromMinutes(1)));
+        }
+
+        public void Dispose()
+        {
+            _timer?.Dispose();
         }
     }
 }

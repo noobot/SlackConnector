@@ -13,5 +13,9 @@ namespace SlackConnector.Tests.Unit.Stubs
             RunEvery_Action = action;
             RunEvery_Tick = tick;
         }
+
+        public void Dispose()
+        {
+        }
     }
 }
