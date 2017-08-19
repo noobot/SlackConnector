@@ -67,6 +67,12 @@ namespace SlackConnector.Tests.Unit.Stubs
             OnDisconnect?.Invoke();
         }
 
+        public event ReconnectEventHandler OnReconnecting;
+        public void RaiseOnReconnecting()
+        {
+            OnReconnecting?.Invoke();
+        }
+
         public event ReconnectEventHandler OnReconnect;
         public void RaiseOnReconnect()
         {
