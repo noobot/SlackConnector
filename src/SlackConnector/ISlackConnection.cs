@@ -110,6 +110,11 @@ namespace SlackConnector
         /// <summary>
         /// Raised when attempting to reconnect to Slack after a disconnect is detected
         /// </summary>
+        event ReconnectEventHandler OnReconnecting;
+
+        /// <summary>
+        /// Raised when a connection has been restored.
+        /// </summary>
         event ReconnectEventHandler OnReconnect;
 
         /// <summary>
