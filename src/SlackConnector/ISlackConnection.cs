@@ -108,6 +108,11 @@ namespace SlackConnector
         event DisconnectEventHandler OnDisconnect;
 
         /// <summary>
+        /// Raised when attempting to reconnect to Slack after a disconnect is detected
+        /// </summary>
+        event ReconnectEventHandler OnReconnect;
+
+        /// <summary>
         /// Raised when real-time messages are received.
         /// </summary>
         event MessageReceivedEventHandler OnMessageReceived;
