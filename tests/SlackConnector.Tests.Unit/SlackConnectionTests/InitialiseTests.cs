@@ -7,7 +7,7 @@ using SlackConnector.Connections.Monitoring;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
@@ -30,10 +30,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             connection.Initialise(info).Wait();
 
             // then
-            connection.Self.ShouldEqual(info.Self);
-            connection.Team.ShouldEqual(info.Team);
-            connection.UserCache.ShouldEqual(info.Users);
-            connection.ConnectedHubs.ShouldEqual(info.SlackChatHubs);
+            connection.Self.ShouldBe(info.Self);
+            connection.Team.ShouldBe(info.Team);
+            connection.UserCache.ShouldBe(info.Users);
+            connection.ConnectedHubs.ShouldBe(info.SlackChatHubs);
             connection.ConnectedSince.HasValue.ShouldBeTrue();
         }
 

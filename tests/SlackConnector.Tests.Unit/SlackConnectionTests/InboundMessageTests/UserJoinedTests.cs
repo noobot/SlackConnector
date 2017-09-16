@@ -7,7 +7,7 @@ using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
@@ -59,7 +59,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             });
 
             slackConnection.UserCache.ContainsKey(inboundMessage.User.Id).ShouldBeTrue();
-            slackConnection.UserCache[inboundMessage.User.Id].ShouldEqual(lastUser);
+            slackConnection.UserCache[inboundMessage.User.Id].ShouldBe(lastUser);
         }
 
         [Theory, AutoMoqData]

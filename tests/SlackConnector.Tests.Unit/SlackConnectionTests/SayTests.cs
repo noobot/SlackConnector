@@ -8,7 +8,7 @@ using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
@@ -59,7 +59,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             var exception = await Assert.ThrowsAsync<MissingChannelException>(() => slackConnection.Say(new BotMessage { ChatHub = null }));
 
             // then
-            exception.Message.ShouldEqual("When calling the Say() method, the message parameter must have its ChatHub property set.");
+            exception.Message.ShouldBe("When calling the Say() method, the message parameter must have its ChatHub property set.");
         }
 
         [Theory, AutoMoqData]
@@ -75,7 +75,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             var exception = await Assert.ThrowsAsync<MissingChannelException>(() => slackConnection.Say(new BotMessage { ChatHub = new SlackChatHub { Id = string.Empty } }));
 
             // then
-            exception.Message.ShouldEqual("When calling the Say() method, the message parameter must have its ChatHub property set.");
+            exception.Message.ShouldBe("When calling the Say() method, the message parameter must have its ChatHub property set.");
         }
     }
 }

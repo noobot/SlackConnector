@@ -4,7 +4,7 @@ using SlackConnector.Connections.Clients.Handshake;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Tests.Integration.Configuration;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Integration.Connections.Clients
 {

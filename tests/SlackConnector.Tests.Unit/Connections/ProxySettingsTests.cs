@@ -1,7 +1,7 @@
 ﻿using System;
 using SlackConnector.Connections;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.Connections
 {
@@ -19,9 +19,9 @@ namespace SlackConnector.Tests.Unit.Connections
             var settings = new ProxySettings(url, username, password);
 
             // then
-            settings.Url.ShouldEqual(url);
-            settings.Username.ShouldEqual(username);
-            settings.Password.ShouldEqual(password);
+            settings.Url.ShouldBe(url);
+            settings.Username.ShouldBe(username);
+            settings.Password.ShouldBe(password);
         }
 
         [Theory]

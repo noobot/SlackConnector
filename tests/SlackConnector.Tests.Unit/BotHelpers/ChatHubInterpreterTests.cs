@@ -2,7 +2,7 @@
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.BotHelpers
 {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Integration
 {

@@ -6,7 +6,7 @@ using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
@@ -38,10 +38,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
 
             // then
-            lastHub.Id.ShouldEqual(hubId);
-            lastHub.Type.ShouldEqual(SlackChatHubType.Channel);
+            lastHub.Id.ShouldBe(hubId);
+            lastHub.Type.ShouldBe(SlackChatHubType.Channel);
             slackConnection.ConnectedHubs.ContainsKey(hubId).ShouldBeTrue();
-            slackConnection.ConnectedHubs[hubId].ShouldEqual(lastHub);
+            slackConnection.ConnectedHubs[hubId].ShouldBe(lastHub);
         }
 
         [Theory, AutoMoqData]

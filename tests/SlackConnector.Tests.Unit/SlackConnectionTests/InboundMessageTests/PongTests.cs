@@ -7,7 +7,7 @@ using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {
@@ -38,7 +38,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
 
             // then
-            lastTimestamp.ShouldEqual(inboundMessage.Timestamp);
+            lastTimestamp.ShouldBe(inboundMessage.Timestamp);
         }
 
         [Theory, AutoMoqData]

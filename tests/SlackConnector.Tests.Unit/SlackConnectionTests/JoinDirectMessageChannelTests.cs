@@ -9,7 +9,7 @@ using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {
@@ -63,7 +63,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => slackConnection.JoinDirectMessageChannel(null));
 
             // then
-            exception.Message.ShouldEqual("Value cannot be null.\r\nParameter name: user");
+            exception.Message.ShouldBe("Value cannot be null.\r\nParameter name: user");
         }
 
         [Theory, AutoMoqData]
@@ -77,7 +77,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => slackConnection.JoinDirectMessageChannel(string.Empty));
 
             // then
-            exception.Message.ShouldEqual("Value cannot be null.\r\nParameter name: user");
+            exception.Message.ShouldBe("Value cannot be null.\r\nParameter name: user");
         }
     }
 }

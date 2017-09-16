@@ -9,7 +9,7 @@ using SlackConnector.Connections.Sockets;
 using SlackConnector.Exceptions;
 using SlackConnector.Models;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectorTests
 {
@@ -63,7 +63,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             var result = await _slackConnector.Connect(_slackKey);
 
             // then
-            result.ShouldEqual(expectedConnection);
+            result.ShouldBe(expectedConnection);
 
             _slackConnectionFactory
                 .Verify(x => x.Create(It.Is((ConnectionInformation p) => p.WebSocket == _webSocketClient.Object)), Times.Once);
@@ -119,7 +119,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             var result = await _slackConnector.Connect(_slackKey);
 
             // then
-            result.ShouldEqual(expectedConnection);
+            result.ShouldBe(expectedConnection);
         }
 
         [Fact]
@@ -314,7 +314,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
             var exception = await Assert.ThrowsAsync<HandshakeException>(() => _slackConnector.Connect(_slackKey));
 
             // then
-            exception.Message.ShouldEqual(handshakeResponse.Error);
+            exception.Message.ShouldBe(handshakeResponse.Error);
         }
 
         [Theory]

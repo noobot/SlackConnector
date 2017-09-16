@@ -4,7 +4,7 @@ using Moq;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Models;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests
 {

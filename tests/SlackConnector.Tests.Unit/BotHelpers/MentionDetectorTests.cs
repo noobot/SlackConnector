@@ -1,6 +1,6 @@
 ﻿using SlackConnector.BotHelpers;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.BotHelpers
 {

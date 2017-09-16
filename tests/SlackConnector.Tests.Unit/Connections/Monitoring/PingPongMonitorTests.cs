@@ -6,7 +6,7 @@ using Ploeh.AutoFixture.Xunit2;
 using SlackConnector.Connections.Monitoring;
 using SlackConnector.Tests.Unit.Stubs;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.Connections.Monitoring
 {
@@ -61,7 +61,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             timerStub.RunEvery_Action();
 
             // then
-            pingCalls.ShouldEqual(2);
+            pingCalls.ShouldBe(2);
             reconnectCalled.ShouldBeFalse();
         }
 
@@ -139,7 +139,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             timerStub.RunEvery_Action();
             
             // then
-            reconnectCalls.ShouldEqual(1);
+            reconnectCalls.ShouldBe(1);
         }
 
         [Theory, AutoMoqData]

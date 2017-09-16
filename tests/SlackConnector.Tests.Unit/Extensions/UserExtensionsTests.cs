@@ -1,7 +1,7 @@
 ﻿using SlackConnector.Connections.Models;
 using SlackConnector.Extensions;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.Extensions
 {
@@ -34,20 +34,20 @@ namespace SlackConnector.Tests.Unit.Extensions
             var slackUser = user.ToSlackUser();
 
             // then
-            user.Id.ShouldEqual(slackUser.Id);
-            user.Name.ShouldEqual(slackUser.Name);
-            user.Profile.Email.ShouldEqual(slackUser.Email);
-            user.TimeZoneOffset.ShouldEqual(slackUser.TimeZoneOffset);
-            user.IsBot.ShouldEqual(slackUser.IsBot);
-            user.Profile.FirstName.ShouldEqual(slackUser.FirstName);
-            user.Profile.LastName.ShouldEqual(slackUser.LastName);
-            user.Profile.Image.ShouldEqual(slackUser.Image);
-            user.Profile.Title.ShouldEqual(slackUser.WhatIDo);
-            user.Deleted.ShouldEqual(slackUser.Deleted);
+            user.Id.ShouldBe(slackUser.Id);
+            user.Name.ShouldBe(slackUser.Name);
+            user.Profile.Email.ShouldBe(slackUser.Email);
+            user.TimeZoneOffset.ShouldBe(slackUser.TimeZoneOffset);
+            user.IsBot.ShouldBe(slackUser.IsBot);
+            user.Profile.FirstName.ShouldBe(slackUser.FirstName);
+            user.Profile.LastName.ShouldBe(slackUser.LastName);
+            user.Profile.Image.ShouldBe(slackUser.Image);
+            user.Profile.Title.ShouldBe(slackUser.WhatIDo);
+            user.Deleted.ShouldBe(slackUser.Deleted);
             slackUser.Online.HasValue.ShouldBeTrue();
             slackUser.Online.Value.ShouldBeTrue();
             slackUser.IsGuest.ShouldBeFalse();
-            slackUser.StatusText.ShouldEqual(user.Profile.StatusText);
+            slackUser.StatusText.ShouldBe(user.Profile.StatusText);
         }
 
         [Fact]

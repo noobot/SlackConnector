@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Should;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 using Timer = SlackConnector.Connections.Monitoring.Timer;

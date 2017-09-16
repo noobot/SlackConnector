@@ -5,7 +5,7 @@ using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Logging;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
 {

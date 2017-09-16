@@ -2,7 +2,7 @@
 using SlackConnector.Connections.Responses;
 using SlackConnector.Exceptions;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.Connections.Clients
 {
@@ -17,7 +17,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
 
             // when && then
             var exception = Assert.Throws<CommunicationException>(() => verifier.VerifyResponse(response));
-            exception.Message.ShouldEqual($"Error occured while posting message '{response.Error}'");
+            exception.Message.ShouldBe($"Error occured while posting message '{response.Error}'");
         }
 
         [Fact]

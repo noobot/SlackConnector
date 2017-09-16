@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using SlackConnector.Models;
 using Xunit;
-using Should;
+using Shouldly;
 
 namespace SlackConnector.Tests.Unit.Models
 {
@@ -63,7 +63,7 @@ namespace SlackConnector.Tests.Unit.Models
             resultJson = RemoveLinesAndStuffFromJson(resultJson);
 
             // then
-            resultJson.ShouldEqual(expectedJson);
+            resultJson.ShouldBe(expectedJson);
         }
 
         private static string RemoveLinesAndStuffFromJson(string json)
