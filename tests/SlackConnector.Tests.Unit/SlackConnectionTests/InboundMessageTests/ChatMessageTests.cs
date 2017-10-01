@@ -33,7 +33,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
                 User = "userABC",
                 MessageType = MessageType.Message,
                 Text = "amazing-text",
-                RawData = "I am raw data yo"
+                RawData = "I am raw data yo",
+                MessageSubType = MessageSubType.channel_leave
             };
 
             SlackMessage receivedMessage = null;
@@ -51,7 +52,8 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             {
                 Text = "amazing-text",
                 User = new SlackUser { Id = "userABC", Name = "i-have-a-name" },
-                RawData = inboundMessage.RawData
+                RawData = inboundMessage.RawData,
+                MessageSubType = SlackMessageSubType.ChannelLeave
             });
         }
 

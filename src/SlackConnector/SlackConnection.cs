@@ -117,7 +117,8 @@ namespace SlackConnector
                 Text = inboundMessage.Text,
                 ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
                 RawData = inboundMessage.RawData,
-                MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text)
+                MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text),
+                MessageSubType = inboundMessage.MessageSubType.ToSlackMessageSubType()
             };
 
             return RaiseMessageReceived(message);
