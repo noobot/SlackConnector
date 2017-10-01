@@ -197,9 +197,8 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             var result = interpreter.InterpretMessage(json);
 
             // then
-            var expected = new ChatMessage
+            var expected = new UnknownMessage
             {
-                MessageType = MessageType.Unknown,
                 RawData = json
             };
 
@@ -207,7 +206,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
         }
 
         [Theory, AutoMoqData]
-        private void shouldnt_return_message_given_dodge_json(MessageInterpreter interpreter)
+        private void should_return_unknown_message_given_dodge_json(MessageInterpreter interpreter)
         {
             // given
             string json = @"{ 'type': 'something_else', 'channel': { 'isObject': true } }";
@@ -216,7 +215,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             var result = interpreter.InterpretMessage(json);
 
             // then
-            result.ShouldBeNull();
+            result.ShouldBeOfType<UnknownMessage>();
         }
 
         [Theory, AutoMoqData]
@@ -262,7 +261,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             var result = interpreter.InterpretMessage(null);
 
             // then
-            result.ShouldBeNull();
+            result.ShouldBeOfType<UnknownMessage>();
             logger.Verify(x => x.LogError(It.IsAny<string>()), Times.Never);
         }
 
@@ -273,10 +272,10 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             SlackConnector.LoggingLevel = ConsoleLoggingLevel.All;
 
             // when
-            var result = interpreter.InterpretMessage(null);
+            var result = interpreter.InterpretMessage(@"{ 'something': 'no end tag'");
 
             // then
-            result.ShouldBeNull();
+            result.ShouldBeOfType<UnknownMessage>();
             logger.Verify(x => x.LogError(It.IsAny<string>()), Times.AtLeastOnce);
         }
 
