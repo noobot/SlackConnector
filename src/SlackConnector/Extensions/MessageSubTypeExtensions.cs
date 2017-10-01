@@ -1,5 +1,4 @@
-﻿using System;
-using SlackConnector.Connections.Sockets.Messages.Inbound;
+﻿using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 
 namespace SlackConnector.Extensions

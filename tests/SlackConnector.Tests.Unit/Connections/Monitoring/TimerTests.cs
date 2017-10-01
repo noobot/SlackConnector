@@ -38,6 +38,7 @@ namespace SlackConnector.Tests.Unit.Connections.Monitoring
             eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
             eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
             eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
+            eventTriggered.WaitOne(TimeSpan.FromSeconds(1));
             count.ShouldBeGreaterThanOrEqualTo(5);
         }
 
