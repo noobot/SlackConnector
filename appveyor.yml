@@ -1,0 +1,31 @@
+version: 4.1.{build}
+skip_tags: true
+image: Visual Studio 2017
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+nuget:
+  project_feed: true
+before_build:
+- cmd: >-
+    dotnet restore
+
+    type NUL > src/SlackConnector.Tests.Integration/Configuration/config.json
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
+  verbosity: minimal
+test_script:
+- ps: dotnet test .\tests\SlackConnector.Tests.Unit\SlackConnector.Tests.Unit.csproj
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: 8t4+xbVlkXA/FY3516ThrMibGxfCT7ZcSwyZw7KNwUlCH08KMPtznY2QphEn1n/z
+  artifact: /.*\.nupkg/
+  draft: true
+  on:
+    branch: master

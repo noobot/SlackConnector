@@ -17,13 +17,16 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
 
         public InboundMessage InterpretMessage(string json)
         {
+            InboundMessage message = new UnknownMessage();
+
             try
             {
-                MessageType messageType = ParseMessageType(json);
-
-                InboundMessage message;
+                var messageType = ParseMessageType(json);
                 switch (messageType)
                 {
+                    case MessageType.Message:
+                        message = GetChatMessage(json);
+                        break;
                     case MessageType.Group_Joined:
                         message = JsonConvert.DeserializeObject<GroupJoinedMessage>(json);
                         break;
@@ -39,14 +42,7 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                     case MessageType.Pong:
                         message = JsonConvert.DeserializeObject<PongMessage>(json);
                         break;
-                    default:
-                        message = GetChatMessage(json);
-                        break;
                 }
-
-                message.RawData = json;
-
-                return message;
             }
             catch (Exception ex)
             {
@@ -57,7 +53,8 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                 }
             }
 
-            return null;
+            message.RawData = json;
+            return message;
         }
 
         private static MessageType ParseMessageType(string json)
