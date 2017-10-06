@@ -42,6 +42,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                     case MessageType.Pong:
                         message = JsonConvert.DeserializeObject<PongMessage>(json);
                         break;
+                    case MessageType.Reaction_Added:
+                        message = GetReactionMessage(json);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -80,6 +83,21 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                 message.User = WebUtility.HtmlDecode(message.User);
                 message.Text = WebUtility.HtmlDecode(message.Text);
                 message.Team = WebUtility.HtmlDecode(message.Team);
+            }
+
+            return message;
+        }
+
+        private static ReactionMessage GetReactionMessage(string json)
+        {
+            var message = JsonConvert.DeserializeObject<ReactionMessage>(json);
+
+            if (message != null)
+            {
+                JObject messageJobject = JObject.Parse(json);
+                message.Channel = messageJobject["item"]["channel"].Value<string>();
+                message.ReactingToTimestamp = messageJobject["item"]["ts"].Value<double>();
+                message.RawData = json;
             }
 
             return message;

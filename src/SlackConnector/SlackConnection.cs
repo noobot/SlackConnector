@@ -95,6 +95,7 @@ namespace SlackConnector
                 case MessageType.Im_Created: return HandleDmJoined((DmChannelJoinedMessage)inboundMessage);
                 case MessageType.Team_Join: return HandleUserJoined((UserJoinedMessage)inboundMessage);
                 case MessageType.Pong: return HandlePong((PongMessage)inboundMessage);
+                case MessageType.Reaction_Added: return HandleReaction((ReactionMessage)inboundMessage);
             }
 
             return Task.CompletedTask;
@@ -122,6 +123,27 @@ namespace SlackConnector
             };
 
             return RaiseMessageReceived(message);
+        }
+
+        private Task HandleReaction(ReactionMessage inboundMessage)
+        {
+            if (string.IsNullOrEmpty(inboundMessage.User))
+                return Task.CompletedTask;
+
+            if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
+                return Task.CompletedTask;
+
+            var reaction = new SlackReaction
+            {
+                User = GetMessageUser(inboundMessage.User),
+                Timestamp = inboundMessage.Timestamp,
+                ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
+                RawData = inboundMessage.RawData,
+                Reaction = inboundMessage.Reaction,
+                ReactingToTimestamp = inboundMessage.ReactingToTimestamp
+            };
+
+            return RaiseReactionReceived(reaction);
         }
 
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
@@ -320,6 +342,23 @@ namespace SlackConnector
                 try
                 {
                     await e(message);
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+        }
+
+        public event ReactionReceivedEventHandler OnReactionReceived;
+        private async Task RaiseReactionReceived(SlackReaction reaction)
+        {
+            var e = OnReactionReceived;
+            if (e != null)
+            {
+                try
+                {
+                    await e(reaction);
                 }
                 catch (Exception)
                 {
