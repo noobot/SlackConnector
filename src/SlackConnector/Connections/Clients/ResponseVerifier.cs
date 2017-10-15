@@ -1,5 +1,3 @@
-using System.Net;
-using Newtonsoft.Json;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Exceptions;
 
