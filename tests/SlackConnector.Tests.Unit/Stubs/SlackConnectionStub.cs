@@ -51,6 +51,31 @@ namespace SlackConnector.Tests.Unit.Stubs
             throw new NotImplementedException();
         }
 
+        public async Task<SlackChatHub> JoinChannel(string channelName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<SlackChatHub> CreateChannel(string channelName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task ArchiveChannel(string channelName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<SlackPurpose> SetChannelPurpose(string channelName, string purpose)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<SlackTopic> SetChannelTopic(string channelName, string topic)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task IndicateTyping(SlackChatHub chatHub)
         {
             throw new NotImplementedException();
