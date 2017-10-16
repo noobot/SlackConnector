@@ -92,12 +92,12 @@ namespace SlackConnector
         Task<SlackChatHub> JoinDirectMessageChannel(string user);
 
         /// <summary>
-        /// Creates a channel.
+        /// Joins a channel.
         /// </summary>
         Task<SlackChatHub> JoinChannel(string channelName);
 
         /// <summary>
-        /// Joins a channel.
+        /// Create a channel.
         /// </summary>
         Task<SlackChatHub> CreateChannel(string channelName);
 
