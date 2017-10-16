@@ -86,10 +86,35 @@ namespace SlackConnector
         /// <returns>Users.</returns>
         Task<IEnumerable<SlackUser>> GetUsers();
 
-            /// <summary>
+        /// <summary>
         /// Opens a DM channel to a user. Required to PM someone.
         /// </summary>
         Task<SlackChatHub> JoinDirectMessageChannel(string user);
+
+        /// <summary>
+        /// Joins a channel.
+        /// </summary>
+        Task<SlackChatHub> JoinChannel(string channelName);
+
+        /// <summary>
+        /// Create a channel.
+        /// </summary>
+        Task<SlackChatHub> CreateChannel(string channelName);
+
+        /// <summary>
+        /// Archives a channel.
+        /// </summary>
+        Task ArchiveChannel(string channelName);
+
+        /// <summary>
+        /// Sets a channel purpose.
+        /// </summary>
+        Task<SlackPurpose> SetChannelPurpose(string channelName, string purpose);
+
+        /// <summary>
+        /// Sets a channel topic.
+        /// </summary>
+        Task<SlackTopic> SetChannelTopic(string channelName, string topic);
 
         /// <summary>
         /// Indicate to the users on the channel that the bot is 'typing' on the keyboard.

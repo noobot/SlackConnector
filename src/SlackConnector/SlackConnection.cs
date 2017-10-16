@@ -256,6 +256,97 @@ namespace SlackConnector
             };
         }
 
+        public async Task<SlackChatHub> JoinChannel(string channelName)
+        {
+            if (string.IsNullOrEmpty(channelName))
+            {
+                throw new ArgumentNullException(nameof(channelName));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            Channel channel = await client.JoinChannel(SlackKey, channelName);
+
+            return new SlackChatHub
+            {
+                Id = channel.Id,
+                Name = channel.Name,
+                Type = SlackChatHubType.Channel
+            };
+        }
+
+        public async Task<SlackChatHub> CreateChannel(string channelName)
+        {
+            if (string.IsNullOrEmpty(channelName))
+            {
+                throw new ArgumentNullException(nameof(channelName));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            Channel channel = await client.CreateChannel(SlackKey, channelName);
+
+            return new SlackChatHub
+            {
+                Id = channel.Id,
+                Name = channel.Name,
+                Type = SlackChatHubType.Channel
+            };
+        }
+
+        public async Task ArchiveChannel(string channelName)
+        {
+            if (string.IsNullOrEmpty(channelName))
+            {
+                throw new ArgumentNullException(nameof(channelName));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            await client.ArchiveChannel(SlackKey, channelName);
+        }
+
+        public async Task<SlackPurpose> SetChannelPurpose(string channelName, string purpose)
+        {
+            if (string.IsNullOrEmpty(channelName))
+            {
+                throw new ArgumentNullException(nameof(channelName));
+            }
+
+            if (string.IsNullOrEmpty(purpose))
+            {
+                throw new ArgumentNullException(nameof(purpose));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            string purposeSet = await client.SetPurpose(SlackKey, channelName, purpose);
+
+            return new SlackPurpose
+            {
+                ChannelName = channelName,
+                Purpose = purposeSet
+            };
+        }
+
+        public async Task<SlackTopic> SetChannelTopic(string channelName, string topic)
+        {
+            if (string.IsNullOrEmpty(channelName))
+            {
+                throw new ArgumentNullException(nameof(channelName));
+            }
+
+            if (string.IsNullOrEmpty(topic))
+            {
+                throw new ArgumentNullException(nameof(topic));
+            }
+
+            IChannelClient client = _connectionFactory.CreateChannelClient();
+            string topicSet = await client.SetTopic(SlackKey, channelName, topic);
+
+            return new SlackTopic
+            {
+                ChannelName = channelName,
+                Topic = topicSet
+            };
+        }
+
         public async Task IndicateTyping(SlackChatHub chatHub)
         {
             var message = new TypingIndicatorMessage
