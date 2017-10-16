@@ -143,15 +143,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             _httpTest.RespondWithJson(expectedResponse);
 
             // when
-            var result = true;
-            try
-            {
-                await _channelClient.ArchiveChannel(slackKey, channelName);
-            }
-            catch (Exception)
-            {
-                result = false;
-            }
+            await _channelClient.ArchiveChannel(slackKey, channelName);
 
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)), Times.Once);
@@ -160,8 +152,6 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("channel", channelName)
                 .Times(1);
-
-            result.ShouldBe(true);
         }
 
         [Fact]
