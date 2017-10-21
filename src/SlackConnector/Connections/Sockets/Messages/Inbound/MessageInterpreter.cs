@@ -3,6 +3,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SlackConnector.Logging;
+using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
@@ -95,9 +96,23 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
             if (message != null)
             {
                 JObject messageJobject = JObject.Parse(json);
-                message.Channel = messageJobject["item"]["channel"].Value<string>();
-                message.ReactingToTimestamp = messageJobject["item"]["ts"].Value<double>();
                 message.RawData = json;
+                switch (messageJobject["item"]["type"].Value<string>())
+                {
+                    case "message":
+                        message.ReactingTo = new MessageReaction();
+                        break;
+                    case "file":
+                        message.ReactingTo = new FileReaction();
+                        break;
+                    case "file_comment":
+                        message.ReactingTo = new FileCommentReaction();
+                        break;
+                    default:
+                        message.ReactingTo = new UnknownReaction();
+                        break;
+                }
+                message.ReactingTo.ParseItem(messageJobject);
             }
 
             return message;

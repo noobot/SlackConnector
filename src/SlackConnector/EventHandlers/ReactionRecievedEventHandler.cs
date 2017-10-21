@@ -3,5 +3,5 @@ using SlackConnector.Models;
 
 namespace SlackConnector.EventHandlers
 {
-    public delegate Task ReactionReceivedEventHandler(SlackReaction message);
+    public delegate Task ReactionReceivedEventHandler(ISlackReaction message);
 }

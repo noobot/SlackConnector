@@ -15,6 +15,7 @@ using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
 using SlackConnector.Extensions;
 using SlackConnector.Models;
+using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 
 namespace SlackConnector
 {
@@ -132,16 +133,53 @@ namespace SlackConnector
 
             if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return Task.CompletedTask;
-
-            var reaction = new SlackReaction
+            ISlackReaction reaction = null;
+            switch (inboundMessage.ReactingTo.type)
             {
-                User = GetMessageUser(inboundMessage.User),
-                Timestamp = inboundMessage.Timestamp,
-                ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
-                RawData = inboundMessage.RawData,
-                Reaction = inboundMessage.Reaction,
-                ReactingToTimestamp = inboundMessage.ReactingToTimestamp
-            };
+                case ReactionItemType.message:
+                    reaction = new SlackMessageReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        ChatHub = (inboundMessage.ReactingTo as MessageReaction).Channel == null ? null : _connectedHubs[(inboundMessage.ReactingTo as MessageReaction).Channel],
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        ReactingToTimestamp = (inboundMessage.ReactingTo as MessageReaction).Timestamp
+                    };
+                    break;
+                case ReactionItemType.file:
+                    reaction = new SlackFileReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        File = (inboundMessage.ReactingTo as FileReaction).File
+                    };
+                    break;
+                case ReactionItemType.file_comment:
+                    reaction = new SlackFileCommentReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        File = (inboundMessage.ReactingTo as FileCommentReaction).File,
+                        FileComment = (inboundMessage.ReactingTo as FileCommentReaction).FileComment
+                    };
+                    break;
+                case ReactionItemType.unknown:
+                    reaction = new SlackUnknownReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction
+                    };
+                    break;
+            }
+
+            
 
             return RaiseReactionReceived(reaction);
         }
@@ -351,7 +389,7 @@ namespace SlackConnector
         }
 
         public event ReactionReceivedEventHandler OnReactionReceived;
-        private async Task RaiseReactionReceived(SlackReaction reaction)
+        private async Task RaiseReactionReceived(ISlackReaction reaction)
         {
             var e = OnReactionReceived;
             if (e != null)
