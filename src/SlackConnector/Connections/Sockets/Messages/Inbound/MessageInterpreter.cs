@@ -3,6 +3,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SlackConnector.Logging;
+using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
@@ -42,6 +43,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                     case MessageType.Pong:
                         message = JsonConvert.DeserializeObject<PongMessage>(json);
                         break;
+                    case MessageType.Reaction_Added:
+                        message = GetReactionMessage(json);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -80,6 +84,35 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                 message.User = WebUtility.HtmlDecode(message.User);
                 message.Text = WebUtility.HtmlDecode(message.Text);
                 message.Team = WebUtility.HtmlDecode(message.Team);
+            }
+
+            return message;
+        }
+
+        private static ReactionMessage GetReactionMessage(string json)
+        {
+            var message = JsonConvert.DeserializeObject<ReactionMessage>(json);
+
+            if (message != null)
+            {
+                JObject messageJobject = JObject.Parse(json);
+                message.RawData = json;
+                switch (messageJobject["item"]["type"].Value<string>())
+                {
+                    case "message":
+                        message.ReactingTo = new MessageReaction();
+                        break;
+                    case "file":
+                        message.ReactingTo = new FileReaction();
+                        break;
+                    case "file_comment":
+                        message.ReactingTo = new FileCommentReaction();
+                        break;
+                    default:
+                        message.ReactingTo = new UnknownReaction();
+                        break;
+                }
+                message.ReactingTo.ParseItem(messageJobject);
             }
 
             return message;

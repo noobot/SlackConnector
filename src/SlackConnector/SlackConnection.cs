@@ -15,6 +15,7 @@ using SlackConnector.EventHandlers;
 using SlackConnector.Exceptions;
 using SlackConnector.Extensions;
 using SlackConnector.Models;
+using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 
 namespace SlackConnector
 {
@@ -95,6 +96,7 @@ namespace SlackConnector
                 case MessageType.Im_Created: return HandleDmJoined((DmChannelJoinedMessage)inboundMessage);
                 case MessageType.Team_Join: return HandleUserJoined((UserJoinedMessage)inboundMessage);
                 case MessageType.Pong: return HandlePong((PongMessage)inboundMessage);
+                case MessageType.Reaction_Added: return HandleReaction((ReactionMessage)inboundMessage);
             }
 
             return Task.CompletedTask;
@@ -122,6 +124,64 @@ namespace SlackConnector
             };
 
             return RaiseMessageReceived(message);
+        }
+
+        private Task HandleReaction(ReactionMessage inboundMessage)
+        {
+            if (string.IsNullOrEmpty(inboundMessage.User))
+                return Task.CompletedTask;
+
+            if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
+                return Task.CompletedTask;
+            ISlackReaction reaction = null;
+            switch (inboundMessage.ReactingTo.type)
+            {
+                case ReactionItemType.message:
+                    reaction = new SlackMessageReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        ChatHub = (inboundMessage.ReactingTo as MessageReaction).Channel == null ? null : _connectedHubs[(inboundMessage.ReactingTo as MessageReaction).Channel],
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        ReactingToTimestamp = (inboundMessage.ReactingTo as MessageReaction).Timestamp
+                    };
+                    break;
+                case ReactionItemType.file:
+                    reaction = new SlackFileReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        File = (inboundMessage.ReactingTo as FileReaction).File
+                    };
+                    break;
+                case ReactionItemType.file_comment:
+                    reaction = new SlackFileCommentReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        File = (inboundMessage.ReactingTo as FileCommentReaction).File,
+                        FileComment = (inboundMessage.ReactingTo as FileCommentReaction).FileComment
+                    };
+                    break;
+                case ReactionItemType.unknown:
+                    reaction = new SlackUnknownReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction
+                    };
+                    break;
+            }
+
+            
+
+            return RaiseReactionReceived(reaction);
         }
 
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
@@ -411,6 +471,23 @@ namespace SlackConnector
                 try
                 {
                     await e(message);
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+        }
+
+        public event ReactionReceivedEventHandler OnReactionReceived;
+        private async Task RaiseReactionReceived(ISlackReaction reaction)
+        {
+            var e = OnReactionReceived;
+            if (e != null)
+            {
+                try
+                {
+                    await e(reaction);
                 }
                 catch (Exception)
                 {
