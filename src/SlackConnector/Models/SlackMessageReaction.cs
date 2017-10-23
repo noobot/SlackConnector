@@ -8,7 +8,5 @@
         public double Timestamp { get; set; }
         public string Reaction { get; set; }
         public double ReactingToTimestamp { get; set; }
-
-        public SlackReactionType ReactionType => SlackReactionType.message;
     }
 }

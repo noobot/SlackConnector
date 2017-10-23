@@ -63,11 +63,10 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
 
         private static MessageType ParseMessageType(string json)
         {
-            MessageType messageType = MessageType.Unknown;
-
+            var messageType = MessageType.Unknown;
             if (!string.IsNullOrWhiteSpace(json))
             {
-                JObject messageJobject = JObject.Parse(json);
+                var messageJobject = JObject.Parse(json);
                 Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType);
             }
 
@@ -77,7 +76,6 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         private static ChatMessage GetChatMessage(string json)
         {
             var message = JsonConvert.DeserializeObject<ChatMessage>(json);
-
             if (message != null)
             {
                 message.Channel = WebUtility.HtmlDecode(message.Channel);
@@ -122,7 +120,6 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         private static ReactionItemType ParseReactionItemType(string json)
         {
             var messageType = ReactionItemType.unknown;
-
             if (!string.IsNullOrWhiteSpace(json))
             {
                 var messageJobject = JObject.Parse(json);

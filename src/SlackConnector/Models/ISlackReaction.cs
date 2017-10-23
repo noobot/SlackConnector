@@ -6,6 +6,5 @@
         SlackUser User { get; set; }
         double Timestamp { get; set; }
         string Reaction { get; set; }
-        SlackReactionType ReactionType { get; }
     }
 }

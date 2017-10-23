@@ -377,7 +377,6 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 ReactingToUser = "U0G9QF9C6",
                 ReactingTo = new FileReaction
                 {
-                    type = ReactionItemType.file,
                     File = "F0HS27V1Z"
                 },
             };
