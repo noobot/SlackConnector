@@ -78,7 +78,7 @@ namespace SlackConnector
             var handshake = await handshakeClient.FirmShake(SlackKey);
             await _webSocketClient.Connect(handshake.WebSocketUrl);
 
-            await Task.WhenAll(reconnectingEvent, RaiseOnReconnect()); 
+            await Task.WhenAll(reconnectingEvent, RaiseOnReconnect());
         }
 
         private Task ListenTo(InboundMessage inboundMessage)
@@ -178,8 +178,6 @@ namespace SlackConnector
                     };
                     break;
             }
-
-            
 
             return RaiseReactionReceived(reaction);
         }

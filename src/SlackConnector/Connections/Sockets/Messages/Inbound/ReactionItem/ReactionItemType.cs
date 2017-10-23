@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
+﻿namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
 {
     internal enum ReactionItemType
     {

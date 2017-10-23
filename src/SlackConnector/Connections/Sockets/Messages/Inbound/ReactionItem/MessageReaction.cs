@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
 {
-    class MessageReaction : IReactionItem
+    internal class MessageReaction : IReactionItem
     {
-
         public ReactionItemType type { get; set; }
         public string Channel { get; set; }
         public double Timestamp { get; set; }
@@ -16,9 +13,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
         {
             if (reactionjObject["item"]["type"].Value<string>() == "message" )
             {
-                this.type = ReactionItemType.message;
-                this.Channel = reactionjObject["item"]["channel"].Value<string>();
-                this.Timestamp = reactionjObject["item"]["ts"].Value<double>();
+                type = ReactionItemType.message;
+                Channel = reactionjObject["item"]["channel"].Value<string>();
+                Timestamp = reactionjObject["item"]["ts"].Value<double>();
             }
             else
             {

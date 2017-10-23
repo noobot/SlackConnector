@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
 {
-    class FileReaction : IReactionItem
+    internal class FileReaction : IReactionItem
     {
         public ReactionItemType type { get; set; }
         public string File { get; set; }
@@ -14,8 +12,8 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
         {
             if (reactionjObject["item"]["type"].Value<string>() == "file" )
             {
-                this.type = ReactionItemType.file;
-                this.File = reactionjObject["item"]["file"].Value<string>();
+                type = ReactionItemType.file;
+                File = reactionjObject["item"]["file"].Value<string>();
             }
             else
             {
