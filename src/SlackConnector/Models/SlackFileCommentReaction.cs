@@ -8,6 +8,6 @@
         public string Reaction { get; set; }
         public string File { get; set; }
         public string FileComment { get; set; }
-        public SlackReactionType ReactionType { get { return SlackReactionType.file_comment; } }
+        public SlackReactionType ReactionType => SlackReactionType.file_comment;
     }
 }

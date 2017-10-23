@@ -9,6 +9,6 @@
         public string Reaction { get; set; }
         public double ReactingToTimestamp { get; set; }
 
-        public SlackReactionType ReactionType { get { return SlackReactionType.message; } }
+        public SlackReactionType ReactionType => SlackReactionType.message;
     }
 }

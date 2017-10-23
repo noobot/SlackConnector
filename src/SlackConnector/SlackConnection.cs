@@ -133,6 +133,7 @@ namespace SlackConnector
 
             if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return Task.CompletedTask;
+
             ISlackReaction reaction = null;
             switch (inboundMessage.ReactingTo.type)
             {
