@@ -125,7 +125,7 @@ namespace SlackConnector
         /// <summary>
         /// Raised when reaction messages are received.
         /// </summary>
-        event ReactionReceivedEventHandler OnReactionReceived;
+        event ReactionReceivedEventHandler OnReaction;
 
         /// <summary>
         /// Raised when bot joins a channel or group

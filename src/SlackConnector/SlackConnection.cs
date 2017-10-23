@@ -88,6 +88,7 @@ namespace SlackConnector
                 return Task.CompletedTask;
             }
 
+            //TODO: Visitor pattern?
             switch (inboundMessage.MessageType)
             {
                 case MessageType.Message: return HandleMessage((ChatMessage)inboundMessage);
@@ -117,7 +118,7 @@ namespace SlackConnector
                 User = GetMessageUser(inboundMessage.User),
                 Timestamp = inboundMessage.Timestamp,
                 Text = inboundMessage.Text,
-                ChatHub = inboundMessage.Channel == null ? null : _connectedHubs[inboundMessage.Channel],
+                ChatHub = GetChatHub(inboundMessage.Channel),
                 RawData = inboundMessage.RawData,
                 MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text),
                 MessageSubType = inboundMessage.MessageSubType.ToSlackMessageSubType()
@@ -133,6 +134,20 @@ namespace SlackConnector
 
             if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return Task.CompletedTask;
+
+            if (inboundMessage.ReactingTo is MessageReaction messageReaction)
+            {
+                return RaiseReactionReceived(
+                    new SlackMessageReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        ChatHub = GetChatHub(messageReaction.Channel),
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        ReactingToUser = GetMessageUser(inboundMessage.ReactingToUser)
+                    });
+            }
 
             //ISlackReaction reaction = null;
             //switch (inboundMessage.ReactingTo.type)
@@ -180,7 +195,8 @@ namespace SlackConnector
             //        break;
             //}
 
-            return RaiseReactionReceived(null);//reaction);
+            // return RaiseReactionReceived(null);//reaction);
+            return Task.CompletedTask;
         }
 
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
@@ -232,9 +248,16 @@ namespace SlackConnector
 
         private SlackUser GetMessageUser(string userId)
         {
-            return UserCache.ContainsKey(userId) ?
-                UserCache[userId] :
-                new SlackUser { Id = userId, Name = string.Empty };
+            return UserCache.ContainsKey(userId)
+                ? UserCache[userId]
+                : new SlackUser { Id = userId, Name = string.Empty };
+        }
+
+        private SlackChatHub GetChatHub(string channel)
+        {
+            return channel != null && _connectedHubs.ContainsKey(channel)
+                ? _connectedHubs[channel]
+                : null;
         }
 
         public async Task Close()
@@ -387,10 +410,10 @@ namespace SlackConnector
             }
         }
 
-        public event ReactionReceivedEventHandler OnReactionReceived;
+        public event ReactionReceivedEventHandler OnReaction;
         private async Task RaiseReactionReceived(ISlackReaction reaction)
         {
-            var e = OnReactionReceived;
+            var e = OnReaction;
             if (e != null)
             {
                 try

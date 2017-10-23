@@ -337,8 +337,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 ReactingToUser = "U0G9QF9C6",
                 ReactingTo = new MessageReaction
                 {
-                    Channel = "C0G9QF9GZ",
-                    Timestamp = 1360782400.498405
+                    Channel = "C0G9QF9GZ"
                 }
             };
 

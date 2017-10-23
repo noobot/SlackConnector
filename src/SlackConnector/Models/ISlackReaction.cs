@@ -2,9 +2,9 @@
 {
     public interface ISlackReaction
     {
-        string RawData { get; set; }
-        SlackUser User { get; set; }
-        double Timestamp { get; set; }
-        string Reaction { get; set; }
+        string RawData { get; }
+        SlackUser User { get; }
+        double Timestamp { get; }
+        string Reaction { get; }
     }
 }

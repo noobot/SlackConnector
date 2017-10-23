@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
-using SlackConnector.Serialising;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
@@ -10,11 +9,7 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         {
             MessageType = MessageType.Reaction_Added;
         }
-
-        [JsonProperty("subtype")]
-        [JsonConverter(typeof(EnumConverter))]
-        public MessageSubType MessageSubType { get; set; }
-
+        
         [JsonProperty("user")]
         public string User { get; set; }
 
