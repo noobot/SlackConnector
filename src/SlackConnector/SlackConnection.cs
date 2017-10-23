@@ -134,53 +134,53 @@ namespace SlackConnector
             if (!string.IsNullOrEmpty(Self.Id) && inboundMessage.User == Self.Id)
                 return Task.CompletedTask;
 
-            ISlackReaction reaction = null;
-            switch (inboundMessage.ReactingTo.type)
-            {
-                case ReactionItemType.message:
-                    reaction = new SlackMessageReaction
-                    {
-                        User = GetMessageUser(inboundMessage.User),
-                        Timestamp = inboundMessage.Timestamp,
-                        ChatHub = (inboundMessage.ReactingTo as MessageReaction).Channel == null ? null : _connectedHubs[(inboundMessage.ReactingTo as MessageReaction).Channel],
-                        RawData = inboundMessage.RawData,
-                        Reaction = inboundMessage.Reaction,
-                        ReactingToTimestamp = (inboundMessage.ReactingTo as MessageReaction).Timestamp
-                    };
-                    break;
-                case ReactionItemType.file:
-                    reaction = new SlackFileReaction
-                    {
-                        User = GetMessageUser(inboundMessage.User),
-                        Timestamp = inboundMessage.Timestamp,
-                        RawData = inboundMessage.RawData,
-                        Reaction = inboundMessage.Reaction,
-                        File = (inboundMessage.ReactingTo as FileReaction).File
-                    };
-                    break;
-                case ReactionItemType.file_comment:
-                    reaction = new SlackFileCommentReaction
-                    {
-                        User = GetMessageUser(inboundMessage.User),
-                        Timestamp = inboundMessage.Timestamp,
-                        RawData = inboundMessage.RawData,
-                        Reaction = inboundMessage.Reaction,
-                        File = (inboundMessage.ReactingTo as FileCommentReaction).File,
-                        FileComment = (inboundMessage.ReactingTo as FileCommentReaction).FileComment
-                    };
-                    break;
-                case ReactionItemType.unknown:
-                    reaction = new SlackUnknownReaction
-                    {
-                        User = GetMessageUser(inboundMessage.User),
-                        Timestamp = inboundMessage.Timestamp,
-                        RawData = inboundMessage.RawData,
-                        Reaction = inboundMessage.Reaction
-                    };
-                    break;
-            }
+            //ISlackReaction reaction = null;
+            //switch (inboundMessage.ReactingTo.type)
+            //{
+            //    case ReactionItemType.message:
+            //        reaction = new SlackMessageReaction
+            //        {
+            //            User = GetMessageUser(inboundMessage.User),
+            //            Timestamp = inboundMessage.Timestamp,
+            //            ChatHub = (inboundMessage.ReactingTo as MessageReaction).Channel == null ? null : _connectedHubs[(inboundMessage.ReactingTo as MessageReaction).Channel],
+            //            RawData = inboundMessage.RawData,
+            //            Reaction = inboundMessage.Reaction,
+            //            ReactingToTimestamp = (inboundMessage.ReactingTo as MessageReaction).Timestamp
+            //        };
+            //        break;
+            //    case ReactionItemType.file:
+            //        reaction = new SlackFileReaction
+            //        {
+            //            User = GetMessageUser(inboundMessage.User),
+            //            Timestamp = inboundMessage.Timestamp,
+            //            RawData = inboundMessage.RawData,
+            //            Reaction = inboundMessage.Reaction,
+            //            File = (inboundMessage.ReactingTo as FileReaction).File
+            //        };
+            //        break;
+            //    case ReactionItemType.file_comment:
+            //        reaction = new SlackFileCommentReaction
+            //        {
+            //            User = GetMessageUser(inboundMessage.User),
+            //            Timestamp = inboundMessage.Timestamp,
+            //            RawData = inboundMessage.RawData,
+            //            Reaction = inboundMessage.Reaction,
+            //            File = (inboundMessage.ReactingTo as FileCommentReaction).File,
+            //            FileComment = (inboundMessage.ReactingTo as FileCommentReaction).FileComment
+            //        };
+            //        break;
+            //    case ReactionItemType.unknown:
+            //        reaction = new SlackUnknownReaction
+            //        {
+            //            User = GetMessageUser(inboundMessage.User),
+            //            Timestamp = inboundMessage.Timestamp,
+            //            RawData = inboundMessage.RawData,
+            //            Reaction = inboundMessage.Reaction
+            //        };
+            //        break;
+            //}
 
-            return RaiseReactionReceived(reaction);
+            return RaiseReactionReceived(null);//reaction);
         }
 
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)

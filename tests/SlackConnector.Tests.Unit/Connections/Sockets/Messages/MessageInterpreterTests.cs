@@ -298,8 +298,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             var expected = new PongMessage
             {
                 MessageType = MessageType.Pong,
-                RawData = json,
-                //Timestamp = 1445366603.000002
+                RawData = json
             };
 
             result.ShouldLookLike(expected);
@@ -338,10 +337,9 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 ReactingToUser = "U0G9QF9C6",
                 ReactingTo = new MessageReaction
                 {
-                    type = ReactionItemType.message,
                     Channel = "C0G9QF9GZ",
                     Timestamp = 1360782400.498405
-                },
+                }
             };
 
             result.ShouldLookLike(expected);
@@ -420,7 +418,6 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 ReactingToUser = "U0G9QF9C6",
                 ReactingTo = new FileCommentReaction
                 {
-                    type = ReactionItemType.file_comment,
                     File = "F0HS27V1Z",
                     FileComment = "Fc0HS2KBEZ"
                 },
@@ -460,10 +457,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                 User = "U024BE7LH",
                 Timestamp = 1360782804.083113,
                 ReactingToUser = "U0G9QF9C6",
-                ReactingTo = new UnknownReaction
-                {
-                    type = ReactionItemType.unknown
-                },
+                ReactingTo = new UnknownReaction()
             };
 
             result.ShouldLookLike(expected);

@@ -93,29 +93,43 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         {
             var message = JsonConvert.DeserializeObject<ReactionMessage>(json);
 
-            if (message != null)
+            var reactionItemType = ParseReactionItemType(json);
+            switch (reactionItemType)
             {
-                JObject messageJobject = JObject.Parse(json);
-                message.RawData = json;
-                switch (messageJobject["item"]["type"].Value<string>())
-                {
-                    case "message":
-                        message.ReactingTo = new MessageReaction();
-                        break;
-                    case "file":
-                        message.ReactingTo = new FileReaction();
-                        break;
-                    case "file_comment":
-                        message.ReactingTo = new FileCommentReaction();
-                        break;
-                    default:
-                        message.ReactingTo = new UnknownReaction();
-                        break;
-                }
-                message.ReactingTo.ParseItem(messageJobject);
+                case ReactionItemType.file:
+                    message.ReactingTo = GenerateReactionItem<FileReaction>(json);
+                    break;
+                case ReactionItemType.file_comment:
+                    message.ReactingTo = GenerateReactionItem<FileCommentReaction>(json);
+                    break;
+                case ReactionItemType.message:
+                    message.ReactingTo = GenerateReactionItem<MessageReaction>(json);
+                    break;
+                default:
+                    message.ReactingTo = GenerateReactionItem<UnknownReaction>(json);
+                    break;
             }
 
             return message;
+        }
+
+        private static IReactionItem GenerateReactionItem<T>(string json) where T : IReactionItem
+        {
+            var messageJobject = JObject.Parse(json);
+            return JsonConvert.DeserializeObject<T>(messageJobject["item"].ToString());
+        }
+
+        private static ReactionItemType ParseReactionItemType(string json)
+        {
+            var messageType = ReactionItemType.unknown;
+
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var messageJobject = JObject.Parse(json);
+                Enum.TryParse(messageJobject["item"]["type"].Value<string>(), true, out messageType);
+            }
+
+            return messageType;
         }
     }
 }

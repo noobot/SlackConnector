@@ -2,9 +2,9 @@
 {
     internal enum ReactionItemType
     {
+        unknown = 0,
         message,
         file,
-        file_comment,
-        unknown
+        file_comment
     }
 }

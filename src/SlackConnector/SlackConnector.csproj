@@ -15,6 +15,11 @@
     <PackageProjectUrl>https://github.com/noobot/slackconnector</PackageProjectUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.5|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
