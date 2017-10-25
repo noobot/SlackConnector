@@ -8,5 +8,6 @@
         public string Reaction { get; internal set; }
         public string File { get; internal set; }
         public string FileComment { get; internal set; }
+        public SlackUser ReactingToUser { get; internal set; }
     }
 }
