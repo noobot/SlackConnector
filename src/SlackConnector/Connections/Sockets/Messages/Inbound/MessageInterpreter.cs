@@ -3,6 +3,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SlackConnector.Logging;
+using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 
 namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
@@ -42,6 +43,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                     case MessageType.Pong:
                         message = JsonConvert.DeserializeObject<PongMessage>(json);
                         break;
+                    case MessageType.Reaction_Added:
+                        message = GetReactionMessage(json);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -59,11 +63,10 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
 
         private static MessageType ParseMessageType(string json)
         {
-            MessageType messageType = MessageType.Unknown;
-
+            var messageType = MessageType.Unknown;
             if (!string.IsNullOrWhiteSpace(json))
             {
-                JObject messageJobject = JObject.Parse(json);
+                var messageJobject = JObject.Parse(json);
                 Enum.TryParse(messageJobject["type"].Value<string>(), true, out messageType);
             }
 
@@ -73,7 +76,6 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         private static ChatMessage GetChatMessage(string json)
         {
             var message = JsonConvert.DeserializeObject<ChatMessage>(json);
-
             if (message != null)
             {
                 message.Channel = WebUtility.HtmlDecode(message.Channel);
@@ -83,6 +85,48 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
             }
 
             return message;
+        }
+
+        private static ReactionMessage GetReactionMessage(string json)
+        {
+            var message = JsonConvert.DeserializeObject<ReactionMessage>(json);
+
+            var reactionItemType = ParseReactionItemType(json);
+            switch (reactionItemType)
+            {
+                case ReactionItemType.file:
+                    message.ReactingTo = GenerateReactionItem<FileReaction>(json);
+                    break;
+                case ReactionItemType.file_comment:
+                    message.ReactingTo = GenerateReactionItem<FileCommentReaction>(json);
+                    break;
+                case ReactionItemType.message:
+                    message.ReactingTo = GenerateReactionItem<MessageReaction>(json);
+                    break;
+                default:
+                    message.ReactingTo = GenerateReactionItem<UnknownReaction>(json);
+                    break;
+            }
+
+            return message;
+        }
+
+        private static IReactionItem GenerateReactionItem<T>(string json) where T : IReactionItem
+        {
+            var messageJobject = JObject.Parse(json);
+            return JsonConvert.DeserializeObject<T>(messageJobject["item"].ToString());
+        }
+
+        private static ReactionItemType ParseReactionItemType(string json)
+        {
+            var messageType = ReactionItemType.unknown;
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var messageJobject = JObject.Parse(json);
+                Enum.TryParse(messageJobject["item"]["type"].Value<string>(), true, out messageType);
+            }
+
+            return messageType;
         }
     }
 }

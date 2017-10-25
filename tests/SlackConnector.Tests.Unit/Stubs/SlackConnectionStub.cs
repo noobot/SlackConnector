@@ -110,6 +110,12 @@ namespace SlackConnector.Tests.Unit.Stubs
             OnMessageReceived?.Invoke(null);
         }
 
+        public event ReactionReceivedEventHandler OnReaction;
+        public void RaiseOnReactionReceived()
+        {
+            OnReaction?.Invoke(null);
+        }
+
         public event ChatHubJoinedEventHandler OnChatHubJoined;
         public void RaiseOnChatHubJoined()
         {

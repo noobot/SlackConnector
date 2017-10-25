@@ -6,6 +6,7 @@ using SlackConnector.Logging;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
 using Shouldly;
+using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 
 namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
 {
@@ -297,8 +298,164 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             var expected = new PongMessage
             {
                 MessageType = MessageType.Pong,
+                RawData = json
+            };
+
+            result.ShouldLookLike(expected);
+        }
+
+        [Theory, AutoMoqData]
+        private void should_return_message_reaction_message(MessageInterpreter interpreter)
+        {
+            // given
+            string json = @"
+                {
+                    'type': 'reaction_added',
+                    'user': 'U024BE7LH',
+                    'reaction': 'thumbsup',
+                    'item_user': 'U0G9QF9C6',
+                    'item': {
+                        'type': 'message',
+                        'channel': 'C0G9QF9GZ',
+                        'ts': '1360782400.498405'
+                    },
+                    'event_ts': '1360782804.083113'
+                }
+            ";
+
+            // when
+            var result = interpreter.InterpretMessage(json);
+
+            // then
+            var expected = new ReactionMessage
+            {
+                MessageType = MessageType.Reaction_Added,
                 RawData = json,
-                //Timestamp = 1445366603.000002
+                Reaction = "thumbsup",
+                User = "U024BE7LH",
+                Timestamp = 1360782804.083113,
+                ReactingToUser = "U0G9QF9C6",
+                ReactingTo = new MessageReaction
+                {
+                    Channel = "C0G9QF9GZ"
+                }
+            };
+
+            result.ShouldLookLike(expected);
+        }
+
+        [Theory, AutoMoqData]
+        private void should_return_file_reaction_message(MessageInterpreter interpreter)
+        {
+            // given
+            string json = @"
+                {
+                    'type': 'reaction_added',
+                    'user': 'U024BE7LH',
+                    'reaction': 'thumbsup',
+                    'item_user': 'U0G9QF9C6',
+                    'item': {
+                        'type': 'file',
+                        'file': 'F0HS27V1Z',
+                    },
+                    'event_ts': '1360782804.083113'
+                }
+            ";
+
+            // when
+            var result = interpreter.InterpretMessage(json);
+
+            // then
+            var expected = new ReactionMessage
+            {
+                MessageType = MessageType.Reaction_Added,
+                RawData = json,
+                Reaction = "thumbsup",
+                User = "U024BE7LH",
+                Timestamp = 1360782804.083113,
+                ReactingToUser = "U0G9QF9C6",
+                ReactingTo = new FileReaction
+                {
+                    File = "F0HS27V1Z"
+                },
+            };
+
+            result.ShouldLookLike(expected);
+        }
+
+        [Theory, AutoMoqData]
+        private void should_return_file_comment_reaction_message(MessageInterpreter interpreter)
+        {
+            // given
+            string json = @"
+                {
+                    'type': 'reaction_added',
+                    'user': 'U024BE7LH',
+                    'reaction': 'thumbsup',
+                    'item_user': 'U0G9QF9C6',
+                    'item': {
+                        'type': 'file_comment',
+                        'file_comment': 'Fc0HS2KBEZ',
+                        'file': 'F0HS27V1Z',
+                    },
+                    'event_ts': '1360782804.083113'
+                }
+            ";
+
+            // when
+            var result = interpreter.InterpretMessage(json);
+
+            // then
+            var expected = new ReactionMessage
+            {
+                MessageType = MessageType.Reaction_Added,
+                RawData = json,
+                Reaction = "thumbsup",
+                User = "U024BE7LH",
+                Timestamp = 1360782804.083113,
+                ReactingToUser = "U0G9QF9C6",
+                ReactingTo = new FileCommentReaction
+                {
+                    File = "F0HS27V1Z",
+                    FileComment = "Fc0HS2KBEZ"
+                },
+            };
+
+            result.ShouldLookLike(expected);
+        }
+
+        [Theory, AutoMoqData]
+        private void should_return_unknown_reaction_message(MessageInterpreter interpreter)
+        {
+            // given
+            string json = @"
+                {
+                    'type': 'reaction_added',
+                    'user': 'U024BE7LH',
+                    'reaction': 'thumbsup',
+                    'item_user': 'U0G9QF9C6',
+                    'item': {
+                        'type': 'nifty_new_slack_reaction',
+                        'item1': 'Fc0HS2KBEZ',
+                        'item2': 'F0HS27V1Z',
+                    },
+                    'event_ts': '1360782804.083113'
+                }
+            ";
+
+            // when
+            var result = interpreter.InterpretMessage(json);
+
+            // then
+            var expected = new ReactionMessage
+            {
+                MessageType = MessageType.Reaction_Added,
+                RawData = json,
+                Reaction = "thumbsup",
+                User = "U024BE7LH",
+                Timestamp = 1360782804.083113,
+                ReactingToUser = "U0G9QF9C6",
+                ReactingTo = new UnknownReaction()
             };
 
             result.ShouldLookLike(expected);
