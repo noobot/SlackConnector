@@ -137,12 +137,27 @@ namespace SlackConnector
 
             if (inboundMessage.ReactingTo is MessageReaction messageReaction)
             {
+                //TODO: Interface methods? Extension methods?
                 return RaiseReactionReceived(
                     new SlackMessageReaction
                     {
                         User = GetMessageUser(inboundMessage.User),
                         Timestamp = inboundMessage.Timestamp,
                         ChatHub = GetChatHub(messageReaction.Channel),
+                        RawData = inboundMessage.RawData,
+                        Reaction = inboundMessage.Reaction,
+                        ReactingToUser = GetMessageUser(inboundMessage.ReactingToUser)
+                    });
+            }
+            
+            if (inboundMessage.ReactingTo is FileReaction fileReaction)
+            {
+                return RaiseReactionReceived(
+                    new SlackFileReaction
+                    {
+                        User = GetMessageUser(inboundMessage.User),
+                        Timestamp = inboundMessage.Timestamp,
+                        File = fileReaction.File,
                         RawData = inboundMessage.RawData,
                         Reaction = inboundMessage.Reaction,
                         ReactingToUser = GetMessageUser(inboundMessage.ReactingToUser)

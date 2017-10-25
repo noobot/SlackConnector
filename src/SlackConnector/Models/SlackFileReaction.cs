@@ -7,5 +7,6 @@
         public double Timestamp { get; set; }
         public string Reaction { get; set; }
         public string File { get; set; }
+        public SlackUser ReactingToUser { get; set; }
     }
 }

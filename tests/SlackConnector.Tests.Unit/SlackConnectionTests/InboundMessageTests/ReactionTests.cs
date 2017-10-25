@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
-using SlackConnector.Connections.Models;
+using Ploeh.AutoFixture;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
-using Shouldly;
 using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
@@ -21,6 +19,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             SlackConnection slackConnection)
         {
             // given
+            var fixture = new Fixture();
             var connectionInfo = new ConnectionInformation
             {
                 Users =
@@ -46,10 +45,10 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             var inboundMessage = new ReactionMessage
             {
                 User = "userABC",
-                Reaction = "frowny-face",
-                RawData = "I am THE raw data yo",
+                Reaction = fixture.Create<string>(),
+                RawData = fixture.Create<string>(),
                 ReactingToUser = "secondUser",
-                Timestamp = 1360782804.083113,
+                Timestamp = fixture.Create<double>(),
                 ReactingTo = new MessageReaction
                 {
                     Channel = "chat-hub-1"
@@ -63,11 +62,65 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
             lastReaction.ShouldLookLike(new SlackMessageReaction
             {
                 User = connectionInfo.Users["userABC"],
-                Reaction = "frowny-face",
+                Reaction = inboundMessage.Reaction,
+                RawData = inboundMessage.RawData,
                 ChatHub = connectionInfo.SlackChatHubs["chat-hub-1"],
-                RawData = "I am THE raw data yo",
                 ReactingToUser = connectionInfo.Users["secondUser"],
-                Timestamp = 1360782804.083113
+                Timestamp = inboundMessage.Timestamp
+            });
+        }
+
+        [Theory, AutoMoqData]
+        private async Task should_raise_file_reaction_event(
+            Mock<IWebSocketClient> webSocket,
+            SlackConnection slackConnection)
+        {
+            // given
+            var fixture = new Fixture();
+            var connectionInfo = new ConnectionInformation
+            {
+                Users =
+                {
+                    { "some-user", new SlackUser { Id = "some-user", Name = "i-have-a-name" } },
+                    { "another-user", new SlackUser { Id = "another-user", Name = "i-have-a-name-too-thanks" } }
+                },
+                WebSocket = webSocket.Object
+            };
+            await slackConnection.Initialise(connectionInfo);
+
+            ISlackReaction lastReaction = null;
+            slackConnection.OnReaction += reaction =>
+            {
+                lastReaction = reaction;
+                return Task.CompletedTask;
+            };
+
+            var file = fixture.Create<string>();
+            var inboundMessage = new ReactionMessage
+            {
+                User = "some-user",
+                Reaction = fixture.Create<string>(),
+                RawData = fixture.Create<string>(),
+                ReactingToUser = "another-user",
+                Timestamp = fixture.Create<double>(),
+                ReactingTo = new FileReaction
+                {
+                    File = file
+                }
+            };
+
+            // when
+            webSocket.Raise(x => x.OnMessage += null, null, inboundMessage);
+
+            // then
+            lastReaction.ShouldLookLike(new SlackFileReaction
+            {
+                User = connectionInfo.Users["some-user"],
+                Reaction = inboundMessage.Reaction,
+                File = file,
+                RawData = inboundMessage.RawData,
+                ReactingToUser = connectionInfo.Users["another-user"],
+                Timestamp = inboundMessage.Timestamp
             });
         }
 
