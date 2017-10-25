@@ -1,4 +1,4 @@
-﻿namespace SlackConnector.Models
+﻿namespace SlackConnector.Models.Reactions
 {
     public class SlackMessageReaction : ISlackReaction
     {

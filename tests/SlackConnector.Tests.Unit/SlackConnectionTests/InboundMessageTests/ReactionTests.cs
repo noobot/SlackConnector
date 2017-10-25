@@ -8,6 +8,7 @@ using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
 using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
+using SlackConnector.Models.Reactions;
 
 namespace SlackConnector.Tests.Unit.SlackConnectionTests.InboundMessageTests
 {

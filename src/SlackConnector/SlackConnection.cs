@@ -16,6 +16,7 @@ using SlackConnector.Exceptions;
 using SlackConnector.Extensions;
 using SlackConnector.Models;
 using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
+using SlackConnector.Models.Reactions;
 
 namespace SlackConnector
 {
