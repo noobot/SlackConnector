@@ -180,22 +180,15 @@ namespace SlackConnector
                     });
             }
 
-            //ISlackReaction reaction = null;
-            //switch (inboundMessage.ReactingTo.type)
-            //{
-            //    case ReactionItemType.unknown:
-            //        reaction = new SlackUnknownReaction
-            //        {
-            //            User = GetMessageUser(inboundMessage.User),
-            //            Timestamp = inboundMessage.Timestamp,
-            //            RawData = inboundMessage.RawData,
-            //            Reaction = inboundMessage.Reaction
-            //        };
-            //        break;
-            //}
-
-            // return RaiseReactionReceived(null);//reaction);
-            return Task.CompletedTask;
+            return RaiseReactionReceived(
+                new SlackUnknownReaction
+                {
+                    User = GetMessageUser(inboundMessage.User),
+                    Timestamp = inboundMessage.Timestamp,
+                    RawData = inboundMessage.RawData,
+                    Reaction = inboundMessage.Reaction,
+                    ReactingToUser = GetMessageUser(inboundMessage.ReactingToUser)
+                });
         }
 
         private Task HandleGroupJoined(GroupJoinedMessage inboundMessage)
@@ -247,6 +240,11 @@ namespace SlackConnector
 
         private SlackUser GetMessageUser(string userId)
         {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return null;
+            }
+
             return UserCache.ContainsKey(userId)
                 ? UserCache[userId]
                 : new SlackUser { Id = userId, Name = string.Empty };
