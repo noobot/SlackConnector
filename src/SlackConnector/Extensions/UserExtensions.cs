@@ -20,7 +20,8 @@ namespace SlackConnector.Extensions
                 WhatIDo = user.Profile?.Title,
                 Deleted = user.Deleted,
                 IsGuest = user.IsGuest,
-                StatusText = user.Profile?.StatusText
+                StatusText = user.Profile?.StatusText,
+                IsAdmin = user.IsAdmin
             };
 
             if (!string.IsNullOrWhiteSpace(user.Presence))

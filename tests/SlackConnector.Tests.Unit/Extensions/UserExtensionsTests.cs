@@ -1,4 +1,5 @@
-﻿using SlackConnector.Connections.Models;
+﻿using Ploeh.AutoFixture;
+using SlackConnector.Connections.Models;
 using SlackConnector.Extensions;
 using Xunit;
 using Shouldly;
@@ -11,23 +12,25 @@ namespace SlackConnector.Tests.Unit.Extensions
         public void should_create_slack_user_from_user()
         {
             // given
+            var fixture = new Fixture();
             var user = new User
             {
-                Id = "Id",
-                Name = "Name",
-                TimeZoneOffset = 0L,
-                IsBot = false,
-                Deleted = false,
+                Id = fixture.Create<string>(),
+                Name = fixture.Create<string>(),
+                TimeZoneOffset = fixture.Create<long>(),
+                IsBot = fixture.Create<bool>(),
+                Deleted = fixture.Create<bool>(),
                 Presence = "active",
                 Profile = new Profile
                 {
-                    Email = "a@b.c",
-                    FirstName = "First",
-                    LastName = "Last",
-                    Image = "http://image.com",
-                    Title = "Developer", 
-                    StatusText = "Vacationing"
-                }
+                    Email = fixture.Create<string>(),
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Image = fixture.Create<string>(),
+                    Title = fixture.Create<string>(), 
+                    StatusText = fixture.Create<string>()
+                },
+                IsAdmin = fixture.Create<bool>()
             };
 
             // when
@@ -48,6 +51,7 @@ namespace SlackConnector.Tests.Unit.Extensions
             slackUser.Online.Value.ShouldBeTrue();
             slackUser.IsGuest.ShouldBeFalse();
             slackUser.StatusText.ShouldBe(user.Profile.StatusText);
+            slackUser.IsAdmin.ShouldBe(user.IsAdmin);
         }
 
         [Fact]
