@@ -27,7 +27,8 @@ namespace SlackConnector.Connections.Clients.Chat
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channel", channel)
                        .SetQueryParam("text", text)
-                       .SetQueryParam("as_user", "true");
+                       .SetQueryParam("as_user", "true")
+                       .SetQueryParam("link_names", "true");
             
             if (attachments != null && attachments.Any())
             {
