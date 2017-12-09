@@ -54,6 +54,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
                 .WithQueryParamValue("channel", channel)
                 .WithQueryParamValue("text", text)
                 .WithQueryParamValue("as_user", "true")
+                .WithQueryParamValue("link_names", "true")
                 .WithoutQueryParam("attachments")
                 .Times(1);
         }
