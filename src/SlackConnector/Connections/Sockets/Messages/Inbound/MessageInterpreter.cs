@@ -46,6 +46,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
                     case MessageType.Reaction_Added:
                         message = GetReactionMessage(json);
                         break;
+                    case MessageType.Channel_Created:
+                        message = JsonConvert.DeserializeObject<ChannelCreatedMessage>(json);
+                        break;
                 }
             }
             catch (Exception ex)
