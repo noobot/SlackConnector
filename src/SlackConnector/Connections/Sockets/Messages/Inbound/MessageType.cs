@@ -9,6 +9,7 @@
         Im_Created,
         Team_Join,
         Pong,
-        Reaction_Added
+        Reaction_Added,
+        Channel_Created
     }
 }

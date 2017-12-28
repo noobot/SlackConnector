@@ -34,7 +34,7 @@ namespace SlackConnector
         private Dictionary<string, SlackUser> _userCache { get; set; }
         public IReadOnlyDictionary<string, SlackUser> UserCache => _userCache;
 
-        public bool IsConnected => _webSocketClient.IsAlive;
+        public bool IsConnected => _webSocketClient?.IsAlive ?? false;
         public DateTime? ConnectedSince { get; private set; }
         public string SlackKey { get; private set; }
 
@@ -99,6 +99,7 @@ namespace SlackConnector
                 case MessageType.Team_Join: return HandleUserJoined((UserJoinedMessage)inboundMessage);
                 case MessageType.Pong: return HandlePong((PongMessage)inboundMessage);
                 case MessageType.Reaction_Added: return HandleReaction((ReactionMessage)inboundMessage);
+                case MessageType.Channel_Created: return HandleChannelCreated((ChannelCreatedMessage)inboundMessage);
             }
 
             return Task.CompletedTask;
@@ -238,6 +239,23 @@ namespace SlackConnector
             return RaisePong(inboundMessage.Timestamp);
         }
 
+        private Task HandleChannelCreated(ChannelCreatedMessage inboundMessage)
+        {
+            string channelId = inboundMessage?.Channel?.Id;
+            if (channelId == null) return Task.CompletedTask;
+
+            var hub = inboundMessage.Channel.ToChatHub();
+            _connectedHubs[channelId] = hub;
+            
+            var slackChannelCreated = new SlackChannelCreated
+            {
+                Id = channelId,
+                Name = inboundMessage.Channel.Name,
+                Creator = GetMessageUser(inboundMessage.Channel.Creator)
+            };
+            return RaiseOnChannelCreated(slackChannelCreated);
+        }
+
         private SlackUser GetMessageUser(string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -263,12 +281,6 @@ namespace SlackConnector
             {
                 await _webSocketClient.Close();
             }
-        }
-
-        [Obsolete("Please use Close async method", true)]
-        public void Disconnect()
-        {
-            throw new NotImplementedException();
         }
 
         public async Task Say(BotMessage message)
@@ -563,6 +575,21 @@ namespace SlackConnector
             }
         }
 
+        public event ChannelCreatedHandler OnChannelCreated;
+        private async Task RaiseOnChannelCreated(SlackChannelCreated chatHub)
+        {
+            var e = OnChannelCreated;
+            if (e != null)
+            {
+                try
+                {
+                    await e(chatHub);
+                }
+                catch
+                {
+                }
+            }
+        }
         //TODO: USER JOINED EVENT HANDLING
     }
 }

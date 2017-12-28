@@ -129,6 +129,8 @@ namespace SlackConnector.Tests.Unit.Stubs
         }
 
         public event PongEventHandler OnPong;
+        public event ChannelCreatedHandler OnChannelCreated;
+
         public void RaiseOnPong()
         {
             OnPong?.Invoke(DateTime.MinValue);

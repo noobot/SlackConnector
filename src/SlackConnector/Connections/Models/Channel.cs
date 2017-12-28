@@ -15,5 +15,7 @@ namespace SlackConnector.Connections.Models
 
         [JsonProperty("members")]
         public string[] Members { get; set; }
+
+        public string Creator { get; set; }
     }
 }

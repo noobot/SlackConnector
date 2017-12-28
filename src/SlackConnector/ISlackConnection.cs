@@ -9,13 +9,11 @@ namespace SlackConnector
 {
     public interface ISlackConnection
     {
-        #region Properties
-
         /// <summary>
         /// All of the ChatHubs that are currently open.
         /// </summary>
         IReadOnlyDictionary<string, SlackChatHub> ConnectedHubs { get; }
-        
+
         /// <summary>
         /// UserId => User object.
         /// </summary>
@@ -46,14 +44,6 @@ namespace SlackConnector
         /// </summary>
         ContactDetails Self { get; }
 
-        #endregion
-
-        /// <summary>
-        /// Disconnect from Slack.
-        /// </summary>
-        [Obsolete("Please use Close async method", true)]
-        void Disconnect();
-
         /// <summary>
         /// Close websocket connection to Slack
         /// </summary>
@@ -63,7 +53,7 @@ namespace SlackConnector
         /// Send message to Slack channel.
         /// </summary>
         Task Say(BotMessage message);
-        
+
         /// <summary>
         /// Uploads a file from to a Slack channel
         /// </summary>
@@ -166,5 +156,10 @@ namespace SlackConnector
         /// Raised when SlackApi sends a pong to our ping
         /// </summary>
         event PongEventHandler OnPong;
+
+        /// <summary>
+        /// Raised when a new channel is created
+        /// </summary>
+        event ChannelCreatedHandler OnChannelCreated;
     }
 }
