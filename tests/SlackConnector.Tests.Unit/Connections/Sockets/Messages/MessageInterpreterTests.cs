@@ -460,5 +460,40 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
 
             result.ShouldLookLike(expected);
         }
+
+        [Theory, AutoMoqData]
+        private void should_return_channel_created_message(MessageInterpreter interpreter)
+        {
+            // given
+            string json = @"
+                {
+                    'type': 'channel_created',
+                    'channel': {
+                        'id': 'C024BE91L',
+                        'name': 'fun',
+                        'created': 1360782804,
+                        'creator': 'U024BE7LH'
+                    }
+                }
+            ";
+
+            // when
+            var result = interpreter.InterpretMessage(json);
+
+            // then
+            var expected = new ChannelCreatedMessage
+            {
+                MessageType = MessageType.Channel_Created,
+                Channel = new Channel
+                {
+                    Id = "C024BE91L",
+                    Name = "fun",
+                    Creator = "U024BE7LH"
+                },
+                RawData = json,
+            };
+
+            result.ShouldLookLike(expected);
+        }
     }
 }
