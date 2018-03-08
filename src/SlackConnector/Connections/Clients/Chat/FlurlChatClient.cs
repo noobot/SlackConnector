@@ -19,7 +19,9 @@ namespace SlackConnector.Connections.Clients.Chat
             _responseVerifier = responseVerifier;
         }
 
-        public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
+        public async Task PostMessage(string slackKey, string channel, string text, 
+			IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, 
+			string userName = null)
         {
             var request = ClientConstants
                        .SlackApiHost
@@ -34,8 +36,14 @@ namespace SlackConnector.Connections.Clients.Chat
             {
                 request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
             }
+			if (threadTs == null)
+				request.SetQueryParam("thread_ts", threadTs);
+			if (iconUrl == null)
+				request.SetQueryParam("icon_url", iconUrl);
+			if (userName == null)
+				request.SetQueryParam("username", userName);
 
-            var response = await request.GetJsonAsync<StandardResponse>();
+			var response = await request.GetJsonAsync<StandardResponse>();
             _responseVerifier.VerifyResponse(response);
         }
     }

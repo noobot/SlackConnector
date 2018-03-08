@@ -119,6 +119,7 @@ namespace SlackConnector
             {
                 User = GetMessageUser(inboundMessage.User),
                 Timestamp = inboundMessage.Timestamp,
+				ThreadTimestamp = inboundMessage.ThreadTimestamp,
                 Text = inboundMessage.Text,
                 ChatHub = GetChatHub(inboundMessage.Channel),
                 RawData = inboundMessage.RawData,
@@ -291,7 +292,8 @@ namespace SlackConnector
             }
 
             var client = _connectionFactory.CreateChatClient();
-            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments,
+				message.ThreadTimestamp, message.IconUrl, message.UserName);
         }
 
         public async Task Upload(SlackChatHub chatHub, string filePath)
