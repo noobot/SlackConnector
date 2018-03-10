@@ -10,7 +10,7 @@ using SlackConnector.Logging;
 
 namespace SlackConnector.Connections
 {
-    internal class ConnectionFactory : IConnectionFactory
+    public class ConnectionFactory : IConnectionFactory
     {
         public async Task<IWebSocketClient> CreateWebSocketClient(string url, ProxySettings proxySettings)
         {

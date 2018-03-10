@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections.Models
 {
-    internal class Im
+    public class Im
     {
         public string Id { get; set; }
 

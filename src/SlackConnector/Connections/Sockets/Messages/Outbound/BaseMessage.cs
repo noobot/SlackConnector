@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections.Sockets.Messages.Outbound
 {
-    internal abstract class BaseMessage
+    public abstract class BaseMessage
     {
         [JsonProperty("id")]
         public int Id { get; set; }

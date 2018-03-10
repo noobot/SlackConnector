@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections.Models
 {
-    internal class Channel : Detail
+    public class Channel : Detail
     {
         [JsonProperty("is_channel")]
         public bool IsChannel { get; set; }

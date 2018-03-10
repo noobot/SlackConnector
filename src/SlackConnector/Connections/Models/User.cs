@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections.Models
 {
-    internal class User : Detail
+    public class User : Detail
     {
         public bool Deleted { get; set; }
 

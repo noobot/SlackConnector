@@ -3,7 +3,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.Channel
 {
-    internal interface IChannelClient
+    public interface IChannelClient
     {
         Task<Models.Channel> JoinDirectMessageChannel(string slackKey, string user);
 

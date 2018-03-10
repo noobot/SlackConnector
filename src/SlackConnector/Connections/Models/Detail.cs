@@ -1,6 +1,6 @@
 ﻿namespace SlackConnector.Connections.Models
 {
-    internal class Detail
+    public class Detail
     {
         public string Id { get; set; }
         public string Name { get; set; }

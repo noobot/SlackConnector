@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections.Models
 {
-    internal class Profile
+    public class Profile
     {
         [JsonProperty("first_name")]
         public string FirstName { get; set; }
