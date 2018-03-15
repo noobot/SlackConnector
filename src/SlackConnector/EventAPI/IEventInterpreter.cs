@@ -6,6 +6,6 @@ namespace SlackConnector.EventAPI
 {
     public interface IEventInterpreter
     {
-		InboundOuterEvent InterpretMessage(string json);
+		InboundOuterEvent InterpretEvent(string json);
 	}
 }

@@ -6,6 +6,7 @@ namespace SlackConnector.EventAPI
 {
     public enum EventType
     {
+		Unknown,
 		app_mention,
 		app_rate_limited,
 		app_uninstalled,

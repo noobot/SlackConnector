@@ -7,7 +7,10 @@ namespace SlackConnector.EventAPI
 		[JsonProperty("type")]
 		[JsonConverter(typeof(EventTypeConverter))]
 		public EventType Type { get; set; }
+	}
 
+	public class CommonInboundEvent : InboundEvent
+	{
 		[JsonProperty("event_ts")]
 		public string EventTimestamp { get; set; }
 
@@ -16,8 +19,5 @@ namespace SlackConnector.EventAPI
 
 		[JsonProperty("ts")]
 		public string Timestamp { get; set; }
-
-		[JsonProperty("item")]
-		public string Item { get; set; }
 	}
 }

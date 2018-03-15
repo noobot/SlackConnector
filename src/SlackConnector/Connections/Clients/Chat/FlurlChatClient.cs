@@ -9,7 +9,7 @@ using SlackConnector.Models;
 
 namespace SlackConnector.Connections.Clients.Chat
 {
-    internal class FlurlChatClient : IChatClient
+    public class FlurlChatClient : IChatClient
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";

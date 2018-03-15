@@ -6,7 +6,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.Channel
 {
-    internal class FlurlChannelClient : IChannelClient
+    public class FlurlChannelClient : IChannelClient
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string JOIN_DM_PATH = "/api/im.open";

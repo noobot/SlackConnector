@@ -7,7 +7,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.File
 {
-    internal class FlurlFileClient : IFileClient
+    public class FlurlFileClient : IFileClient
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string FILE_UPLOAD_PATH = "/api/files.upload";

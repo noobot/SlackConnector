@@ -1,6 +1,6 @@
 ﻿namespace SlackConnector.Connections.Sockets.Messages.Inbound
 {
-    internal enum MessageSubType
+    public enum MessageSubType
     {
         Unknown = 0,
         bot_message,

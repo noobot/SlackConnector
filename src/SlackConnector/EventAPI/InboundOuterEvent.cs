@@ -2,11 +2,22 @@
 
 namespace SlackConnector.EventAPI
 {
+	public enum OuterEventType
+	{
+		Unknown,
+		event_callback,
+		app_rate_limited,
+		url_verification
+	}
+
 	public class InboundOuterEvent
 	{
+		[JsonProperty("type")]
+		[JsonConverter(typeof(EventTypeConverter))]
+		public EventType Type { get; set; }
+
 		[JsonProperty("token")]
 		public string Token { get; set; }
-
 
 		[JsonProperty("team_id")]
 		public string TeamId { get; set; }
@@ -14,6 +25,11 @@ namespace SlackConnector.EventAPI
 		[JsonProperty("api_app_id")]
 		public string ApiAppId { get; set; }
 
+		public string RawData { get; set; }
+	}
+
+	public class InboundOuterCommonEvent : InboundOuterEvent
+	{
 		[JsonProperty("event")]
 		public InboundEvent Event { get; set; }
 
@@ -25,5 +41,10 @@ namespace SlackConnector.EventAPI
 
 		[JsonProperty("event_time")]
 		public int EventTime { get; set; }
+
+		public T GetEvent<T>() where T : InboundEvent
+		{
+			return this.Event as T;
+		}
 	}
 }

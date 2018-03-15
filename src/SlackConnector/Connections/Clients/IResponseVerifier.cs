@@ -2,7 +2,7 @@
 
 namespace SlackConnector.Connections.Clients
 {
-    internal interface IResponseVerifier
+    public interface IResponseVerifier
     {
         void VerifyResponse(StandardResponse response);
     }
