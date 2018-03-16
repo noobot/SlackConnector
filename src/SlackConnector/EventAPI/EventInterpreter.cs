@@ -8,79 +8,79 @@ namespace SlackConnector.EventAPI
 {
 	public class EventInterpreter : IEventInterpreter
 	{
-		private InboundOuterEvent CreateInboundCommonOuterEvent<T>(string json) where T : InboundEvent
+		private InboundOuterEvent CreateInboundCommonOuterEvent<T>(JObject eventJobject) where T : InboundEvent
 		{
-			var outerEvent = new InboundOuterCommonEvent();
-			outerEvent.Event = JsonConvert.DeserializeObject<T>(json);
+			var outerEvent = eventJobject.ToObject<InboundOuterCommonEvent>();
+			outerEvent.Event = eventJobject["event"].ToObject<T>();
 			return outerEvent;
 		}
 
 		public InboundOuterEvent InterpretEvent(string json)
 		{
 			InboundOuterEvent outerEvent = null;
-
+			var eventJobject = JObject.Parse(json);
 			try
 			{
-				var outerEventType = ParseOuterEventType(json);
+				var outerEventType = ParseOuterEventType(eventJobject);
 				switch (outerEventType)
 				{
 					case OuterEventType.event_callback:
-						var eventType = ParseEventType(json);
+						var eventType = ParseEventType(eventJobject);
 						switch (eventType)
 						{
 							case EventType.app_mention:
-								outerEvent = this.CreateInboundCommonOuterEvent<AppMentionEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<AppMentionEvent>(eventJobject);
 								break;
 							case EventType.app_uninstalled:
-								outerEvent = this.CreateInboundCommonOuterEvent<InboundEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<InboundEvent>(eventJobject);
 								break;
 							case EventType.channel_archive:
-								outerEvent = this.CreateInboundCommonOuterEvent<ChannelArchiveEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<ChannelArchiveEvent>(eventJobject);
 								break;
 							case EventType.channel_created:
-								outerEvent = this.CreateInboundCommonOuterEvent<ChannelCreatedEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<ChannelCreatedEvent>(eventJobject);
 								break;
 							case EventType.channel_deleted:
-								outerEvent = this.CreateInboundCommonOuterEvent<ChannelDeletedEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<ChannelDeletedEvent>(eventJobject);
 								break;
 							case EventType.channel_history_changed:
-								outerEvent = this.CreateInboundCommonOuterEvent<ChannelHistoryChangedEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<ChannelHistoryChangedEvent>(eventJobject);
 								break;
 							case EventType.channel_rename:
-								outerEvent = this.CreateInboundCommonOuterEvent<ChannelRenameEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<ChannelRenameEvent>(eventJobject);
 								break;
 							case EventType.message:
 							case EventType.message_dot_channels:
 							case EventType.message_dot_groups:
 							case EventType.message_dot_im:
 							case EventType.message_dot_mpim:
-								outerEvent = this.CreateInboundCommonOuterEvent<MessageEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<MessageEvent>(eventJobject);
 								break;
 							case EventType.reaction_added:
-								outerEvent = this.CreateInboundCommonOuterEvent<ReactionEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<ReactionEvent>(eventJobject);
 								break;
 							case EventType.reaction_removed:
-								outerEvent = this.CreateInboundCommonOuterEvent<ReactionEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<ReactionEvent>(eventJobject);
 								break;
 							case EventType.team_domain_change:
-								outerEvent = this.CreateInboundCommonOuterEvent<TeamDomainChangeEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<TeamDomainChangeEvent>(eventJobject);
 								break;
 							case EventType.team_join:
-								outerEvent = this.CreateInboundCommonOuterEvent<TeamJoinEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<TeamJoinEvent>(eventJobject);
 								break;
 							case EventType.team_rename:
-								outerEvent = this.CreateInboundCommonOuterEvent<TeamRenameEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<TeamRenameEvent>(eventJobject);
 								break;
 							case EventType.user_change:
-								outerEvent = this.CreateInboundCommonOuterEvent<UserChangeEvent>(json);
+								outerEvent = this.CreateInboundCommonOuterEvent<UserChangeEvent>(eventJobject);
 								break;
 						}
 						break;
 					case OuterEventType.url_verification:
-						outerEvent = JsonConvert.DeserializeObject<UrlVerificationEvent>(json);
+						outerEvent = eventJobject.ToObject<UrlVerificationEvent>();
 						break;
 					case OuterEventType.app_rate_limited:
-						outerEvent = JsonConvert.DeserializeObject<AppRateLimitedEvent>(json);
+						outerEvent = eventJobject.ToObject<AppRateLimitedEvent>();
 						break;
 
 				}
@@ -98,26 +98,18 @@ namespace SlackConnector.EventAPI
 			return outerEvent;
 		}
 
-		private static OuterEventType ParseOuterEventType(string json)
+		private static OuterEventType ParseOuterEventType(JObject eventJobject)
 		{
 			var eventType = OuterEventType.Unknown;
-			if (!string.IsNullOrWhiteSpace(json))
-			{
-				var messageJobject = JObject.Parse(json);
-				Enum.TryParse(messageJobject["type"].Value<string>(), true, out eventType);
-			}
+			Enum.TryParse(eventJobject["type"].Value<string>(), true, out eventType);
 
 			return eventType;
 		}
 
-		private static EventType ParseEventType(string json)
+		private static EventType ParseEventType(JObject eventJobject)
 		{
 			var eventType = EventType.Unknown;
-			if (!string.IsNullOrWhiteSpace(json))
-			{
-				var messageJobject = JObject.Parse(json);
-				Enum.TryParse(messageJobject["event"]["type"].Value<string>(), true, out eventType);
-			}
+			Enum.TryParse(eventJobject["event"]["type"].Value<string>(), true, out eventType);
 
 			return eventType;
 		}

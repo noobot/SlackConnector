@@ -323,8 +323,8 @@ namespace SlackConnector
 
         public async Task<IEnumerable<SlackUser>> GetUsers()
         {
-            IChannelClient client = _connectionFactory.CreateChannelClient();
-            var users = await client.GetUsers(SlackKey);
+            var client = _connectionFactory.CreateUserClient();
+            var users = await client.ListAll(SlackKey);
 
             //TODO: Update user cache
             return users.Select(u => u.ToSlackUser());

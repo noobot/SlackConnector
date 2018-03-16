@@ -7,6 +7,7 @@ using Moq;
 using Shouldly;
 using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
+using SlackConnector.Connections.Clients.Users;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Tests.Unit.TestExtensions;
@@ -19,13 +20,15 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
         private readonly HttpTest _httpTest;
         private readonly Mock<IResponseVerifier> _responseVerifierMock;
         private readonly FlurlChannelClient _channelClient;
+		private readonly FlurlUserClient _userClient;
 
-        public FlurlChannelClientTests()
+		public FlurlChannelClientTests()
         {
             _httpTest = new HttpTest();
             _responseVerifierMock = new Mock<IResponseVerifier>();
             _channelClient = new FlurlChannelClient(_responseVerifierMock.Object);
-        }
+			_userClient = new FlurlUserClient(_responseVerifierMock.Object);
+		}
 
         public void Dispose()
         {
@@ -280,7 +283,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             // given
             const string slackKey = "I-is-another-key";
 
-            var expectedResponse = new UsersResponse
+            var expectedResponse = new UserCollectionResponse
             {
                 Members = new[]
                 {
@@ -292,12 +295,12 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             _httpTest.RespondWithJson(expectedResponse);
 
             // when
-            var result = await _channelClient.GetUsers(slackKey);
+            var result = await _userClient.ListAll(slackKey);
 
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)), Times.Once);
             _httpTest
-                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChannelClient.USERS_LIST_PATH))
+                .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlUserClient.USERS_LIST_PATH))
                 .WithQueryParamValue("token", slackKey)
                 .WithQueryParamValue("presence", "1")
                 .Times(1);

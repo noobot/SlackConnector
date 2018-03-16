@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Clients.Chat;
+using SlackConnector.Connections.Clients.Conversation;
 using SlackConnector.Connections.Clients.File;
 using SlackConnector.Connections.Clients.Handshake;
+using SlackConnector.Connections.Clients.Users;
 using SlackConnector.Connections.Sockets;
 
 namespace SlackConnector.Connections
@@ -14,5 +16,7 @@ namespace SlackConnector.Connections
         IChatClient CreateChatClient();
         IFileClient CreateFileClient();
         IChannelClient CreateChannelClient();
-    }
+		IConversationClient CreateConversationClient();
+		IUserClient CreateUserClient();
+	}
 }
