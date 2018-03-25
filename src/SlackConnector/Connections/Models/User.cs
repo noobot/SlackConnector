@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using SlackConnector.Serialising;
+using System;
 
 namespace SlackConnector.Connections.Models
 {
@@ -17,7 +19,7 @@ namespace SlackConnector.Connections.Models
         [JsonProperty("is_bot")]
         public bool IsBot { get; set; }
 
-        [JsonProperty("is_restricted")]
+        [JsonProperty("is_guest")]
         public bool IsGuest { get; set; }
 
         [JsonProperty("presence")]
@@ -51,12 +53,19 @@ namespace SlackConnector.Connections.Models
 		public bool IsUltraRestricted { get; set; }
 
 		[JsonProperty("updated")]
-		public long Updated { get; set; }
+		[JsonConverter(typeof(SecondEpochConverter))]
+		public DateTime Updated { get; set; }
 
 		[JsonProperty("is_app_user")]
 		public bool IsAppUser { get; set; }
 
+		[JsonProperty("is_stranger")]
+		public bool IsStranger { get; set; }
+
 		[JsonProperty("has_2fa")]
 		public bool Has2Fa { get; set; }
+
+		[JsonProperty("locale")]
+		public string Locale { get; set; }
 	}
 }

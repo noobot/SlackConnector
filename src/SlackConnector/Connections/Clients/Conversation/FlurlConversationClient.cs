@@ -11,16 +11,16 @@ namespace SlackConnector.Connections.Clients.Conversation
 {
 	public class FlurlConversationClient : IConversationClient
 	{
-		internal const string CONVERSATION_CLOSE_PATH = "/api/conversation.close";
-		internal const string CONVERSATION_CREATE_PATH = "/api/conversation.create";
-		internal const string CONVERSATION_INFO_PATH = "/api/conversation.info";
-		internal const string CONVERSATION_INVITE_PATH = "/api/conversation.invite";
-		internal const string CONVERSATION_JOIN_PATH = "/api/conversation.join";
-		internal const string CONVERSATION_LEAVE_PATH = "/api/conversation.leave";
-		internal const string CONVERSATION_LIST_PATH = "/api/conversation.list";
-		internal const string CONVERSATION_MEMBERS_PATH = "/api/conversation.members";
-		internal const string CONVERSATION_OPEN_PATH = "/api/conversation.open";
-		internal const string CONVERSATION_REPLIES_PATH = "/api/conversation.replies";
+		internal const string CONVERSATION_CLOSE_PATH = "/api/conversations.close";
+		internal const string CONVERSATION_CREATE_PATH = "/api/conversations.create";
+		internal const string CONVERSATION_INFO_PATH = "/api/conversations.info";
+		internal const string CONVERSATION_INVITE_PATH = "/api/conversations.invite";
+		internal const string CONVERSATION_JOIN_PATH = "/api/conversations.join";
+		internal const string CONVERSATION_LEAVE_PATH = "/api/conversations.leave";
+		internal const string CONVERSATION_LIST_PATH = "/api/conversations.list";
+		internal const string CONVERSATION_MEMBERS_PATH = "/api/conversations.members";
+		internal const string CONVERSATION_OPEN_PATH = "/api/conversations.open";
+		internal const string CONVERSATION_REPLIES_PATH = "/api/conversations.replies";
 		private readonly IResponseVerifier responseVerifier;
 
 		public FlurlConversationClient(IResponseVerifier responseVerifier)
@@ -28,13 +28,13 @@ namespace SlackConnector.Connections.Clients.Conversation
 			this.responseVerifier = responseVerifier;
 		}
 
-		public async Task Close(string slackKey, string name)
+		public async Task Close(string slackKey, string channel)
 		{
 			var response = await ClientConstants
 					   .SlackApiHost
 					   .AppendPathSegment(CONVERSATION_CLOSE_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("channel", channel)
 					   .GetJsonAsync<StandardResponse>();
 
 			responseVerifier.VerifyResponse(response);
@@ -46,7 +46,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 					   .SlackApiHost
 					   .AppendPathSegment(CONVERSATION_CREATE_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("name", name)
 					   .SetQueryParam("is_private", isPrivate)
 					   .GetJsonAsync<ConversationResponse>();
 
@@ -54,13 +54,13 @@ namespace SlackConnector.Connections.Clients.Conversation
 			return response.Channel;
 		}
 
-		public async Task<Models.ConversationChannel> Info(string slackKey, string name, bool? includeLocale = null)
+		public async Task<Models.ConversationChannel> Info(string slackKey, string channel, bool? includeLocale = null)
 		{
 			var url = ClientConstants
 					   .SlackApiHost
 					   .AppendPathSegment(CONVERSATION_INFO_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name);
+					   .SetQueryParam("channel", channel);
 			if (includeLocale.HasValue)
 				url.SetQueryParam("include_locale", includeLocale.Value);
 
@@ -71,13 +71,13 @@ namespace SlackConnector.Connections.Clients.Conversation
 			return response.Channel;
 		}
 
-		public async Task<Models.ConversationChannel> Invite(string slackKey, string name, params string[] users)
+		public async Task<Models.ConversationChannel> Invite(string slackKey, string channel, params string[] users)
 		{
 			var response = await ClientConstants
 					   .SlackApiHost
 					   .AppendPathSegment(CONVERSATION_INVITE_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("channel", channel)
 					   .SetQueryParam("users", string.Join(",", users))
 					   .GetJsonAsync<ConversationResponse>();
 
@@ -85,26 +85,26 @@ namespace SlackConnector.Connections.Clients.Conversation
 			return response.Channel;
 		}
 
-		public async Task<Models.ConversationChannel> Join(string slackKey, string name)
+		public async Task<Models.ConversationChannel> Join(string slackKey, string channel)
 		{
 			var response = await ClientConstants
 					   .SlackApiHost
 					   .AppendPathSegment(CONVERSATION_JOIN_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("channel", channel)
 					   .GetJsonAsync<ConversationResponse>();
 
 			responseVerifier.VerifyResponse(response);
 			return response.Channel;
 		}
 
-		public async Task Leave(string slackKey, string name)
+		public async Task Leave(string slackKey, string channel)
 		{
 			var response = await ClientConstants
 					   .SlackApiHost
 					   .AppendPathSegment(CONVERSATION_LEAVE_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("channel", channel)
 					   .GetJsonAsync<StandardResponse>();
 
 			responseVerifier.VerifyResponse(response);
@@ -114,7 +114,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 		{
 			var url = ClientConstants
 					   .SlackApiHost
-					   .AppendPathSegment(CONVERSATION_JOIN_PATH)
+					   .AppendPathSegment(CONVERSATION_LIST_PATH)
 					   .SetQueryParam("token", slackKey)
 					   .SetQueryParam("cursor", cursor)
 						.SetQueryParam("excluded_archived", excludeArchived)
@@ -131,13 +131,13 @@ namespace SlackConnector.Connections.Clients.Conversation
 			return new CursoredResponse<Models.ConversationChannel>(response.Channels, response.ReponseMetadata?.NextCursor);
 		}
 
-		public async Task<CursoredResponse<string>> Members(string slackKey, string name, string cursor = null, int? limit = null)
+		public async Task<CursoredResponse<string>> Members(string slackKey, string channel, string cursor = null, int? limit = null)
 		{
 			var response = await ClientConstants
 					   .SlackApiHost
-					   .AppendPathSegment(CONVERSATION_JOIN_PATH)
+					   .AppendPathSegment(CONVERSATION_MEMBERS_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("channel", channel)
 					   .SetQueryParam("cursor", cursor)
 					   .SetQueryParam("limit", limit)
 					   .GetJsonAsync<ConversationMembersResponse>();
@@ -146,13 +146,13 @@ namespace SlackConnector.Connections.Clients.Conversation
 			return new CursoredResponse<string>(response.Members, response.ReponseMetadata?.NextCursor);
 		}
 
-		public async Task<Models.ConversationChannel> Open(string slackKey, string name = null, bool? returnIm = null, params string[] users)
+		public async Task<Models.ConversationChannel> Open(string slackKey, string channel = null, bool? returnIm = null, params string[] users)
 		{
 			var url = ClientConstants
 					   .SlackApiHost
-					   .AppendPathSegment(CONVERSATION_JOIN_PATH)
+					   .AppendPathSegment(CONVERSATION_OPEN_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("channel", channel)
 					   .SetQueryParam("return_im", returnIm);
 
 			if (users != null)
@@ -165,13 +165,13 @@ namespace SlackConnector.Connections.Clients.Conversation
 			return response.Channel;
 		}
 
-		public async Task<CursoredResponse<ConversationMessage>> Replies(string slackKey, string name, string timestamp, string cursor = null, bool? inclusive = null, string latest = null, int? limit = null, string oldest = null)
+		public async Task<CursoredResponse<ConversationMessage>> Replies(string slackKey, string channel, string timestamp, string cursor = null, bool? inclusive = null, string latest = null, int? limit = null, string oldest = null)
 		{
 			var response = await ClientConstants
 					   .SlackApiHost
-					   .AppendPathSegment(CONVERSATION_JOIN_PATH)
+					   .AppendPathSegment(CONVERSATION_REPLIES_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", name)
+					   .SetQueryParam("channel", channel)
 					   .SetQueryParam("ts", timestamp)
 					   .SetQueryParam("cursor", cursor)
 					   .SetQueryParam("inclusive", inclusive)

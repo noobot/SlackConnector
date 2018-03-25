@@ -14,6 +14,9 @@ namespace SlackConnector.Connections.Clients
 		}
 
 		public string NextCursor { get; set; }
+
+		public bool HasNextCursor() => !string.IsNullOrEmpty(this.NextCursor);
+
 		public IEnumerable<V> Items { get; }
 
 		public IEnumerator<V> GetEnumerator()

@@ -5,7 +5,7 @@ namespace SlackConnector.Models
 {
     public partial class SlackAttachment
     {
-        [JsonProperty(PropertyName = "fallback")]
+		[JsonProperty(PropertyName = "fallback")]
         public string Fallback { get; set; }
 
         [JsonProperty(PropertyName = "color")]
@@ -53,6 +53,7 @@ namespace SlackConnector.Models
         public SlackAttachment()
         {
             Fields = new List<SlackAttachmentField>();
-        }
+			Actions = new List<SlackAttachmentAction>();
+		}
     }
 }
