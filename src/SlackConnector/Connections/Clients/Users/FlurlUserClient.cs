@@ -26,7 +26,7 @@ namespace SlackConnector.Connections.Clients.Users
 					   .SlackApiHost
 					   .AppendPathSegment(USERS_INFO_PATH)
 					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("user_id", userId)
+					   .SetQueryParam("user", userId)
 					   .SetQueryParam("include_locale", includeLocale)
 					   .GetJsonAsync<UserResponse>();
 
