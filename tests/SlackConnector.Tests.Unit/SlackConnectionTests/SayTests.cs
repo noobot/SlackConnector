@@ -44,7 +44,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             // then
             chatClient
                 .Verify(x => x.PostMessage(slackKey, message.ChatHub.Id, message.Text, 
-				message.Attachments, message.ThreadTimestamp, message.IconUrl, message.UserName), Times.Once);
+				message.Attachments, message.ThreadTimestamp, message.IconUrl, message.UserName, false, true), Times.Once);
         }
 
         [Theory, AutoMoqData]
