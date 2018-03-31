@@ -97,5 +97,7 @@ namespace SlackConnector.MessageActions
 
 		[JsonProperty("response_url")]
 		public string ResponseUrl { get; set; }
+
+		public string RawJson { get; set; }
 	}
 }

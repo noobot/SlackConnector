@@ -22,6 +22,7 @@ namespace SlackConnector.MessageActions
 				list.Add(action);
 			}
 			inboundMA.Actions = list.ToArray();
+			inboundMA.RawJson = json;
 			return inboundMA;
 		}
 	}

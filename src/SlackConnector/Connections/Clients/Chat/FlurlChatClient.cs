@@ -13,15 +13,16 @@ namespace SlackConnector.Connections.Clients.Chat
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
+		internal const string UPDATE_MESSAGE_PATH = "/api/chat.update";
 
-        public FlurlChatClient(IResponseVerifier responseVerifier)
+		public FlurlChatClient(IResponseVerifier responseVerifier)
         {
             _responseVerifier = responseVerifier;
         }
 
         public async Task PostMessage(string slackKey, string channel, string text, 
 			IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, 
-			string userName = null)
+			string userName = null, bool asUser = false, bool linkNames = true)
         {
             var request = ClientConstants
                        .SlackApiHost
@@ -29,8 +30,8 @@ namespace SlackConnector.Connections.Clients.Chat
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channel", channel)
                        .SetQueryParam("text", text)
-                       //.SetQueryParam("as_user", "true")
-                       //.SetQueryParam("link_names", "true")
+                       .SetQueryParam("as_user", asUser)
+                       .SetQueryParam("link_names", linkNames)
 					   .SetQueryParam("thread_ts", threadTs)
             		   .SetQueryParam("icon_url", iconUrl)
 					   .SetQueryParam("username", userName);
@@ -43,5 +44,26 @@ namespace SlackConnector.Connections.Clients.Chat
 			var response = await request.GetJsonAsync<StandardResponse>();
             _responseVerifier.VerifyResponse(response);
         }
-    }
+
+		public async Task Update(string slackKey, string messageTs, string channel, string text, IList<SlackAttachment> attachments, bool asUser = false, bool linkNames = true)
+		{
+			var request = ClientConstants
+					   .SlackApiHost
+					   .AppendPathSegment(UPDATE_MESSAGE_PATH)
+					   .SetQueryParam("token", slackKey)
+					   .SetQueryParam("channel", channel)
+					   .SetQueryParam("text", text)
+					   .SetQueryParam("as_user", asUser)
+					   .SetQueryParam("link_names", linkNames)
+					   .SetQueryParam("ts", messageTs);
+
+			if (attachments != null && attachments.Any())
+			{
+				request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
+			}
+
+			var response = await request.GetJsonAsync<StandardResponse>();
+			_responseVerifier.VerifyResponse(response);
+		}
+	}
 }
