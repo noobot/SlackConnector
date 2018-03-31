@@ -20,7 +20,13 @@ namespace SlackConnector.Models
         [JsonProperty(PropertyName = "value")]
         public string Value { get; set; }
 
-        public SlackAttachmentAction()
+		[JsonProperty("url")]
+		public string Url { get; set; }
+
+		[JsonProperty("data_source")]
+		public string DataSource { get; set; }
+
+		public SlackAttachmentAction()
         {
             Type = "button";
         }

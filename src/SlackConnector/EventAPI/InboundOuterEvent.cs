@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using SlackConnector.Serialising;
+using System;
 
 namespace SlackConnector.EventAPI
 {
@@ -40,7 +42,8 @@ namespace SlackConnector.EventAPI
 		public string EventId { get; set; }
 
 		[JsonProperty("event_time")]
-		public int EventTime { get; set; }
+		[JsonConverter(typeof(SecondEpochConverter))]
+		public DateTime EventTime { get; set; }
 
 		public T GetEvent<T>() where T : InboundEvent
 		{

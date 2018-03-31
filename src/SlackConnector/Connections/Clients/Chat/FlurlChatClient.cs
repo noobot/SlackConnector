@@ -29,19 +29,16 @@ namespace SlackConnector.Connections.Clients.Chat
                        .SetQueryParam("token", slackKey)
                        .SetQueryParam("channel", channel)
                        .SetQueryParam("text", text)
-                       .SetQueryParam("as_user", "true")
-                       .SetQueryParam("link_names", "true");
-            
+                       //.SetQueryParam("as_user", "true")
+                       //.SetQueryParam("link_names", "true")
+					   .SetQueryParam("thread_ts", threadTs)
+            		   .SetQueryParam("icon_url", iconUrl)
+					   .SetQueryParam("username", userName);
+
             if (attachments != null && attachments.Any())
             {
                 request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
             }
-			if (threadTs == null)
-				request.SetQueryParam("thread_ts", threadTs);
-			if (iconUrl == null)
-				request.SetQueryParam("icon_url", iconUrl);
-			if (userName == null)
-				request.SetQueryParam("username", userName);
 
 			var response = await request.GetJsonAsync<StandardResponse>();
             _responseVerifier.VerifyResponse(response);

@@ -87,6 +87,7 @@ namespace SlackConnector.EventAPI
 			}
 			catch (Exception ex)
 			{
+				throw;
 				if (SlackConnector.LoggingLevel > ConsoleLoggingLevel.None)
 				{
 					//_logger.LogError($"Unable to parse message: '{json}'");

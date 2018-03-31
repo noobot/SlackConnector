@@ -1,4 +1,7 @@
 ﻿using Newtonsoft.Json;
+using SlackConnector.Connections.Sockets.Messages.Inbound;
+using SlackConnector.Models;
+using SlackConnector.Serialising;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +10,15 @@ namespace SlackConnector.EventAPI
 {
     public class MessageEvent : CommonInboundEvent
     {
+		public class MessageEdited
+		{
+			[JsonProperty("user")]
+			public string User { get; set; }
+
+			[JsonProperty("ts")]
+			public string Timestamp { get; set; }
+		}
+
 		public class MessageReaction
 		{
 			[JsonProperty("name")]
@@ -36,5 +48,18 @@ namespace SlackConnector.EventAPI
 
 		[JsonProperty("thread_ts")]
 		public string ThreadTimestamp { get; set; }
+
+		[JsonProperty("subtype")]
+		[JsonConverter(typeof(EnumConverter))]
+		public MessageSubType SubType { get; set; }
+
+		[JsonProperty("edited")]
+		public MessageEdited Edited { get; set; }
+
+		[JsonProperty("bot_id")]
+		public string BotId { get; set; }
+
+		[JsonProperty("attachments")]
+		public SlackAttachment[] Attachments { get; set; }
 	}
 }
