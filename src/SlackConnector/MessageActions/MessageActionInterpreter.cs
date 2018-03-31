@@ -17,7 +17,7 @@ namespace SlackConnector.MessageActions
 			{
 				InboundMessageAction.InboundAction action = null;
 				action = jActionItem.type == "button" ? 
-					jActionItem.ToObject< InboundMessageAction.InboundButtonAction>()
+					jActionItem.ToObject<InboundMessageAction.InboundButtonAction>()
 					: jActionItem.ToObject<InboundMessageAction.InboundOptionsAction>();
 				list.Add(action);
 			}
