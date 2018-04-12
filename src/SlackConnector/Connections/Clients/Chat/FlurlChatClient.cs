@@ -14,6 +14,7 @@ namespace SlackConnector.Connections.Clients.Chat
         private readonly IResponseVerifier _responseVerifier;
         internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
 		internal const string UPDATE_MESSAGE_PATH = "/api/chat.update";
+		internal const string DELETE_MESSAGE_PATH = "/api/chat.delete";
 
 		public FlurlChatClient(IResponseVerifier responseVerifier)
         {
@@ -62,6 +63,21 @@ namespace SlackConnector.Connections.Clients.Chat
 			{
 				request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
 			}
+
+			var response = await request.GetJsonAsync<StandardResponse>();
+			_responseVerifier.VerifyResponse(response);
+		}
+
+		public async Task Delete(string slackKey, string channel, string ts, bool asUser = true)
+		{
+			var request = ClientConstants
+					   .SlackApiHost
+					   .AppendPathSegment(DELETE_MESSAGE_PATH)
+					   .SetQueryParam("token", slackKey)
+					   .SetQueryParam("channel", channel)
+					   .SetQueryParam("ts", ts)
+					   .SetQueryParam("as_user", asUser);
+
 
 			var response = await request.GetJsonAsync<StandardResponse>();
 			_responseVerifier.VerifyResponse(response);

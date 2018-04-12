@@ -13,5 +13,7 @@ namespace SlackConnector.Connections.Clients.Chat
 
 		Task Update(string slackKey, string messageTs, string channel, string text,
 			IList<SlackAttachment> attachments, bool asUser = false, bool linkNames = true);
+
+		Task Delete(string slackKey, string channel, string ts, bool asUser = false);
     }
 }
