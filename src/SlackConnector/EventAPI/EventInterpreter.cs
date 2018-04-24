@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SlackConnector.Connections.Sockets.Messages.Inbound;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -54,7 +55,16 @@ namespace SlackConnector.EventAPI
 							case EventType.message_dot_groups:
 							case EventType.message_dot_im:
 							case EventType.message_dot_mpim:
-								outerEvent = this.CreateInboundCommonOuterEvent<MessageEvent>(eventJobject);
+								var msgSubType = ParseEventSubType<MessageSubType>(eventJobject);
+								switch (msgSubType)
+								{
+									case MessageSubType.message_changed:
+										outerEvent = this.CreateInboundCommonOuterEvent<MessageChangedEvent>(eventJobject);
+										break;
+									default:
+										outerEvent = this.CreateInboundCommonOuterEvent<MessageEvent>(eventJobject);
+										break;
+								}
 								break;
 							case EventType.reaction_added:
 								outerEvent = this.CreateInboundCommonOuterEvent<ReactionEvent>(eventJobject);
@@ -111,6 +121,15 @@ namespace SlackConnector.EventAPI
 		{
 			var eventType = EventType.Unknown;
 			Enum.TryParse(eventJobject["event"]["type"].Value<string>(), true, out eventType);
+
+			return eventType;
+		}
+
+		private static T ParseEventSubType<T>(JObject eventJobject) where T : struct
+		{
+			T eventType = default(T);
+			if (eventJobject["event"]["subtype"] != null)
+				Enum.TryParse<T>(eventJobject["event"]["subtype"].Value<string>(), true, out eventType);
 
 			return eventType;
 		}

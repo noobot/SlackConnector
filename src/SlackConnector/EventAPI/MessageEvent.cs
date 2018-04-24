@@ -8,8 +8,27 @@ using System.Text;
 
 namespace SlackConnector.EventAPI
 {
-    public class MessageEvent : CommonInboundEvent
-    {
+	public class MessageCommonEvent : CommonInboundEvent
+	{
+		[JsonProperty("channel")]
+		public string Channel { get; set; }
+
+		[JsonProperty("subtype")]
+		[JsonConverter(typeof(EnumConverter))]
+		public MessageSubType SubType { get; set; }
+
+	}
+
+	public class MessageChangedEvent : MessageCommonEvent
+	{
+		public MessageEvent Message { get; set; }
+
+		public MessageEvent PreviousMessage { get; set; }
+	}
+
+
+	public class MessageEvent : MessageCommonEvent
+	{
 		public class MessageEdited
 		{
 			[JsonProperty("user")]
@@ -31,9 +50,6 @@ namespace SlackConnector.EventAPI
 			public string[] Users { get; set; }
 		}
 
-		[JsonProperty("channel")]
-		public string Channel { get; set; }
-
 		[JsonProperty("text")]
 		public string Text { get; set; }
 
@@ -48,10 +64,6 @@ namespace SlackConnector.EventAPI
 
 		[JsonProperty("thread_ts")]
 		public string ThreadTimestamp { get; set; }
-
-		[JsonProperty("subtype")]
-		[JsonConverter(typeof(EnumConverter))]
-		public MessageSubType SubType { get; set; }
 
 		[JsonProperty("edited")]
 		public MessageEdited Edited { get; set; }
