@@ -13,5 +13,7 @@ namespace SlackConnector.Exceptions
 
         public CommunicationException(string message, Exception innerException) : base(message, innerException)
         { }
+
+		public string SlackError { get; internal set; }
     }
 }
