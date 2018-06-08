@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using SlackConnector.Serialising;
+using System;
 
 namespace SlackConnector.EventAPI
 {

@@ -12,7 +12,7 @@ namespace SlackConnector.Serialising
 
 		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 		{
-			writer.WriteRawValue(((DateTime)value - _epoch).TotalSeconds.ToString());
+			writer.WriteRawValue(String.Format("{0:0}", ((DateTime)value - _epoch).TotalSeconds));
 		}
 
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

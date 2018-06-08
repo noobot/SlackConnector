@@ -12,9 +12,9 @@ namespace SlackConnector.Connections.Clients.Chat
     public class FlurlChatClient : IChatClient
     {
         private readonly IResponseVerifier _responseVerifier;
-        internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
-		internal const string UPDATE_MESSAGE_PATH = "/api/chat.update";
-		internal const string DELETE_MESSAGE_PATH = "/api/chat.delete";
+        public const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
+		public const string UPDATE_MESSAGE_PATH = "/api/chat.update";
+		public const string DELETE_MESSAGE_PATH = "/api/chat.delete";
 
 		public FlurlChatClient(IResponseVerifier responseVerifier)
         {

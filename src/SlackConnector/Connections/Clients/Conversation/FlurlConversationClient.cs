@@ -11,16 +11,16 @@ namespace SlackConnector.Connections.Clients.Conversation
 {
 	public class FlurlConversationClient : IConversationClient
 	{
-		internal const string CONVERSATION_CLOSE_PATH = "/api/conversations.close";
-		internal const string CONVERSATION_CREATE_PATH = "/api/conversations.create";
-		internal const string CONVERSATION_INFO_PATH = "/api/conversations.info";
-		internal const string CONVERSATION_INVITE_PATH = "/api/conversations.invite";
-		internal const string CONVERSATION_JOIN_PATH = "/api/conversations.join";
-		internal const string CONVERSATION_LEAVE_PATH = "/api/conversations.leave";
-		internal const string CONVERSATION_LIST_PATH = "/api/conversations.list";
-		internal const string CONVERSATION_MEMBERS_PATH = "/api/conversations.members";
-		internal const string CONVERSATION_OPEN_PATH = "/api/conversations.open";
-		internal const string CONVERSATION_REPLIES_PATH = "/api/conversations.replies";
+		public const string CONVERSATION_CLOSE_PATH = "/api/conversations.close";
+		public const string CONVERSATION_CREATE_PATH = "/api/conversations.create";
+		public const string CONVERSATION_INFO_PATH = "/api/conversations.info";
+		public const string CONVERSATION_INVITE_PATH = "/api/conversations.invite";
+		public const string CONVERSATION_JOIN_PATH = "/api/conversations.join";
+		public const string CONVERSATION_LEAVE_PATH = "/api/conversations.leave";
+		public const string CONVERSATION_LIST_PATH = "/api/conversations.list";
+		public const string CONVERSATION_MEMBERS_PATH = "/api/conversations.members";
+		public const string CONVERSATION_OPEN_PATH = "/api/conversations.open";
+		public const string CONVERSATION_REPLIES_PATH = "/api/conversations.replies";
 		private readonly IResponseVerifier responseVerifier;
 
 		public FlurlConversationClient(IResponseVerifier responseVerifier)

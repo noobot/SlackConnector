@@ -16,7 +16,7 @@ namespace SlackConnector.EventAPI
 	{
 		[JsonProperty("type")]
 		[JsonConverter(typeof(EventTypeConverter))]
-		public EventType Type { get; set; }
+		public OuterEventType Type { get; set; }
 
 		[JsonProperty("token")]
 		public string Token { get; set; }
