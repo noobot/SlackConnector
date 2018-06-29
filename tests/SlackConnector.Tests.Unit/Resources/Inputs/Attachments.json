@@ -29,6 +29,13 @@
             "text": "No",
             "type": "button",
             "value": "nop"
+        },
+        {
+            "name": null,
+            "text": "LinkButton",
+            "type": "button",
+            "value": null,
+            "url": "https://test.com/"
         }
     ],
     "image_url": "http://my-website.com/path/to/image.jpg",

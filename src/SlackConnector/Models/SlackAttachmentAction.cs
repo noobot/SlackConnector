@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace SlackConnector.Models
 {
@@ -19,6 +18,10 @@ namespace SlackConnector.Models
 
         [JsonProperty(PropertyName = "value")]
         public string Value { get; set; }
+
+        [JsonProperty(PropertyName = "url", NullValueHandling = NullValueHandling.Ignore)]
+        public string Url { get; set; }
+
 
         public SlackAttachmentAction()
         {
