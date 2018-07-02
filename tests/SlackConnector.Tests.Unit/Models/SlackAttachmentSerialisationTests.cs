@@ -1,8 +1,8 @@
-﻿using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using SlackConnector.Models;
-using Xunit;
+﻿using Newtonsoft.Json;
 using Shouldly;
+using SlackConnector.Models;
+using System.Text.RegularExpressions;
+using Xunit;
 
 namespace SlackConnector.Tests.Unit.Models
 {
@@ -52,6 +52,11 @@ namespace SlackConnector.Tests.Unit.Models
                             Name = "no",
                             Value = "nop",
                             Text = "No"
+                        },
+                        new SlackAttachmentAction
+                        {
+                            Url = "https://test.com/",
+                            Text = "LinkButton"
                         }
                     },
                     ImageUrl = "http://my-website.com/path/to/image.jpg",
