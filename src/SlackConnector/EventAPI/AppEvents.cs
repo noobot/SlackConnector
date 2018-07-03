@@ -21,4 +21,10 @@ namespace SlackConnector.EventAPI
 		[JsonConverter(typeof(SecondEpochConverter))]
 		public DateTime MinuteRateLimited { get; set; }
 	}
+
+	public class AppUninstalledEvent : InboundEvent
+	{
+		[JsonProperty("api_app_id")]
+		public string ApiAppId { get; set; }
+	}
 }

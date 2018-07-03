@@ -33,7 +33,7 @@ namespace SlackConnector.EventAPI
 								outerEvent = this.CreateInboundCommonOuterEvent<AppMentionEvent>(eventJobject);
 								break;
 							case EventType.app_uninstalled:
-								outerEvent = this.CreateInboundCommonOuterEvent<InboundEvent>(eventJobject);
+								outerEvent = this.CreateInboundCommonOuterEvent<AppUninstalledEvent>(eventJobject);
 								break;
 							case EventType.channel_archive:
 								outerEvent = this.CreateInboundCommonOuterEvent<ChannelArchiveEvent>(eventJobject);
