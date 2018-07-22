@@ -16,7 +16,7 @@
     <PackageReference Include="autofixture.automoq" Version="4.5.0" />
     <PackageReference Include="AutoFixture.Xunit2" Version="4.5.0" />
     <PackageReference Include="ExpectedObjects" Version="2.3.4" />
-    <PackageReference Include="flurl.http" Version="1.2.0" />
+    <PackageReference Include="flurl.http" Version="2.3.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="moq" Version="4.9.0" />
     <PackageReference Include="Shouldly" Version="3.0.0" />
