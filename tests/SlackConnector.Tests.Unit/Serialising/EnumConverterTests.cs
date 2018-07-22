@@ -1,6 +1,6 @@
 ﻿using Moq;
 using Newtonsoft.Json;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Xunit2;
 using SlackConnector.Serialising;
 using Xunit;
 using Shouldly;

@@ -1,5 +1,5 @@
 ﻿using Moq;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Xunit2;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Logging;

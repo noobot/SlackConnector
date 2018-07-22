@@ -1,4 +1,4 @@
-﻿using Ploeh.AutoFixture;
+﻿using AutoFixture;
 using SlackConnector.Connections.Models;
 using SlackConnector.Extensions;
 using Xunit;
