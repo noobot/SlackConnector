@@ -12,16 +12,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoFixture" Version="3.50.7" />
-    <PackageReference Include="autofixture.automoq" Version="3.50.7" />
-    <PackageReference Include="AutoFixture.Xunit2" Version="3.50.7" />
-    <PackageReference Include="ExpectedObjects" Version="2.3.1" />
-    <PackageReference Include="flurl.http" Version="1.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="moq" Version="4.7.127" />
-    <PackageReference Include="Shouldly" Version="2.8.3" />
-    <PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="AutoFixture" Version="4.5.0" />
+    <PackageReference Include="autofixture.automoq" Version="4.5.0" />
+    <PackageReference Include="AutoFixture.Xunit2" Version="4.5.0" />
+    <PackageReference Include="ExpectedObjects" Version="2.3.4" />
+    <PackageReference Include="flurl.http" Version="2.3.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="moq" Version="4.9.0" />
+    <PackageReference Include="Shouldly" Version="3.0.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
-using Ploeh.AutoFixture;
+using AutoFixture;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;

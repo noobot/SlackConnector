@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Xunit2;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Chat;
 using SlackConnector.Connections.Sockets;

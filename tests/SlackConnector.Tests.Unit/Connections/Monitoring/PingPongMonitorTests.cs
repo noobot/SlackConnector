@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Xunit2;
 using SlackConnector.Connections.Monitoring;
 using SlackConnector.Tests.Unit.Stubs;
 using Xunit;
