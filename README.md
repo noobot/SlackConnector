@@ -27,10 +27,9 @@ connection.OnMessageReceived += MessageReceived;
 connection.OnDisconnect += Disconnected;
 ```
 
-##Features
+## Features
 
  - Async by default
  - Easy setup
  - Real-time communication
- - Supports default proxies
  - Unit tested
