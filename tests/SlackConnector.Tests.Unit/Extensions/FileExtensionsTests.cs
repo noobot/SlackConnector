@@ -8,7 +8,7 @@ namespace SlackConnector.Tests.Unit.Extensions
 {
     public class FileExtensionsTests
     {
-        [Theory, AutoMoqData]
+        [Fact]
         private void should_return_null()
         {
             // given
