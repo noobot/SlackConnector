@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Flurl.Http;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Channel;
@@ -452,6 +453,19 @@ namespace SlackConnector
         public async Task Ping()
         {
             await _webSocketClient.SendMessage(new PingMessage());
+        }
+
+        public Task<Stream> DownloadFile(Uri downloadUri)
+        {
+            if (!downloadUri.Host.Equals("files.slack.com"))
+            {
+                throw new ArgumentException("Invalid uri. Should be targetting files.slack.com", nameof(downloadUri));
+            }
+
+            return downloadUri.AbsoluteUri
+                .WithOAuthBearerToken(SlackKey)
+                .AllowHttpStatus()
+                .GetStreamAsync();
         }
 
         public event DisconnectEventHandler OnDisconnect;

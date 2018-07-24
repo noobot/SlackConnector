@@ -118,6 +118,11 @@ namespace SlackConnector
         Task Ping();
 
         /// <summary>
+        /// Downloads a file from slack. Best used in conjunction with the file class found in SlackMessage
+        /// </summary>
+        Task<Stream> DownloadFile(Uri downloadUri);
+
+        /// <summary>
         /// Raised when the websocket disconnects from the mothership.
         /// </summary>
         event DisconnectEventHandler OnDisconnect;
