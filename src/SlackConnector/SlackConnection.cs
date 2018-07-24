@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Flurl.Http;
 using SlackConnector.BotHelpers;
 using SlackConnector.Connections;
 using SlackConnector.Connections.Clients.Channel;
@@ -123,7 +124,8 @@ namespace SlackConnector
                 ChatHub = GetChatHub(inboundMessage.Channel),
                 RawData = inboundMessage.RawData,
                 MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text),
-                MessageSubType = inboundMessage.MessageSubType.ToSlackMessageSubType()
+                MessageSubType = inboundMessage.MessageSubType.ToSlackMessageSubType(),
+                File = inboundMessage.File.ToSlackFile()
             };
 
             return RaiseMessageReceived(message);
@@ -451,6 +453,19 @@ namespace SlackConnector
         public async Task Ping()
         {
             await _webSocketClient.SendMessage(new PingMessage());
+        }
+
+        public Task<Stream> DownloadFile(Uri downloadUri)
+        {
+            if (!downloadUri.Host.Equals("files.slack.com"))
+            {
+                throw new ArgumentException("Invalid uri. Should be targetting files.slack.com", nameof(downloadUri));
+            }
+
+            return downloadUri.AbsoluteUri
+                .WithOAuthBearerToken(SlackKey)
+                .AllowHttpStatus()
+                .GetStreamAsync();
         }
 
         public event DisconnectEventHandler OnDisconnect;

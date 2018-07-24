@@ -22,7 +22,7 @@ namespace SlackConnector.Tests.Integration
 
             // then
             SlackConnection.IsConnected.ShouldBeTrue();
-            //Thread.Sleep(TimeSpan.FromMinutes(1));
+            //Thread.Sleep(TimeSpan.FromMinutes(5));
 
             // when
             await SlackConnection.Close();
