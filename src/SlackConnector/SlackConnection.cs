@@ -123,7 +123,8 @@ namespace SlackConnector
                 ChatHub = GetChatHub(inboundMessage.Channel),
                 RawData = inboundMessage.RawData,
                 MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text),
-                MessageSubType = inboundMessage.MessageSubType.ToSlackMessageSubType()
+                MessageSubType = inboundMessage.MessageSubType.ToSlackMessageSubType(),
+                File = inboundMessage.File.ToSlackFile()
             };
 
             return RaiseMessageReceived(message);
