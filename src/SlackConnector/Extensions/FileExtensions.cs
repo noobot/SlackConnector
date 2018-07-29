@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Models;
 
@@ -6,7 +8,17 @@ namespace SlackConnector.Extensions
 {
     internal static class FileExtensions
     {
-        public static SlackFile ToSlackFile(this File file)
+        public static IEnumerable<SlackFile> ToSlackFiles(this IEnumerable<File> file)
+        {
+            if (file == null)
+            {
+                return Enumerable.Empty<SlackFile>();
+            }
+
+            return file.Select(ToSlackFile);
+        }
+
+        private static SlackFile ToSlackFile(this File file)
         {
             if (file == null)
                 return null;

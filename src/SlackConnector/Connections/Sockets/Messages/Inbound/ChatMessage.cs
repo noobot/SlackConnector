@@ -18,9 +18,10 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
         public string User { get; set; }
         public string Text { get; set; }
         public string Team { get; set; }
-        public File File { get; set; }
+        public File[] Files { get; set; }
 
         [JsonProperty("ts")]
         public double Timestamp { get; set; }
+
     }
 }
