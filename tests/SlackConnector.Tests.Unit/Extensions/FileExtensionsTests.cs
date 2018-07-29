@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Linq;
+using AutoFixture;
 using Shouldly;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Extensions;
@@ -8,17 +9,30 @@ namespace SlackConnector.Tests.Unit.Extensions
 {
     public class FileExtensionsTests
     {
-        [Theory, AutoMoqData]
-        private void should_return_null()
+        [Fact]
+        private void should_return_empty_enumeration()
         {
             // given
-            File file = null;
 
             // when
-            var slackFile = file.ToSlackFile();
+            var slackFiles = ((File[])null).ToSlackFiles();
 
             // then
-            slackFile.ShouldBeNull();
+            slackFiles.ShouldBeEmpty();
+        }
+
+        [Fact]
+        private void should_return_null_file_if_entry_is_null()
+        {
+            // given
+            var files = new File[] { null };
+
+            // when
+            var slackFiles = files.ToSlackFiles();
+
+            // then
+            slackFiles.ShouldHaveSingleItem();
+            slackFiles.First().ShouldBeNull();
         }
 
 
@@ -39,8 +53,10 @@ namespace SlackConnector.Tests.Unit.Extensions
                 .With(f => f.DeanimateGif, $"https://{fixture.Create<string>()}.com/{fixture.Create<string>()}")
                 .Create();
 
+            var files = new[] { file };
+
             // when
-            var slackFile = file.ToSlackFile();
+            var slackFile = files.ToSlackFiles().FirstOrDefault();
 
             // then
             slackFile.ShouldNotBeNull();

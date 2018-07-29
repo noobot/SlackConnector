@@ -125,7 +125,7 @@ namespace SlackConnector
                 RawData = inboundMessage.RawData,
                 MentionsBot = _mentionDetector.WasBotMentioned(Self.Name, Self.Id, inboundMessage.Text),
                 MessageSubType = inboundMessage.MessageSubType.ToSlackMessageSubType(),
-                File = inboundMessage.File.ToSlackFile()
+                Files = inboundMessage.Files.ToSlackFiles()
             };
 
             return RaiseMessageReceived(message);

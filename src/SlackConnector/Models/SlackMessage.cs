@@ -1,4 +1,6 @@
-﻿namespace SlackConnector.Models
+﻿using System.Collections.Generic;
+
+namespace SlackConnector.Models
 {
     public class SlackMessage
     {
@@ -9,6 +11,6 @@
         public SlackUser User { get; set; }
         public double Timestamp { get; set; }
         public SlackMessageSubType MessageSubType { get; set; }
-        public SlackFile File { get; set; }
+        public IEnumerable<SlackFile> Files { get; set; }
     }
 }

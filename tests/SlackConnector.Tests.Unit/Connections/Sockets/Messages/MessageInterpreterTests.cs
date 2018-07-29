@@ -52,7 +52,8 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             string json = @"
                 {
                   'type': 'message',
-                  'file':{
+                  'files': [
+                     {
                       'id':'some-id',
                       'created':12345,
                       'timestamp':54321,
@@ -86,7 +87,7 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
                       'deanimate_gif':'https:\/\/deanimate_gif',
                       'permalink':'https:\/\/permalink',
                       'permalink_public':'https:\/\/permalink_public'
-                   }
+                   }]
                 }
             ";
 
@@ -97,41 +98,44 @@ namespace SlackConnector.Tests.Unit.Connections.Sockets.Messages
             var expected = new ChatMessage
             {
                 MessageType = MessageType.Message,
-                File = new File
+                Files = new[] 
                 {
-                    Id = "some-id",
-                    Created = 12345,
-                    Timestamp = 54321,
-                    Name = "name.gif",
-                    Title = "title.gif",
-                    Mimetype = "image/gif",
-                    FileType = "gif",
-                    PrettyType = "GIF",
-                    User = "some-user",
-                    Editable = true,
-                    Size = 63689,
-                    Mode = "hosted",
-                    IsExternal = true,
-                    ExternalType = "some-external-type",
-                    IsPublic = true,
-                    PublicUrlShared = true,
-                    DisplayAsBot = true,
-                    Username = "some-username",
-                    UrlPrivate = "https://url_private",
-                    UrlPrivateDownload = "https://url_private_download",
-                    Thumb64 = "https://thumb_64",
-                    Thumb80 = "https://thumb_80",
-                    Thumb360 = "https://thumb_360",
-                    Thumb360Width = 43,
-                    Thumb360Height = 29,
-                    Thumb160 = "https://thumb_160",
-                    Thumb360Gif = "https://thumb_360_gif",
-                    ImageExifRotation = 6,
-                    OriginalWidth = 53,
-                    OriginalHeight = 39,
-                    DeanimateGif = "https://deanimate_gif",
-                    Permalink = "https://permalink",
-                    PermalinkPublic = "https://permalink_public"
+                    new File
+                    {
+                        Id = "some-id",
+                        Created = 12345,
+                        Timestamp = 54321,
+                        Name = "name.gif",
+                        Title = "title.gif",
+                        Mimetype = "image/gif",
+                        FileType = "gif",
+                        PrettyType = "GIF",
+                        User = "some-user",
+                        Editable = true,
+                        Size = 63689,
+                        Mode = "hosted",
+                        IsExternal = true,
+                        ExternalType = "some-external-type",
+                        IsPublic = true,
+                        PublicUrlShared = true,
+                        DisplayAsBot = true,
+                        Username = "some-username",
+                        UrlPrivate = "https://url_private",
+                        UrlPrivateDownload = "https://url_private_download",
+                        Thumb64 = "https://thumb_64",
+                        Thumb80 = "https://thumb_80",
+                        Thumb360 = "https://thumb_360",
+                        Thumb360Width = 43,
+                        Thumb360Height = 29,
+                        Thumb160 = "https://thumb_160",
+                        Thumb360Gif = "https://thumb_360_gif",
+                        ImageExifRotation = 6,
+                        OriginalWidth = 53,
+                        OriginalHeight = 39,
+                        DeanimateGif = "https://deanimate_gif",
+                        Permalink = "https://permalink",
+                        PermalinkPublic = "https://permalink_public"
+                    }
                 },
                 RawData = json
             };
