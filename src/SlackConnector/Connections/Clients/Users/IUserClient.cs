@@ -12,5 +12,7 @@ namespace SlackConnector.Connections.Clients.Users
 		Task<ICollection<Models.User>> ListAll(string slackKey);
 
 		Task<Models.User> Info(string slackKey, string userId, bool? includeLocale = null);
+
+		Task<Models.Identity> Identity(string slackKey);
 	}
 }

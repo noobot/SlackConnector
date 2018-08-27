@@ -14,6 +14,7 @@ namespace SlackConnector.Connections.Clients.Users
 		private readonly IResponseVerifier responseVerifier;
 		internal const string USERS_LIST_PATH = "/api/users.list";
 		internal const string USERS_INFO_PATH = "/api/users.info";
+		internal const string USERS_IDENTITY_PATH = "/api/users.identity";
 
 		public FlurlUserClient(IResponseVerifier responseVerifier)
 		{
@@ -58,6 +59,18 @@ namespace SlackConnector.Connections.Clients.Users
 				userList.AddRange(response);
 			} while (cursor != null);
 			return userList;
+		}
+
+		public async Task<Identity> Identity(string slackKey)
+		{
+			var response = await ClientConstants
+					   .SlackApiHost
+					   .AppendPathSegment(USERS_IDENTITY_PATH)
+					   .SetQueryParam("token", slackKey)
+					   .GetJsonAsync<IdentityResponse>();
+
+			responseVerifier.VerifyResponse(response);
+			return new Identity(response.User, response.Team);
 		}
 	}
 }
