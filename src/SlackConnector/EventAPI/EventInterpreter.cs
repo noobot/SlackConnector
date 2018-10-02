@@ -84,6 +84,9 @@ namespace SlackConnector.EventAPI
 							case EventType.user_change:
 								outerEvent = this.CreateInboundCommonOuterEvent<UserChangeEvent>(eventJobject);
 								break;
+							case EventType.tokens_revoked:
+								outerEvent = this.CreateInboundCommonOuterEvent<TokensRevokedEvent>(eventJobject);
+								break;
 						}
 						break;
 					case OuterEventType.url_verification:
