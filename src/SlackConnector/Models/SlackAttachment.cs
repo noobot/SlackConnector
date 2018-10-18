@@ -49,8 +49,14 @@ namespace SlackConnector.Models
 
         [JsonProperty(PropertyName = "mrkdwn_in")]
         public List<string> MarkdownIn { get; set; }
-        
-        public SlackAttachment()
+
+		[JsonProperty(PropertyName = "footer")]
+		public string Footer { get; set; }
+
+		[JsonProperty(PropertyName = "footer_icon")]
+		public string FooterIcon { get; set; }
+
+		public SlackAttachment()
         {
             Fields = new List<SlackAttachmentField>();
 			Actions = new List<SlackAttachmentAction>();
