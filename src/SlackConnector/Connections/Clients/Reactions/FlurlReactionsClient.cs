@@ -28,7 +28,7 @@ namespace SlackConnector.Connections.Clients.Reactions
 					   .SetQueryParam("token", slackKey)
 					   .SetQueryParam("name", name)
 					   .SetQueryParam("channel", channel)
-					   .SetQueryParam("ts", messageTs)
+					   .SetQueryParam("timestamp", messageTs)
 					   .SetQueryParam("file", file)
 					   .SetQueryParam("file_comment", fileComment);
 
@@ -54,7 +54,7 @@ namespace SlackConnector.Connections.Clients.Reactions
 		   .SetQueryParam("token", slackKey)
 		   .SetQueryParam("name", name)
 		   .SetQueryParam("channel", channel)
-		   .SetQueryParam("ts", messageTs)
+		   .SetQueryParam("timestamp", messageTs)
 		   .SetQueryParam("file", file)
 		   .SetQueryParam("file_comment", fileComment);
 

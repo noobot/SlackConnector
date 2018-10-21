@@ -2,5 +2,6 @@
 {
     public interface IReactionItem
     {
+		string Type { get; set; }
     }
 }

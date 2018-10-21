@@ -6,5 +6,11 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
     {
         [JsonProperty("channel")]
         public string Channel { get; set; }
-    }
+
+		[JsonProperty("ts")]
+		public string Timestamp { get; set; }
+
+		[JsonProperty("type")]
+		public string Type { get; set; }
+	}
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl;
-using Flurl;
 using Flurl.Http;
 using SlackConnector.Connections.Models;
 using SlackConnector.Connections.Responses;

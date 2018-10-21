@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
+using SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,28 @@ namespace SlackConnector.EventAPI
 		{
 			var outerEvent = eventJobject.ToObject<InboundOuterCommonEvent>();
 			outerEvent.Event = eventJobject["event"].ToObject<T>();
+			return outerEvent;
+		}
+
+		private InboundOuterEvent CreateReactionInboundCommonOuterEvent(JObject eventJobject)
+		{
+			var outerEvent = eventJobject.ToObject<InboundOuterCommonEvent>();
+			var reactionEvent = eventJobject["event"].ToObject<ReactionEvent>();
+			outerEvent.Event = reactionEvent;
+			var item = eventJobject["event"]["item"];
+			var itemType = item["type"].Value<string>();
+			switch (itemType)
+			{
+				case "message":
+					reactionEvent.ReactingTo = item.ToObject<MessageReaction>();
+					break;
+				case "file":
+					reactionEvent.ReactingTo = item.ToObject<FileReaction>();
+					break;
+				case "file_comment":
+					reactionEvent.ReactingTo = item.ToObject<FileCommentReaction>();
+					break;
+			}
 			return outerEvent;
 		}
 
@@ -67,10 +90,10 @@ namespace SlackConnector.EventAPI
 								}
 								break;
 							case EventType.reaction_added:
-								outerEvent = this.CreateInboundCommonOuterEvent<ReactionEvent>(eventJobject);
+								outerEvent = this.CreateReactionInboundCommonOuterEvent(eventJobject);
 								break;
 							case EventType.reaction_removed:
-								outerEvent = this.CreateInboundCommonOuterEvent<ReactionEvent>(eventJobject);
+								outerEvent = this.CreateReactionInboundCommonOuterEvent(eventJobject);
 								break;
 							case EventType.team_domain_change:
 								outerEvent = this.CreateInboundCommonOuterEvent<TeamDomainChangeEvent>(eventJobject);
