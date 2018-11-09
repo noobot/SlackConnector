@@ -40,5 +40,7 @@
     ],
     "image_url": "http://my-website.com/path/to/image.jpg",
     "thumb_url": "http://example.com/path/to/thumb.png",
+    "footer": "Brief text to help contextualize an attachment",
+    "footer_icon": "http://flickr.com/icons/footer.jpg",
     "mrkdwn_in": ["fields","pretext","text"]
 }
