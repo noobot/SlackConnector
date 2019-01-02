@@ -23,6 +23,16 @@ namespace SlackConnector.EventAPI
 	{
 		public MessageEvent Message { get; set; }
 
+		[JsonProperty("previous_message")]
+		public MessageEvent PreviousMessage { get; set; }
+	}
+
+	public class MessageDeletedEvent : MessageCommonEvent
+	{
+		[JsonProperty("deleted_ts")]
+		public string DeletedTimestamp { get; set; }
+
+		[JsonProperty("previous_message")]
 		public MessageEvent PreviousMessage { get; set; }
 	}
 

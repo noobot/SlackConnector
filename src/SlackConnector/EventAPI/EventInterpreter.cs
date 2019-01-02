@@ -84,6 +84,9 @@ namespace SlackConnector.EventAPI
 									case MessageSubType.message_changed:
 										outerEvent = this.CreateInboundCommonOuterEvent<MessageChangedEvent>(eventJobject);
 										break;
+									case MessageSubType.message_deleted:
+										outerEvent = this.CreateInboundCommonOuterEvent<MessageDeletedEvent>(eventJobject);
+										break;
 									default:
 										outerEvent = this.CreateInboundCommonOuterEvent<MessageEvent>(eventJobject);
 										break;
