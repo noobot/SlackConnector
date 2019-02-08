@@ -9,7 +9,7 @@ namespace SlackConnector.EventAPI
 		Unknown,
 		event_callback,
 		app_rate_limited,
-		url_verification
+		url_verification,
 	}
 
 	public class InboundOuterEvent

@@ -8,9 +8,11 @@ namespace SlackConnector.MessageActions
 {
 	public class MessageActionInterpreter : IMessageActionInterpreter
 	{
-		public InboundMessageAction InterpretMessageAction(string json)
+		public InboundCommonMessageAction InterpretMessageAction(string json)
 		{
 			dynamic jObject = JObject.Parse(json);
+			if (jObject.type == "dialog_submission")
+				return jObject.ToObject<DialogSubmissionAction>();
 			InboundMessageAction inboundMA = jObject.ToObject<InboundMessageAction>();
 			var list = new List<InboundMessageAction.InboundAction>();
 			foreach (var jActionItem in jObject.actions)

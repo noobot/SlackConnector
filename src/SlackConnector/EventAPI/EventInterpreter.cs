@@ -121,7 +121,6 @@ namespace SlackConnector.EventAPI
 					case OuterEventType.app_rate_limited:
 						outerEvent = eventJobject.ToObject<AppRateLimitedEvent>();
 						break;
-
 				}
 			}
 			catch (Exception ex)
