@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 
 namespace SlackConnector.Models
 {
@@ -42,7 +43,7 @@ namespace SlackConnector.Models
 		public string DataSource { get; set; }
 
 		[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-		public string Options { get; set; }
+		public IEnumerable<SlackAttachmentOptionAction> Options { get; set; }
 
 		public SlackAttachmentAction()
         {
