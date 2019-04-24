@@ -5,6 +5,12 @@ namespace SlackConnector.Models
 {
 	public class SlackAttachmentOptionAction
 	{
+		public SlackAttachmentOptionAction(string text, string value)
+		{
+			Text = text;
+			Value = value;
+		}
+
 		[JsonProperty(PropertyName = "text")]
 		public string Text { get; set; }
 
