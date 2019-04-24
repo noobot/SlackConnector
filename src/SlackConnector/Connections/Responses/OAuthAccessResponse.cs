@@ -39,6 +39,12 @@ namespace SlackConnector.Connections.Responses
 		[JsonProperty("team_id")]
 		public string TeamId { get; set; }
 
+		[JsonProperty("app_id")]
+		public string AppId { get; set; }
+
+		[JsonProperty("app_user_id")]
+		public string AppUserId { get; set; }
+
 		[JsonProperty("incoming_webhook")]
 		public IncomingWebhookResponse IncomingWebhook { get; set; }
 
