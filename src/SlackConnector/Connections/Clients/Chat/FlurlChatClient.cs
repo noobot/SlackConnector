@@ -84,7 +84,7 @@ namespace SlackConnector.Connections.Clients.Chat
 			_responseVerifier.VerifyResponse(response);
 		}
 
-		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string text, IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, string userName = null, bool asUser = false, bool linkNames = true)
+		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string user, string text, IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, string userName = null, bool asUser = false, bool linkNames = true)
 		{
 			var request = ClientConstants
 					   .SlackApiHost
@@ -92,6 +92,7 @@ namespace SlackConnector.Connections.Clients.Chat
 					   .SetQueryParam("token", slackKey)
 					   .SetQueryParam("channel", channel)
 					   .SetQueryParam("text", text)
+					   .SetQueryParam("user", user)
 					   .SetQueryParam("as_user", asUser)
 					   .SetQueryParam("link_names", linkNames)
 					   .SetQueryParam("thread_ts", threadTs)
