@@ -13,6 +13,7 @@ namespace SlackConnector.Connections.Clients.Chat
     {
         private readonly IResponseVerifier _responseVerifier;
         public const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
+		public const string SEND_EPHEMERAL_PATH = "/api/chat.postEphemeral";
 		public const string UPDATE_MESSAGE_PATH = "/api/chat.update";
 		public const string DELETE_MESSAGE_PATH = "/api/chat.delete";
 
@@ -81,6 +82,30 @@ namespace SlackConnector.Connections.Clients.Chat
 
 			var response = await request.GetJsonAsync<StandardResponse>();
 			_responseVerifier.VerifyResponse(response);
+		}
+
+		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string text, IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, string userName = null, bool asUser = false, bool linkNames = true)
+		{
+			var request = ClientConstants
+					   .SlackApiHost
+					   .AppendPathSegment(SEND_EPHEMERAL_PATH)
+					   .SetQueryParam("token", slackKey)
+					   .SetQueryParam("channel", channel)
+					   .SetQueryParam("text", text)
+					   .SetQueryParam("as_user", asUser)
+					   .SetQueryParam("link_names", linkNames)
+					   .SetQueryParam("thread_ts", threadTs)
+					   .SetQueryParam("icon_url", iconUrl)
+					   .SetQueryParam("username", userName);
+
+			if (attachments != null && attachments.Any())
+			{
+				request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
+			}
+
+			var response = await request.GetJsonAsync<MessageResponse>();
+			_responseVerifier.VerifyResponse(response);
+			return response;
 		}
 	}
 }
