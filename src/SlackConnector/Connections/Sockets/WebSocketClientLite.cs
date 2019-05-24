@@ -14,10 +14,10 @@ namespace SlackConnector.Connections.Sockets
     {
         private readonly IMessageInterpreter _interpreter;
         private readonly List<IDisposable> _subscriptions = new List<IDisposable>();
-        private IMessageWebSocketRx _webSocket;
+        private MessageWebSocketRx _webSocket;
         private int _currentMessageId;
 
-        public bool IsAlive => _webSocket.IsConnected;
+        public bool IsAlive => _webSocket.SubprotocolAccepted;
 
         public WebSocketClientLite(IMessageInterpreter interpreter)
         {
@@ -32,12 +32,14 @@ namespace SlackConnector.Connections.Sockets
             }
 
             _webSocket = new MessageWebSocketRx();
-            _subscriptions.Add(_webSocket.ObserveConnectionStatus.Subscribe(OnConnectionChange));
+            _subscriptions.Add(_webSocket.ConnectionStatusObservable.Subscribe(OnConnectionChange));
 
             var uri = new Uri(webSockerUrl);
-            var messageObserver = await _webSocket.CreateObservableMessageReceiver(uri, excludeZeroApplicationDataInPong: true);
-            _subscriptions.Add(messageObserver.Subscribe(OnWebSocketOnMessage));
-        }
+			await _webSocket.ConnectAsync(uri);
+			_webSocket.ExcludeZeroApplicationDataInPong = true;
+
+			_subscriptions.Add(_webSocket.MessageReceiverObservable.Subscribe(OnWebSocketOnMessage));
+		}
 
         public async Task SendMessage(BaseMessage message)
         {
@@ -58,7 +60,7 @@ namespace SlackConnector.Connections.Sockets
                 }
                 _subscriptions.Clear();
 
-                await _webSocket.CloseAsync();
+                await _webSocket.DisconnectAsync();
             }
         }
 
