@@ -12,9 +12,9 @@ namespace SlackConnector.Connections.Clients.Users
 	public class FlurlUserClient : IUserClient
 	{
 		private readonly IResponseVerifier responseVerifier;
-		internal const string USERS_LIST_PATH = "/api/users.list";
-		internal const string USERS_INFO_PATH = "/api/users.info";
-		internal const string USERS_IDENTITY_PATH = "/api/users.identity";
+		public const string USERS_LIST_PATH = "/api/users.list";
+		public const string USERS_INFO_PATH = "/api/users.info";
+		public const string USERS_IDENTITY_PATH = "/api/users.identity";
 
 		public FlurlUserClient(IResponseVerifier responseVerifier)
 		{

@@ -12,8 +12,8 @@ namespace SlackConnector.Connections.Clients.Auth
 	public class FlurlAuthClient : IAuthClient
 	{
 		private readonly IResponseVerifier responseVerifier;
-		internal const string AUTH_TEST_PATH = "/api/auth.test";
-		internal const string OAUTH_ACCESS = "/api/oauth.access";
+		public const string AUTH_TEST_PATH = "/api/auth.test";
+		public const string OAUTH_ACCESS = "/api/oauth.access";
 
 		public FlurlAuthClient(IResponseVerifier responseVerifier)
 		{

@@ -10,7 +10,7 @@ namespace SlackConnector.Connections.Clients.Team
 {
     public class FlurlTeamClient : ITeamClient
     {
-		internal const string TEAM_INFO = "/api/team.info";
+		public const string TEAM_INFO = "/api/team.info";
 		private readonly IResponseVerifier responseVerifier;
 
 		public FlurlTeamClient(IResponseVerifier responseVerifier)
