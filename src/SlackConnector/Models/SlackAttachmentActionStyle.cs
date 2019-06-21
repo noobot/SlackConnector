@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace SlackConnector.Models
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum SlackAttachmentActionStyle
+    public enum SlackActionStyle
     {
         [EnumMember(Value = "default")]
         Default,

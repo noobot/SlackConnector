@@ -6,6 +6,7 @@ using Flurl.Http;
 using Newtonsoft.Json;
 using SlackConnector.Connections.Responses;
 using SlackConnector.Models;
+using SlackConnector.Models.Blocks;
 
 namespace SlackConnector.Connections.Clients.Chat
 {
@@ -24,7 +25,7 @@ namespace SlackConnector.Connections.Clients.Chat
 
         public async Task<MessageResponse> PostMessage(string slackKey, string channel, string text, 
 			IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, 
-			string userName = null, bool asUser = false, bool linkNames = true)
+			string userName = null, bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
         {
             var request = ClientConstants
                        .SlackApiHost
@@ -43,12 +44,18 @@ namespace SlackConnector.Connections.Clients.Chat
                 request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
             }
 
+			if (blocks != null && blocks.Any())
+			{
+				request.SetQueryParam("blocks", JsonConvert.SerializeObject(blocks));
+			}
+
 			var response = await request.GetJsonAsync<MessageResponse>();
             _responseVerifier.VerifyResponse(response);
 			return response;
         }
 
-		public async Task Update(string slackKey, string messageTs, string channel, string text, IList<SlackAttachment> attachments, bool asUser = false, bool linkNames = true)
+		public async Task Update(string slackKey, string messageTs, string channel, string text, IList<SlackAttachment> attachments, 
+			bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
 		{
 			var request = ClientConstants
 					   .SlackApiHost
@@ -63,6 +70,11 @@ namespace SlackConnector.Connections.Clients.Chat
 			if (attachments != null && attachments.Any())
 			{
 				request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
+			}
+
+			if (blocks != null && blocks.Any())
+			{
+				request.SetQueryParam("blocks", JsonConvert.SerializeObject(blocks));
 			}
 
 			var response = await request.GetJsonAsync<StandardResponse>();
@@ -84,7 +96,9 @@ namespace SlackConnector.Connections.Clients.Chat
 			_responseVerifier.VerifyResponse(response);
 		}
 
-		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string user, string text, IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, string userName = null, bool asUser = false, bool linkNames = true)
+		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string user, string text, 
+			IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, string userName = null, 
+			bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
 		{
 			var request = ClientConstants
 					   .SlackApiHost
@@ -102,6 +116,11 @@ namespace SlackConnector.Connections.Clients.Chat
 			if (attachments != null && attachments.Any())
 			{
 				request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
+			}
+
+			if (blocks != null && blocks.Any())
+			{
+				request.SetQueryParam("blocks", JsonConvert.SerializeObject(blocks));
 			}
 
 			var response = await request.GetJsonAsync<MessageResponse>();

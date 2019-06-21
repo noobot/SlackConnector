@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SlackConnector.Models.Blocks.Elements
+{
+	public abstract class ElementBase
+	{
+		public ElementBase(string type)
+		{
+			Type = type;
+		}
+
+		public string Type { get; protected set; }
+	}
+}

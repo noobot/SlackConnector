@@ -28,7 +28,7 @@ namespace SlackConnector.Models
         public string Text { get; set; }
 
         [JsonProperty(PropertyName = "style", NullValueHandling = NullValueHandling.Ignore)]
-        public SlackAttachmentActionStyle? Style { get; set; }
+        public SlackActionStyle? Style { get; set; }
 
         [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }
