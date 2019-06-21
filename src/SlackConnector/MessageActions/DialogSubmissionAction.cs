@@ -7,6 +7,12 @@ namespace SlackConnector.MessageActions
 {
 	public class DialogSubmissionAction : InboundCommonMessageAction
 	{
+		[JsonProperty("callback_id")]
+		public string CallbackId { get; set; }
+
+		[JsonProperty("action_ts")]
+		public string ActionTimestamp { get; set; }
+
 		[JsonProperty("state")]
 		public string State { get; set; }
 
