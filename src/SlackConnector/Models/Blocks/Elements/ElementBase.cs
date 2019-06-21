@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,6 +12,7 @@ namespace SlackConnector.Models.Blocks.Elements
 			Type = type;
 		}
 
+		[JsonProperty(PropertyName = "type")]
 		public string Type { get; protected set; }
 	}
 }

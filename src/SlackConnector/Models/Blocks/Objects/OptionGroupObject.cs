@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,8 +18,10 @@ namespace SlackConnector.Models.Blocks.Objects
 			this.Options = new List<OptionObject>();
 		}
 
+		[JsonProperty(PropertyName = "label")]
 		public TextObject Label { get; set; }
 
+		[JsonProperty(PropertyName = "options")]
 		public IList<OptionObject> Options { get; set; }
 	}
 }

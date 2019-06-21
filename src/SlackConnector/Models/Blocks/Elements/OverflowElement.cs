@@ -13,9 +13,7 @@ namespace SlackConnector.Models.Blocks.Elements
 			this.Options = new List<OptionObject>();
 		}
 
-		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-		public ConfirmObject Confirm { get; set; }
-
+		[JsonProperty(PropertyName = "options")]
 		public IList<OptionObject> Options { get; set; }
 	}
 }

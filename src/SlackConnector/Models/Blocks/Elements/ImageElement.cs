@@ -5,10 +5,12 @@ using System.Text;
 
 namespace SlackConnector.Models.Blocks.Elements
 {
-	public class ImageElement : ElementBase
+	public class ImageElement : ElementBase, IContextElement
 	{
-		public ImageElement() : base("image")
+		public ImageElement(string imageUrl, string altText) : base("image")
 		{
+			ImageUrl = imageUrl;
+			AltText = altText;
 		}
 
 		[JsonProperty(PropertyName = "image_url")]

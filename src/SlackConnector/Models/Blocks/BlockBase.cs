@@ -12,6 +12,7 @@ namespace SlackConnector.Models.Blocks
 			Type = type;
 		}
 
+		[JsonProperty(PropertyName = "type")]
 		public string Type { get; protected set; }
 
 		[JsonProperty(PropertyName = "block_id", NullValueHandling = NullValueHandling.Ignore)]

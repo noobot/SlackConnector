@@ -14,11 +14,10 @@ namespace SlackConnector.Models.Blocks.Elements
 			this.Options = new List<OptionObject>();
 		}
 
+		[JsonProperty(PropertyName = "placeholder")]
 		public TextObject Placeholder { get; set; }
 
-		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-		public ConfirmObject Confirm { get; set; }
-
+		[JsonProperty(PropertyName = "options")]
 		public IList<OptionObject> Options { get; set; }
 
 		[JsonProperty(PropertyName = "option_groups", NullValueHandling = NullValueHandling.Ignore)]

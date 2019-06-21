@@ -18,10 +18,13 @@ namespace SlackConnector.Models.Blocks.Objects
 				throw new ArgumentException("Value length can't be greater than 75");
 		}
 
+		[JsonProperty(PropertyName = "text")]
 		public string Text { get; }
+
+		[JsonProperty(PropertyName = "value")]
 		public string Value { get; }
 
-		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty(PropertyName = "url", NullValueHandling = NullValueHandling.Ignore)]
 		public string Url { get; }
 	}
 }

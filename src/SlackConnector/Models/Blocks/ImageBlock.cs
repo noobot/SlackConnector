@@ -8,8 +8,10 @@ namespace SlackConnector.Models.Blocks
 {
 	public class ImageBlock : BlockBase
 	{
-		public ImageBlock() : base("image")
+		public ImageBlock(string imageUrl, string altText) : base("image")
 		{
+			ImageUrl = imageUrl;
+			AltText = altText;
 		}
 
 		[JsonProperty(PropertyName = "image_url")]
@@ -18,7 +20,13 @@ namespace SlackConnector.Models.Blocks
 		[JsonProperty(PropertyName = "alt_text", NullValueHandling = NullValueHandling.Ignore)]
 		public string AltText { get; set; }
 
-		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty(PropertyName = "title", NullValueHandling = NullValueHandling.Ignore)]
 		public TextObject Title { get; set; }
+
+		public ImageBlock WithTitle(string title)
+		{
+			this.Title = new TextObject(title, TextObjectType.PlainText);
+			return this;
+		}
 	}
 }

@@ -24,7 +24,7 @@ namespace SlackConnector.Connections.Clients.Chat
         }
 
         public async Task<MessageResponse> PostMessage(string slackKey, string channel, string text, 
-			IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, 
+			IList<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null, 
 			string userName = null, bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
         {
             var request = ClientConstants
@@ -46,7 +46,8 @@ namespace SlackConnector.Connections.Clients.Chat
 
 			if (blocks != null && blocks.Any())
 			{
-				request.SetQueryParam("blocks", JsonConvert.SerializeObject(blocks));
+				var jsonBlocks = JsonConvert.SerializeObject(blocks);
+				request.SetQueryParam("blocks", jsonBlocks);
 			}
 
 			var response = await request.GetJsonAsync<MessageResponse>();
@@ -54,7 +55,7 @@ namespace SlackConnector.Connections.Clients.Chat
 			return response;
         }
 
-		public async Task Update(string slackKey, string messageTs, string channel, string text, IList<SlackAttachment> attachments, 
+		public async Task Update(string slackKey, string messageTs, string channel, string text, IList<SlackAttachment> attachments = null, 
 			bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
 		{
 			var request = ClientConstants
@@ -97,7 +98,7 @@ namespace SlackConnector.Connections.Clients.Chat
 		}
 
 		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string user, string text, 
-			IList<SlackAttachment> attachments, string threadTs = null, string iconUrl = null, string userName = null, 
+			IList<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null, string userName = null, 
 			bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
 		{
 			var request = ClientConstants

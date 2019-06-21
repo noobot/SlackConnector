@@ -13,12 +13,10 @@ namespace SlackConnector.Models.Blocks.Elements
 			this.Placeholder = new TextObject(placeholder, TextObjectType.PlainText);
 		}
 
+		[JsonProperty(PropertyName = "placeholder")]
 		public TextObject Placeholder { get; set; }
 
 		[JsonProperty(PropertyName = "initial_user", NullValueHandling = NullValueHandling.Ignore)]
 		public string InitialUser { get; set; }
-
-		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-		public ConfirmObject Confirm { get; set; }
 	}
 }

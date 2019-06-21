@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,12 +23,16 @@ namespace SlackConnector.Models.Blocks.Objects
 			this.Deny = new TextObject(deny);
 		}
 
+		[JsonProperty(PropertyName = "title")]
 		public TextObject Title { get; set; }
 
+		[JsonProperty(PropertyName = "text")]
 		public TextObject Text { get; set; }
 
+		[JsonProperty(PropertyName = "confirm")]
 		public TextObject Confirm { get; set; }
 
+		[JsonProperty(PropertyName = "deny")]
 		public TextObject Deny { get; set; }
 	}
 }
