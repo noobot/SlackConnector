@@ -6,7 +6,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.Channel
 {
-    internal class FlurlChannelClient : IChannelClient
+    public class FlurlChannelClient : IChannelClient
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string JOIN_DM_PATH = "/api/im.open";
@@ -17,7 +17,6 @@ namespace SlackConnector.Connections.Clients.Channel
         internal const string CHANNEL_SET_TOPIC_PATH = "/api/channels.setTopic";
         internal const string CHANNELS_LIST_PATH = "/api/channels.list";
         internal const string GROUPS_LIST_PATH = "/api/groups.list";
-        internal const string USERS_LIST_PATH = "/api/users.list";
         
         public FlurlChannelClient(IResponseVerifier responseVerifier)
         {
@@ -125,19 +124,6 @@ namespace SlackConnector.Connections.Clients.Channel
 
             _responseVerifier.VerifyResponse(response);
             return response.Groups;
-        }
-
-        public async Task<User[]> GetUsers(string slackKey)
-        {
-            var response = await ClientConstants
-                       .SlackApiHost
-                       .AppendPathSegment(USERS_LIST_PATH)
-                       .SetQueryParam("token", slackKey)
-                       .SetQueryParam("presence", "1")
-                       .GetJsonAsync<UsersResponse>();
-
-            _responseVerifier.VerifyResponse(response);
-            return response.Members;
         }
     }
 }

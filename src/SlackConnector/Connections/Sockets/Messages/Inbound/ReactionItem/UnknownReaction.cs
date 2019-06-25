@@ -1,6 +1,10 @@
-﻿namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
+﻿using Newtonsoft.Json;
+
+namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
 {
-    internal class UnknownReaction : IReactionItem
+	public class UnknownReaction : IReactionItem
     {
-    }
+		[JsonProperty("type")]
+		public string Type { get; set; }
+	}
 }

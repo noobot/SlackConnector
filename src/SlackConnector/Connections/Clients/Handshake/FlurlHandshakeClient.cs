@@ -5,7 +5,7 @@ using SlackConnector.Connections.Responses;
 
 namespace SlackConnector.Connections.Clients.Handshake
 {
-    internal class FlurlHandshakeClient : IHandshakeClient
+    public class FlurlHandshakeClient : IHandshakeClient
     {
         private readonly IResponseVerifier _responseVerifier;
         internal const string HANDSHAKE_PATH = "/api/rtm.start";

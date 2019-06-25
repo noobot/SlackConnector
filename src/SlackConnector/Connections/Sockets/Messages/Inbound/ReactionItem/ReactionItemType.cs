@@ -1,6 +1,6 @@
 ﻿namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
 {
-    internal enum ReactionItemType
+	public enum ReactionItemType
     {
         unknown = 0,
         message,

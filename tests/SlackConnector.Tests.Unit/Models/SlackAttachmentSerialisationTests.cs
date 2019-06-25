@@ -45,7 +45,7 @@ namespace SlackConnector.Tests.Unit.Models
                             Name = "yes",
                             Value = "yep",
                             Text = "Yes",
-                            Style = SlackAttachmentActionStyle.Primary
+                            Style = SlackActionStyle.Primary
                         },
                         new SlackAttachmentAction
                         {

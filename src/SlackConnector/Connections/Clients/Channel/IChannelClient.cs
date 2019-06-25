@@ -20,7 +20,5 @@ namespace SlackConnector.Connections.Clients.Channel
         Task<Models.Channel[]> GetChannels(string slackKey);
 
         Task<Models.Group[]> GetGroups(string slackKey);
-
-        Task<Models.User[]> GetUsers(string slackKey);
     }
 }

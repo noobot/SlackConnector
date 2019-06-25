@@ -2,8 +2,10 @@
 using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.Channel;
 using SlackConnector.Connections.Clients.Chat;
+using SlackConnector.Connections.Clients.Conversation;
 using SlackConnector.Connections.Clients.File;
 using SlackConnector.Connections.Clients.Handshake;
+using SlackConnector.Connections.Clients.Users;
 using SlackConnector.Connections.Sockets;
 using SlackConnector.Connections.Sockets.Messages.Inbound;
 using SlackConnector.Logging;
@@ -38,5 +40,15 @@ namespace SlackConnector.Connections
         {
             return new FlurlChannelClient(new ResponseVerifier());
         }
-    }
+
+		public IConversationClient CreateConversationClient()
+		{
+			return new FlurlConversationClient(new ResponseVerifier());
+		}
+
+		public IUserClient CreateUserClient()
+		{
+			return new FlurlUserClient(new ResponseVerifier());
+		}
+	}
 }
