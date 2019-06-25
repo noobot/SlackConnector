@@ -6,27 +6,27 @@ using System.Text;
 
 namespace SlackConnector.MessageActions
 {
-	public class InboundMessageAction : InboundCommonMessageAction
+	public class ActionPayload : CommonActionPayload
 	{
-		public partial class InboundActionSelectedOption
+		public partial class ActionPayloadSelectedOption
 		{
 			[JsonProperty("value")]
 			public string Value { get; set; }
 		}
 
-		public partial class InboundButtonAction : InboundAction
+		public partial class ActionPayloadButton : ActionPayloadAction
 		{
 			[JsonProperty("value")]
 			public string Value { get; set; }
 		}
 
-		public partial class InboundOptionsAction : InboundAction
+		public partial class ActionPayloadOptions : ActionPayloadAction
 		{
 			[JsonProperty("selected_options")]
-			public InboundActionSelectedOption[] SelectedOptions { get; set; }
+			public ActionPayloadSelectedOption[] SelectedOptions { get; set; }
 		}
 
-		public partial class InboundAction
+		public partial class ActionPayloadAction
 		{
 			[JsonProperty("name")]
 			public string Name { get; set; }
@@ -36,7 +36,7 @@ namespace SlackConnector.MessageActions
 		}
 
 		[JsonProperty("actions")]
-		public InboundAction[] Actions { get; set; }
+		public ActionPayloadAction[] Actions { get; set; }
 
 		[JsonProperty("callback_id")]
 		public string CallbackId { get; set; }

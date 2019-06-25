@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlackConnector.MessageActions
 {
-	public class BlockInboundAction
+	public class InboundBlockAction
 	{
 		[JsonProperty(PropertyName = "block_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string BlockId { get; set; }
@@ -20,9 +20,9 @@ namespace SlackConnector.MessageActions
 		public string Type { get; set; }
 	}
 
-	public class BlockMessageAction : InboundCommonMessageAction
+	public class BlockActionPayload : CommonActionPayload
 	{
 		[JsonProperty(PropertyName = "actions", NullValueHandling = NullValueHandling.Ignore)]
-		public IEnumerable<BlockInboundAction> Actions { get; set; }
+		public IEnumerable<InboundBlockAction> Actions { get; set; }
 	}
 }

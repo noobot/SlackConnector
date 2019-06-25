@@ -8,24 +8,24 @@ namespace SlackConnector.MessageActions
 {
 	public class MessageActionInterpreter : IMessageActionInterpreter
 	{
-		public InboundCommonMessageAction InterpretMessageAction(string json)
+		public CommonActionPayload InterpretMessageAction(string json)
 		{
 			dynamic jObject = JObject.Parse(json);
 			switch ((string)jObject.type)
 			{
 				case "dialog_submission":
-					return jObject.ToObject<DialogSubmissionAction>();
+					return jObject.ToObject<DialogSubmissionPayload>();
 				case "block_actions":
-					return jObject.ToObject<BlockMessageAction>();
+					return jObject.ToObject<BlockActionPayload>();
 				default:
-					var inboundMA = jObject.ToObject<InboundMessageAction>();
-					var list = new List<InboundMessageAction.InboundAction>();
+					var inboundMA = jObject.ToObject<ActionPayload>();
+					var list = new List<ActionPayload.ActionPayloadAction>();
 					foreach (var jActionItem in jObject.actions)
 					{
-						InboundMessageAction.InboundAction action = null;
+						ActionPayload.ActionPayloadAction action = null;
 						action = jActionItem.type == "button" ?
-							jActionItem.ToObject<InboundMessageAction.InboundButtonAction>()
-							: jActionItem.ToObject<InboundMessageAction.InboundOptionsAction>();
+							jActionItem.ToObject<ActionPayload.ActionPayloadButton>()
+							: jActionItem.ToObject<ActionPayload.ActionPayloadOptions>();
 						list.Add(action);
 					}
 					inboundMA.Actions = list.ToArray();

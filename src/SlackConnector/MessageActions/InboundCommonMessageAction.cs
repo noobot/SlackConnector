@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlackConnector.MessageActions
 {
-	public partial class InboundMessageActionChannel
+	public partial class ActionPayloadChannel
 	{
 		[JsonProperty("id")]
 		public string Id { get; set; }
@@ -14,7 +14,7 @@ namespace SlackConnector.MessageActions
 		public string Name { get; set; }
 	}
 
-	public partial class InboundMessageActionUser
+	public partial class ActionPayloadUser
 	{
 		[JsonProperty("id")]
 		public string Id { get; set; }
@@ -23,7 +23,7 @@ namespace SlackConnector.MessageActions
 		public string Name { get; set; }
 	}
 
-	public partial class InboundMessageActionTeam
+	public partial class ActionPayloadTeam
 	{
 		[JsonProperty("id")]
 		public string Id { get; set; }
@@ -31,16 +31,16 @@ namespace SlackConnector.MessageActions
 		[JsonProperty("domain")]
 		public string Domain { get; set; }
 	}
-	public class InboundCommonMessageAction
+	public class CommonActionPayload
 	{
 		[JsonProperty("team")]
-		public InboundMessageActionTeam Team { get; set; }
+		public ActionPayloadTeam Team { get; set; }
 
 		[JsonProperty("channel")]
-		public InboundMessageActionChannel Channel { get; set; }
+		public ActionPayloadChannel Channel { get; set; }
 
 		[JsonProperty("user")]
-		public InboundMessageActionUser User { get; set; }
+		public ActionPayloadUser User { get; set; }
 
 		[JsonProperty("token")]
 		public string Token { get; set; }

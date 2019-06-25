@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlackConnector.MessageActions
 {
-	public class DialogSubmissionAction : InboundCommonMessageAction
+	public class DialogSubmissionPayload : CommonActionPayload
 	{
 		[JsonProperty("callback_id")]
 		public string CallbackId { get; set; }

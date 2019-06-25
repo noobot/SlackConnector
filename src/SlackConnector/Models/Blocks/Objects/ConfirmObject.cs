@@ -19,7 +19,7 @@ namespace SlackConnector.Models.Blocks.Objects
 				throw new ArgumentException("Confirm can't be greater than 30 char");
 			this.Confirm = new TextObject(confirm);
 			if (!(deny is null) && deny.Length > 30)
-				throw new ArgumentException("Decny can't be greater than 30 char");
+				throw new ArgumentException("Deny can't be greater than 30 char");
 			this.Deny = new TextObject(deny);
 		}
 

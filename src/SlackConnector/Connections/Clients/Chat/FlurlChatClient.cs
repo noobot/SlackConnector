@@ -23,9 +23,9 @@ namespace SlackConnector.Connections.Clients.Chat
             _responseVerifier = responseVerifier;
         }
 
-        public async Task<MessageResponse> PostMessage(string slackKey, string channel, string text, 
-			IList<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null, 
-			string userName = null, bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
+        public async Task<MessageResponse> PostMessage(string slackKey, string channel, string text,
+			IEnumerable<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null, 
+			string userName = null, bool asUser = false, bool linkNames = true, IEnumerable<BlockBase> blocks = null)
         {
             var request = ClientConstants
                        .SlackApiHost
@@ -55,8 +55,8 @@ namespace SlackConnector.Connections.Clients.Chat
 			return response;
         }
 
-		public async Task Update(string slackKey, string messageTs, string channel, string text, IList<SlackAttachment> attachments = null, 
-			bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
+		public async Task Update(string slackKey, string messageTs, string channel, string text, IEnumerable<SlackAttachment> attachments = null, 
+			bool asUser = false, bool linkNames = true, IEnumerable<BlockBase> blocks = null)
 		{
 			var request = ClientConstants
 					   .SlackApiHost
@@ -97,9 +97,9 @@ namespace SlackConnector.Connections.Clients.Chat
 			_responseVerifier.VerifyResponse(response);
 		}
 
-		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string user, string text, 
-			IList<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null, string userName = null, 
-			bool asUser = false, bool linkNames = true, IList<BlockBase> blocks = null)
+		public async Task<MessageResponse> PostEphemeral(string slackKey, string channel, string user, string text,
+			IEnumerable<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null, string userName = null, 
+			bool asUser = false, bool linkNames = true, IEnumerable<BlockBase> blocks = null)
 		{
 			var request = ClientConstants
 					   .SlackApiHost

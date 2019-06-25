@@ -6,6 +6,6 @@ namespace SlackConnector.MessageActions
 {
     public interface IMessageActionInterpreter
     {
-		InboundCommonMessageAction InterpretMessageAction(string json);
+		CommonActionPayload InterpretMessageAction(string json);
     }
 }
