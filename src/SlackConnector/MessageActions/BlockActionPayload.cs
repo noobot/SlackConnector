@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SlackConnector.EventAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,5 +25,8 @@ namespace SlackConnector.MessageActions
 	{
 		[JsonProperty(PropertyName = "actions", NullValueHandling = NullValueHandling.Ignore)]
 		public IEnumerable<InboundBlockAction> Actions { get; set; }
+
+		[JsonProperty("message")]
+		public MessageEvent Message { get; set; }
 	}
 }
