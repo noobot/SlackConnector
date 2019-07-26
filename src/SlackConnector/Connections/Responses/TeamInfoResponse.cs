@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SlackConnector.Connections.Responses
 {
-    public class TeamInfoResponse : StandardResponse
+    public class TeamInfoResponse : DefaultStandardResponse
 	{
 		[JsonProperty("team")]
 		public Team Team { get; set; }

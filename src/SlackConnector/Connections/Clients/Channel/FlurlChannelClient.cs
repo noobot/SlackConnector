@@ -69,7 +69,7 @@ namespace SlackConnector.Connections.Clients.Channel
                 .AppendPathSegment(CHANNEL_ARCHIVE_PATH)
                 .SetQueryParam("token", slackKey)
                 .SetQueryParam("channel", channelName)
-                .GetJsonAsync<StandardResponse>();
+                .GetJsonAsync<DefaultStandardResponse>();
 
             _responseVerifier.VerifyResponse(response);
         }

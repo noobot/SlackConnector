@@ -6,8 +6,8 @@ using System.Text;
 
 namespace SlackConnector.Connections.Responses
 {
-    public class MessageResponse : StandardResponse
-    {
+    public class MessageResponse : DefaultStandardResponse
+	{
 		public string Channel { get; set; }
 
 		[JsonProperty("ts")]

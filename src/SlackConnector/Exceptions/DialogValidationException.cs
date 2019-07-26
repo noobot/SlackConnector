@@ -9,7 +9,7 @@ namespace SlackConnector.Exceptions
 	[Serializable]
 	public class DialogValidationException : Exception
 	{
-		public DialogValidationException(DialogResponse dialogResponse) {
+		public DialogValidationException(DefaultStandardResponse dialogResponse) {
 			DialogResponse = dialogResponse;
 		}
 		public DialogValidationException(string message) : base(message) { }
@@ -18,6 +18,6 @@ namespace SlackConnector.Exceptions
 		  System.Runtime.Serialization.SerializationInfo info,
 		  System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 
-		public DialogResponse DialogResponse { get; }
+		public DefaultStandardResponse DialogResponse { get; }
 	}
 }

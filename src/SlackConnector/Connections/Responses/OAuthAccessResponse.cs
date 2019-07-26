@@ -25,7 +25,7 @@ namespace SlackConnector.Connections.Responses
 		[JsonProperty("bot_access_token")]
 		public string BotAccessToken { get; set; }
 	}
-	public class OAuthAccessResponse : StandardResponse
+	public class OAuthAccessResponse : DefaultStandardResponse
 	{
 		[JsonProperty("access_token")]
 		public string AccessToken { get; set; }

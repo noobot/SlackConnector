@@ -38,7 +38,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             const string channel = "channel-name";
             const string filePath = @"C:\test-file-name.exe";
 
-            var expectedResponse = new StandardResponse();
+            var expectedResponse = new DefaultStandardResponse();
             _httpTest.RespondWithJson(expectedResponse);
 
             // when

@@ -7,9 +7,15 @@ namespace SlackConnector.Models.Blocks.Objects
 {
 	public class OptionObject
 	{
+		public OptionObject()
+		{
+		}
+
 		public OptionObject(string text, string value)
 		{
-			Text = text ?? throw new ArgumentNullException(nameof(text));
+			if (text is null)
+				throw new ArgumentNullException(nameof(text));
+			Text = new TextObject(text, TextObjectType.PlainText);
 			Value = value ?? throw new ArgumentNullException(nameof(value));
 
 			if (text.Length > 75)
@@ -19,12 +25,18 @@ namespace SlackConnector.Models.Blocks.Objects
 		}
 
 		[JsonProperty(PropertyName = "text")]
-		public string Text { get; }
+		public TextObject Text { get; set; }
 
 		[JsonProperty(PropertyName = "value")]
-		public string Value { get; }
+		public string Value { get; set; }
 
 		[JsonProperty(PropertyName = "url", NullValueHandling = NullValueHandling.Ignore)]
-		public string Url { get; }
+		public string Url { get; protected set; }
+
+		public OptionObject WithUrl(string url)
+		{
+			this.Url = url;
+			return this;
+		}
 	}
 }

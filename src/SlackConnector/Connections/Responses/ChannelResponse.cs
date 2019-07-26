@@ -2,8 +2,8 @@
 
 namespace SlackConnector.Connections.Responses
 {
-    internal class ChannelResponse : StandardResponse
-    {
+    internal class ChannelResponse : DefaultStandardResponse
+	{
         public Channel Channel { get; set; }
     }
 }

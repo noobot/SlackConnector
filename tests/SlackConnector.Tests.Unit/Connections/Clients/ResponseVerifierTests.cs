@@ -12,7 +12,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
         public void should_throw_exception_with_given_error_message_when_request_failed()
         {
             // given
-            var response = new StandardResponse { Ok = false, Error = "I AM A ERROR-message" };
+            var response = new DefaultStandardResponse { Ok = false, Error = "I AM A ERROR-message" };
             var verifier = new ResponseVerifier();
 
             // when && then
@@ -24,7 +24,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
         public void should_not_throw_exception()
         {
             // given
-            var response = new StandardResponse { Ok = true };
+            var response = new DefaultStandardResponse { Ok = true };
             var verifier = new ResponseVerifier();
 
             // when && then

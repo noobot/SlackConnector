@@ -8,6 +8,6 @@ namespace SlackConnector.Connections.Clients.Dialog
 {
 	public interface IDialogClient
 	{
-		Task<DialogResponse> Open(string slackKey, Models.Dialog dialog, string triggerId);
+		Task<MessageResponse> Open(string slackKey, Models.Dialog dialog, string triggerId);
 	}
 }

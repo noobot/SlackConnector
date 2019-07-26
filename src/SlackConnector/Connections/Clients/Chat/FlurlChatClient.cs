@@ -78,7 +78,7 @@ namespace SlackConnector.Connections.Clients.Chat
 				request.SetQueryParam("blocks", JsonConvert.SerializeObject(blocks));
 			}
 
-			var response = await request.GetJsonAsync<StandardResponse>();
+			var response = await request.GetJsonAsync<DefaultStandardResponse>();
 			_responseVerifier.VerifyResponse(response);
 		}
 
@@ -93,7 +93,7 @@ namespace SlackConnector.Connections.Clients.Chat
 					   .SetQueryParam("as_user", asUser);
 
 
-			var response = await request.GetJsonAsync<StandardResponse>();
+			var response = await request.GetJsonAsync<DefaultStandardResponse>();
 			_responseVerifier.VerifyResponse(response);
 		}
 

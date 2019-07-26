@@ -138,7 +138,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             const string slackKey = "I-is-another-key";
             const string channelName = "my-channel";
 
-            var expectedResponse = new StandardResponse()
+            var expectedResponse = new DefaultStandardResponse()
             {
                 Ok = true
             };

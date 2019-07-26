@@ -4,9 +4,11 @@ namespace SlackConnector.Connections.Clients
 {
     public interface IResponseVerifier
     {
-        void VerifyResponse(StandardResponse response);
+		void VerifyResponse(DefaultStandardResponse response);
 
-		void VerifyResponse(DialogResponse response);
+		void VerifyResponse<T>(StandardResponse<T> response);
+
+		void VerifyDialogResponse(DefaultStandardResponse response);
 
 	}
 }

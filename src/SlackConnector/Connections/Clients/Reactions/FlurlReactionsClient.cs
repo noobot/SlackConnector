@@ -32,7 +32,7 @@ namespace SlackConnector.Connections.Clients.Reactions
 					   .SetQueryParam("file", file)
 					   .SetQueryParam("file_comment", fileComment);
 
-			var response = await request.GetJsonAsync<StandardResponse>();
+			var response = await request.GetJsonAsync<DefaultStandardResponse>();
 			if (!response.Ok)
 			{
 				switch (response.Error)
@@ -58,7 +58,7 @@ namespace SlackConnector.Connections.Clients.Reactions
 		   .SetQueryParam("file", file)
 		   .SetQueryParam("file_comment", fileComment);
 
-			var response = await request.GetJsonAsync<StandardResponse>();
+			var response = await request.GetJsonAsync<DefaultStandardResponse>();
 			if (!response.Ok)
 			{
 				switch (response.Error)

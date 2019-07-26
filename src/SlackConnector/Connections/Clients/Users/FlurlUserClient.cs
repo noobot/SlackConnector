@@ -46,7 +46,7 @@ namespace SlackConnector.Connections.Clients.Users
 					   .GetJsonAsync<UserCollectionResponse>();
 
 			responseVerifier.VerifyResponse(response);
-			return new CursoredResponse<User>(response.Members, response.ReponseMetadata?.NextCursor);
+			return new CursoredResponse<User>(response.Members, response.ResponseMetadata?.NextCursor);
 		}
 
 		public async Task<ICollection<User>> ListAll(string slackKey)

@@ -28,7 +28,7 @@ namespace SlackConnector.Connections.Clients.File
                        .PostMultipartAsync(content => content.AddFile(POST_FILE_VARIABLE_NAME, filePath));
 
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
-            var response = JsonConvert.DeserializeObject<StandardResponse>(responseContent);
+            var response = JsonConvert.DeserializeObject<DefaultStandardResponse>(responseContent);
             _responseVerifier.VerifyResponse(response);
         }
 
@@ -42,7 +42,7 @@ namespace SlackConnector.Connections.Clients.File
                        .PostMultipartAsync(content => content.AddFile(POST_FILE_VARIABLE_NAME, stream, fileName));
 
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
-            var response = JsonConvert.DeserializeObject<StandardResponse>(responseContent);
+            var response = JsonConvert.DeserializeObject<DefaultStandardResponse>(responseContent);
             _responseVerifier.VerifyResponse(response);
         }
     }

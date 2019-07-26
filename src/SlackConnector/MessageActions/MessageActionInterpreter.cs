@@ -16,7 +16,18 @@ namespace SlackConnector.MessageActions
 				case "dialog_submission":
 					return jObject.ToObject<DialogSubmissionPayload>();
 				case "block_actions":
-					return jObject.ToObject<BlockActionPayload>();
+					var inboundBA = jObject.ToObject<BlockActionPayload>();
+					var inboundActions = new List<InboundBlockAction>();
+					foreach (var jActionItem in jObject.actions)
+					{
+						InboundBlockAction action = null;
+						action = jActionItem.type == "button" ?
+							jActionItem.ToObject<InboundBlockAction>()
+							: jActionItem.ToObject<SelectInboundBlockAction>();
+						inboundActions.Add(action);
+					}
+					inboundBA.Actions = inboundActions;
+					return inboundBA;
 				default:
 					var inboundMA = jObject.ToObject<ActionPayload>();
 					var list = new List<ActionPayload.ActionPayloadAction>();

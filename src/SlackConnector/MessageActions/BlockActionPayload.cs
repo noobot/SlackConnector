@@ -1,11 +1,18 @@
 ﻿using Newtonsoft.Json;
 using SlackConnector.EventAPI;
+using SlackConnector.Models.Blocks.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SlackConnector.MessageActions
 {
+	public class SelectInboundBlockAction : InboundBlockAction
+	{
+		[JsonProperty(PropertyName = "selected_option", NullValueHandling = NullValueHandling.Ignore)]
+		public OptionObject SelectedOption { get; set; }
+	}
+
 	public class InboundBlockAction
 	{
 		[JsonProperty(PropertyName = "block_id", NullValueHandling = NullValueHandling.Ignore)]

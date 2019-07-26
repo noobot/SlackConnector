@@ -5,15 +5,13 @@ using System.Text;
 
 namespace SlackConnector.Connections.Responses
 {
-	public class ResponseMetadata
+	public class CursoredResponseMetadata
 	{
 		[JsonProperty("next_cursor")]
 		public string NextCursor { get; set; }
 	}
 
-	public class CursoredResponse : StandardResponse
+	public class CursoredResponse : StandardResponse<CursoredResponseMetadata>
 	{
-		[JsonProperty("response_metadata")]
-		public ResponseMetadata ReponseMetadata { get; set; }
     }
 }

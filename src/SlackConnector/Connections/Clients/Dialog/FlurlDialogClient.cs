@@ -19,7 +19,7 @@ namespace SlackConnector.Connections.Clients.Dialog
 			this.responseVerifier = responseVerifier;
 		}
 
-		public async Task<DialogResponse> Open(string slackKey, Models.Dialog dialog, string triggerId)
+		public async Task<MessageResponse> Open(string slackKey, Models.Dialog dialog, string triggerId)
 		{
 			var response = await ClientConstants
 					   .SlackApiHost
@@ -27,9 +27,9 @@ namespace SlackConnector.Connections.Clients.Dialog
 					   .SetQueryParam("token", slackKey)
 					   .SetQueryParam("trigger_id", triggerId)
 					   .SetQueryParam("dialog", JsonConvert.SerializeObject(dialog))
-					   .GetJsonAsync<DialogResponse>();
+					   .GetJsonAsync<MessageResponse>();
 
-			responseVerifier.VerifyResponse(response);
+			responseVerifier.VerifyDialogResponse(response);
 
 			return response;
 		}

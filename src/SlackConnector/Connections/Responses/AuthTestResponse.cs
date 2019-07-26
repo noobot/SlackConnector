@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlackConnector.Connections.Responses
 {
-	public class AuthTestResponse : StandardResponse
+	public class AuthTestResponse : DefaultStandardResponse
 	{
 		[JsonProperty("url")]
 		public string Url { get; set; }

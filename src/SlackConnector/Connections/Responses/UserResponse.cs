@@ -2,14 +2,14 @@
 
 namespace SlackConnector.Connections.Responses
 {
-	public class IdentityResponse : StandardResponse
+	public class IdentityResponse : DefaultStandardResponse
 	{
 		public UserIdentity User { get; set; }
 
 		public TeamIdentity Team { get; set; }
 	}
 
-	public class UserResponse : StandardResponse
+	public class UserResponse : DefaultStandardResponse
 	{
 		public User User { get; set; }
 	}

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlackConnector.Connections.Responses
 {
-	public class ConversationResponse : StandardResponse
+	public class ConversationResponse : DefaultStandardResponse
 	{
 		public ConversationChannel Channel { get; set; }
 	}

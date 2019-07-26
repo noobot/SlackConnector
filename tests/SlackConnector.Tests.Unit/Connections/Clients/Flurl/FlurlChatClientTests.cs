@@ -40,7 +40,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             const string channel = "channel-name";
             const string text = "some-text-for-you";
 
-            var expectedResponse = new StandardResponse();
+            var expectedResponse = new DefaultStandardResponse();
             _httpTest.RespondWithJson(expectedResponse);
 
             // when
@@ -63,7 +63,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
         public async Task should_add_attachments_if_given()
         {
             // given
-            _httpTest.RespondWithJson(new StandardResponse());
+            _httpTest.RespondWithJson(new DefaultStandardResponse());
             var attachments = new List<SlackAttachment>
             {
                 new SlackAttachment { Text = "dummy text" },

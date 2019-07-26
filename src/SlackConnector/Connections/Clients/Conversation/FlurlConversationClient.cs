@@ -35,7 +35,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 					   .AppendPathSegment(CONVERSATION_CLOSE_PATH)
 					   .SetQueryParam("token", slackKey)
 					   .SetQueryParam("channel", channel)
-					   .GetJsonAsync<StandardResponse>();
+					   .GetJsonAsync<DefaultStandardResponse>();
 
 			responseVerifier.VerifyResponse(response);
 		}
@@ -105,7 +105,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 					   .AppendPathSegment(CONVERSATION_LEAVE_PATH)
 					   .SetQueryParam("token", slackKey)
 					   .SetQueryParam("channel", channel)
-					   .GetJsonAsync<StandardResponse>();
+					   .GetJsonAsync<DefaultStandardResponse>();
 
 			responseVerifier.VerifyResponse(response);
 		}
@@ -128,7 +128,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 					   .GetJsonAsync<ConversationCollectionReponse>();
 
 			responseVerifier.VerifyResponse(response);
-			return new CursoredResponse<Models.ConversationChannel>(response.Channels, response.ReponseMetadata?.NextCursor);
+			return new CursoredResponse<Models.ConversationChannel>(response.Channels, response.ResponseMetadata?.NextCursor);
 		}
 
 		public async Task<CursoredResponse<string>> Members(string slackKey, string channel, string cursor = null, int? limit = null)
@@ -143,7 +143,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 					   .GetJsonAsync<ConversationMembersResponse>();
 
 			responseVerifier.VerifyResponse(response);
-			return new CursoredResponse<string>(response.Members, response.ReponseMetadata?.NextCursor);
+			return new CursoredResponse<string>(response.Members, response.ResponseMetadata?.NextCursor);
 		}
 
 		public async Task<Models.ConversationChannel> Open(string slackKey, string channel = null, bool? returnIm = null, params string[] users)
@@ -181,7 +181,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 					   .GetJsonAsync<ConversationMessageReponse>();
 
 			responseVerifier.VerifyResponse(response);
-			return new CursoredResponse<ConversationMessage>(response.Messages, response.ReponseMetadata?.NextCursor);
+			return new CursoredResponse<ConversationMessage>(response.Messages, response.ResponseMetadata?.NextCursor);
 		}
 	}
 }
