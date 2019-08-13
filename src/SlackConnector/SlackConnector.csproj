@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
@@ -7,12 +7,14 @@
     <FileVersion>1.0.0.1</FileVersion>
     <PackageTags>Slack API SlackApi MargieBot SlackConnector noobot bot slackbot</PackageTags>
     <Description>SlackConnector initiates an open connection between you and the Slack api servers. SlackConnector uses web-sockets to allow real-time messages to be received and handled within your application.</Description>
-    <Company>Workshop2</Company>
-    <RepositoryUrl>https://github.com/noobot/slackconnector</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/noobot/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
+    <Company>kYann</Company>
+    <RepositoryUrl>https://github.com/kYann/slackconnector</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/kYann/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright />
     <Authors>Workshop2</Authors>
-    <PackageProjectUrl>https://github.com/noobot/slackconnector</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/kYann/slackconnector</PackageProjectUrl>
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.5|AnyCPU'">
@@ -24,10 +26,6 @@
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="WebsocketClientLite.PCL" Version="6.2.0" />
   </ItemGroup>
 
