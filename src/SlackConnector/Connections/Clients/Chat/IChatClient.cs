@@ -22,6 +22,8 @@ namespace SlackConnector.Connections.Clients.Chat
 			IEnumerable<SlackAttachment> attachments = null, bool asUser = false, bool linkNames = true, 
 			IEnumerable<BlockBase> blocks = null);
 
+		Task Update(string responseUrl, string text, IEnumerable<SlackAttachment> attachments = null, IEnumerable<BlockBase> blocks = null);
+
 		Task Delete(string slackKey, string channel, string ts, bool asUser = false);
     }
 }

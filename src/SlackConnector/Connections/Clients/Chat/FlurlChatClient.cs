@@ -82,6 +82,17 @@ namespace SlackConnector.Connections.Clients.Chat
 			_responseVerifier.VerifyResponse(response);
 		}
 
+		public async Task Update(string responseUrl, string text, IEnumerable<SlackAttachment> attachments = null, IEnumerable<BlockBase> blocks = null)
+		{
+			var response = await responseUrl.PostJsonAsync(new
+			{
+				text = text,
+				attachments = attachments,
+				blocks = blocks
+			}).ReceiveJson<DefaultStandardResponse>();
+			_responseVerifier.VerifyResponse(response);
+		}
+
 		public async Task Delete(string slackKey, string channel, string ts, bool asUser = true)
 		{
 			var request = ClientConstants
