@@ -9,7 +9,8 @@ namespace SlackConnector.Models.Blocks
 {
 	public class SectionBlock : BlockBase
 	{
-		public SectionBlock() : base("section")
+		public const string BlockName = "section";
+		public SectionBlock() : base(BlockName)
 		{
 		}
 

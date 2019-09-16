@@ -8,7 +8,13 @@ namespace SlackConnector.Models.Blocks.Elements
 {
 	public class ButtonElement : InteractiveElement
 	{
-		public ButtonElement(string actionId, string text) : base(actionId, "button")
+		public const string ElementName = "button";
+
+		public ButtonElement() : base(null, ElementName)
+		{
+		}
+
+		public ButtonElement(string actionId, string text) : base(actionId, ElementName)
 		{
 			this.Text = new TextObject(text, TextObjectType.PlainText);
 		}

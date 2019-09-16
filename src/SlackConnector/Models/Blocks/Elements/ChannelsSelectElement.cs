@@ -8,7 +8,8 @@ namespace SlackConnector.Models.Blocks.Elements
 {
 	public class ChannelsSelectElement : InteractiveElement
 	{
-		public ChannelsSelectElement(string actionId, string placeholder) : base(actionId, "channels_select")
+		public const string ElementName = "channels_select";
+		public ChannelsSelectElement(string actionId, string placeholder) : base(actionId, ElementName)
 		{
 			this.Placeholder = new TextObject(placeholder, TextObjectType.PlainText);
 		}

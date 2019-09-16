@@ -13,7 +13,8 @@ namespace SlackConnector.Models.Blocks
 
 	public class ContextBlock : BlockBase
 	{
-		public ContextBlock() : base("context")
+		public const string BlockName = "context";
+		public ContextBlock() : base(BlockName)
 		{
 			this.Elements = new List<IContextElement>();
 		}

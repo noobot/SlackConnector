@@ -8,7 +8,8 @@ namespace SlackConnector.Models.Blocks.Elements
 {
 	public class ExternalSelectElement : InteractiveElement
 	{
-		public ExternalSelectElement(string actionId, string placeholder) : base(actionId, "external_select")
+		public const string ElementName = "external_select";
+		public ExternalSelectElement(string actionId, string placeholder) : base(actionId, ElementName)
 		{
 			this.Placeholder = new TextObject(placeholder, TextObjectType.PlainText);
 		}

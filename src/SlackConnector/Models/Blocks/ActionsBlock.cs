@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using SlackConnector.Models.Blocks.Elements;
-using SlackConnector.Models.Blocks.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +8,8 @@ namespace SlackConnector.Models.Blocks
 {
 	public class ActionsBlock : BlockBase
 	{
-		public ActionsBlock() : base("actions")
+		public const string BlockName = "actions";
+		public ActionsBlock() : base(BlockName)
 		{
 			this.Elements = new List<InteractiveElement>();
 		}

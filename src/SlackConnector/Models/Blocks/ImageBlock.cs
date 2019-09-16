@@ -8,7 +8,8 @@ namespace SlackConnector.Models.Blocks
 {
 	public class ImageBlock : BlockBase
 	{
-		public ImageBlock(string imageUrl, string altText) : base("image")
+		public const string BlockName = "image";
+		public ImageBlock(string imageUrl, string altText) : base(BlockName)
 		{
 			ImageUrl = imageUrl;
 			AltText = altText;

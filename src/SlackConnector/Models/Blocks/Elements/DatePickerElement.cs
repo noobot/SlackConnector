@@ -9,7 +9,8 @@ namespace SlackConnector.Models.Blocks.Elements
 {
 	public class DatePickerElement : InteractiveElement
 	{
-		public DatePickerElement(string actionId, string placeholder) : base(actionId, "datepicker")
+		public const string ElementName = "datepicker";
+		public DatePickerElement(string actionId, string placeholder) : base(actionId, ElementName)
 		{
 			this.Placeholder = new TextObject(placeholder, TextObjectType.PlainText);
 		}

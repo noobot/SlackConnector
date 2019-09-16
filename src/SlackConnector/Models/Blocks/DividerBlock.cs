@@ -6,7 +6,8 @@ namespace SlackConnector.Models.Blocks
 {
 	public class DividerBlock : BlockBase
 	{
-		public DividerBlock() : base("divider")
+		public const string BlockName = "divider";
+		public DividerBlock() : base(BlockName)
 		{
 		}
 	}

@@ -8,7 +8,8 @@ namespace SlackConnector.Models.Blocks.Elements
 {
 	public class OverflowElement : InteractiveElement
 	{
-		public OverflowElement(string actionId) : base(actionId, "overflow")
+		public const string ElementName = "overflow";
+		public OverflowElement(string actionId) : base(actionId, ElementName)
 		{
 			this.Options = new List<OptionObject>();
 		}

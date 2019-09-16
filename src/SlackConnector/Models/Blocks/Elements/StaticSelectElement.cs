@@ -8,7 +8,13 @@ namespace SlackConnector.Models.Blocks.Elements
 {
 	public class StaticSelectElement : InteractiveElement
 	{
-		public StaticSelectElement(string actionId, string placeholder) : base(actionId, "static_select")
+		public const string ElementName = "static_select";
+
+		public StaticSelectElement() : base(null, ElementName)
+		{
+		}
+
+		public StaticSelectElement(string actionId, string placeholder) : base(actionId, ElementName)
 		{
 			this.Placeholder = new TextObject(placeholder, TextObjectType.PlainText);
 			this.Options = new List<OptionObject>();

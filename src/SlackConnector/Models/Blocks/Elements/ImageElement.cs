@@ -7,7 +7,8 @@ namespace SlackConnector.Models.Blocks.Elements
 {
 	public class ImageElement : ElementBase, IContextElement
 	{
-		public ImageElement(string imageUrl, string altText) : base("image")
+		public const string ElementName = "image";
+		public ImageElement(string imageUrl, string altText) : base(ElementName)
 		{
 			ImageUrl = imageUrl;
 			AltText = altText;
