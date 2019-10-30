@@ -23,34 +23,40 @@ namespace SlackConnector.Connections.Clients.Chat
             _responseVerifier = responseVerifier;
         }
 
-        public async Task<MessageResponse> PostMessage(string slackKey, string channel, string text,
-			IEnumerable<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null, 
+		public async Task<MessageResponse> PostMessage(string slackKey, string channel, string text,
+			IEnumerable<SlackAttachment> attachments = null, string threadTs = null, string iconUrl = null,
 			string userName = null, bool asUser = false, bool linkNames = true, IEnumerable<BlockBase> blocks = null)
-        {
-            var request = ClientConstants
-                       .SlackApiHost
-                       .AppendPathSegment(SEND_MESSAGE_PATH)
-                       .SetQueryParam("token", slackKey)
-                       .SetQueryParam("channel", channel)
-                       .SetQueryParam("text", text)
-                       .SetQueryParam("as_user", asUser)
-                       .SetQueryParam("link_names", linkNames)
-					   .SetQueryParam("thread_ts", threadTs)
-            		   .SetQueryParam("icon_url", iconUrl)
-					   .SetQueryParam("username", userName);
+		{
+			var request = ClientConstants
+					   .SlackApiHost
+					   .AppendPathSegment(SEND_MESSAGE_PATH);
+
+			var args = new Dictionary<string, string>()
+			{
+				{ "token", slackKey },
+				{"channel", channel },
+				{"text", text },
+				{"as_user", asUser.ToString().ToLower() },
+				{"link_names", linkNames.ToString().ToLower() },
+				{"thread_ts", threadTs },
+				{"icon_url", iconUrl },
+				{"username", userName }
+			};
 
             if (attachments != null && attachments.Any())
             {
-                request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
+				args.Add("attachments", JsonConvert.SerializeObject(attachments));
             }
 
 			if (blocks != null && blocks.Any())
 			{
 				var jsonBlocks = JsonConvert.SerializeObject(blocks);
-				request.SetQueryParam("blocks", jsonBlocks);
+				args.Add("blocks", jsonBlocks);
 			}
 
-			var response = await request.GetJsonAsync<MessageResponse>();
+			var response = await request.PostUrlEncodedAsync(args)
+				.ReceiveJson<MessageResponse>();
+
             _responseVerifier.VerifyResponse(response);
 			return response;
         }
