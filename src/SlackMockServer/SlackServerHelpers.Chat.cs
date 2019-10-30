@@ -72,7 +72,7 @@ namespace SlackMockServer
 							Text = request.GetText(),
 							ThreadTimestamp = request.GetParameterValuesFromPostOrGet("thread_ts")?.FirstOrDefault(),
 							Channel = request.GetChannel(),
-							User = request.GetUserIdFromChannel()
+							User = request.GetUserIdFromChannel(),
 						}
 					};
 

@@ -29,11 +29,14 @@ namespace SlackMockServer
 
 			if (values is null || !values.Any())
 			{
+				if (request.Body is null)
+					return Enumerable.Empty<string>();
+
 				var qs = HttpUtility.ParseQueryString(request.Body.TrimStart('?'));
-				values = qs[key].Split(',');
+				values = qs[key]?.Split(',');
 			}
 
-			return values;
+			return values ?? Enumerable.Empty<string>();
 		}
 
 		public static string GetParameterValueFromPostOrGet(this RequestMessage request, string key)
@@ -51,7 +54,7 @@ namespace SlackMockServer
 
 		private static string GetUserIdFromChannel(this RequestMessage request)
 		{
-			var channel = GetChannel(request);
+			var channel = request.GetChannel();
 			if (channel.StartsWith("DM"))
 				return channel.Substring(2);
 			return null;
