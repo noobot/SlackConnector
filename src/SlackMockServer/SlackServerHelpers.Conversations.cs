@@ -12,9 +12,21 @@ namespace SlackMockServer
 {
     public static partial class SlackServerHelpers
     {
-		public static SlackServer MockConversationList(this SlackServer server, params ConversationChannel[] conversations)
+		public static SlackServer MockConversationList(this SlackServer server, 
+			string cursor = null, bool? excludeArchived = null, int? limit = null, string types = null,
+			params ConversationChannel[] conversations)
 		{
-			server.HttpServer.Given(Request.Create().WithPath(FlurlConversationClient.CONVERSATION_LIST_PATH))
+			var givenRequest = Request.Create().WithPath(FlurlConversationClient.CONVERSATION_LIST_PATH);
+			if (cursor != null)
+				givenRequest = givenRequest.WithParam("cursor", cursor);
+			if (excludeArchived != null)
+				givenRequest = givenRequest.WithParam("exclude_archived", excludeArchived.ToString().ToLowerInvariant());
+			if (limit != null)
+				givenRequest = givenRequest.WithParam("limit", limit.Value.ToString());
+			if (types != null)
+				givenRequest = givenRequest.WithParam("types", types);
+
+			server.HttpServer.Given(givenRequest)
 				.RespondWith(Response.Create().WithCallback(request =>
 				{
 					return new WireMock.ResponseMessage()
