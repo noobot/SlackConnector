@@ -16,7 +16,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients
             var verifier = new ResponseVerifier();
 
             // when && then
-            var exception = Assert.Throws<CommunicationException>(() => verifier.VerifyResponse(response));
+            var exception = Assert.Throws<ResponseCommunicationException>(() => verifier.VerifyResponse(response));
             exception.Message.ShouldBe($"Error occured while posting message '{response.Error}'");
         }
 

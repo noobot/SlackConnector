@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ExpectedObjects;
 using Flurl;
@@ -295,14 +296,13 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             _httpTest.RespondWithJson(expectedResponse);
 
             // when
-            var result = await _userClient.ListAll(slackKey);
+            var result = (await _userClient.ListAll(slackKey)).ToArray();
 
             // then
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)), Times.Once);
             _httpTest
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlUserClient.USERS_LIST_PATH))
                 .WithQueryParamValue("token", slackKey)
-                .WithQueryParamValue("presence", "1")
                 .Times(1);
 
             result.ToExpectedObject().ShouldEqual(expectedResponse.Members);

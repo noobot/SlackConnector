@@ -1,16 +1,10 @@
-﻿using SlackConnector.Connections.Clients.Chat;
-using SlackConnector.Connections.Clients.Conversation;
-using SlackConnector.Connections.Clients.Users;
-using SlackConnector.Connections.Models;
-using SlackConnector.Connections.Responses;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
 using WireMock;
-using WireMock.RequestBuilders;
-using WireMock.ResponseBuilders;
 
 namespace SlackMockServer
 {
@@ -39,17 +33,30 @@ namespace SlackMockServer
 			return values ?? Enumerable.Empty<string>();
 		}
 
+		public static string GetSafeParameter(this RequestMessage requestMessage, string key)
+		{
+			var uri = new Uri(requestMessage.Url);
+			if (string.IsNullOrEmpty(uri.Query))
+				return null;
+			var query = QueryHelpers.ParseQuery(uri.Query);
+			if (!query.ContainsKey(key))
+				return null;
+			return query[key];
+		}
+
 		public static string GetParameterValueFromPostOrGet(this RequestMessage request, string key)
 		{
-			IEnumerable<string> values = request.GetParameter(key);
+			var value = request.GetSafeParameter(key);
 
-			if (values is null || !values.Any())
+			if (value is null)
 			{
+				if (request.Body is null)
+					return null;
 				var qs = HttpUtility.ParseQueryString(request.Body.TrimStart('?'));
 				return qs[key];
 			}
 
-			return values?.FirstOrDefault();
+			return value;
 		}
 
 		private static string GetUserIdFromChannel(this RequestMessage request)

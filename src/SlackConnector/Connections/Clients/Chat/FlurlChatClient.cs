@@ -38,12 +38,14 @@ namespace SlackConnector.Connections.Clients.Chat
 				{"text", text },
 				{"as_user", asUser.ToString().ToLower() },
 				{"link_names", linkNames.ToString().ToLower() },
-				{"thread_ts", threadTs },
-				{"icon_url", iconUrl },
-				{"username", userName }
 			};
 
-            if (attachments != null && attachments.Any())
+			if (threadTs != null) args.Add("thread_ts", threadTs);
+			if (iconUrl != null) args.Add("icon_url", iconUrl);
+			if (userName != null) args.Add("username", userName);
+
+
+			if (attachments != null && attachments.Any())
             {
 				args.Add("attachments", JsonConvert.SerializeObject(attachments));
             }
