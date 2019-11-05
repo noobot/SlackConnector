@@ -1,4 +1,7 @@
-﻿namespace SlackConnector.Models
+﻿using SlackConnector.Connections.Models;
+using System.Collections.Generic;
+
+namespace SlackConnector.Models
 {
     public class SlackMessage
     {
@@ -10,5 +13,7 @@
         public string Timestamp { get; set; }
 		public string ThreadTimestamp { get; set; }
         public SlackMessageSubType MessageSubType { get; set; }
-    }
+
+		public IEnumerable<SlackFile> Files { get; set; }
+	}
 }

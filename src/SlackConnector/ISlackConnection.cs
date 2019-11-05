@@ -117,10 +117,15 @@ namespace SlackConnector
         /// <returns></returns>
         Task Ping();
 
-        /// <summary>
-        /// Raised when the websocket disconnects from the mothership.
-        /// </summary>
-        event DisconnectEventHandler OnDisconnect;
+		/// <summary>
+		/// Downloads a file from slack. Best used in conjunction with the file class found in SlackMessage
+		/// </summary>
+		Task<Stream> DownloadFile(Uri downloadUri);
+
+		/// <summary>
+		/// Raised when the websocket disconnects from the mothership.
+		/// </summary>
+		event DisconnectEventHandler OnDisconnect;
 
         /// <summary>
         /// Raised when attempting to reconnect to Slack after a disconnect is detected

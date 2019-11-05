@@ -118,7 +118,7 @@ namespace SlackConnector.Connections.Clients.Conversation
 					   .SetQueryParam("token", slackKey)
 					   .SetQueryParam("cursor", cursor)
 						.SetQueryParam("excluded_archived", excludeArchived)
-						.SetQueryParam("limit", limit.Value);
+						.SetQueryParam("limit", limit);
 
 			if (types != null)
 				url.SetQueryParam("types", string.Join(",", types));

@@ -55,8 +55,10 @@ namespace SlackConnector.Tests.Unit.Models
                         }
                     },
                     ImageUrl = "http://my-website.com/path/to/image.jpg",
-                    ThumbUrl = "http://example.com/path/to/thumb.png"
-                };
+                    ThumbUrl = "http://example.com/path/to/thumb.png",
+					Footer = "Brief text to help contextualize an attachment",
+					FooterIcon = "http://flickr.com/icons/footer.jpg"
+				};
 
             // when
             string resultJson = JsonConvert.SerializeObject(attachment);

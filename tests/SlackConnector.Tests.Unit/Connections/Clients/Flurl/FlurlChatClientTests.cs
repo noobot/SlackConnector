@@ -50,12 +50,14 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)));
             _httpTest
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
-                .WithQueryParamValue("token", slackKey)
-                .WithQueryParamValue("channel", channel)
-                .WithQueryParamValue("text", text)
-                .WithQueryParamValue("as_user", "true")
-                .WithQueryParamValue("link_names", "true")
-                .WithoutQueryParam("attachments")
+                .WithRequestUrlEncoded(new
+				{
+					token = slackKey,
+					channel = channel,
+					text = text,
+					as_user = "false",
+					link_names = "true"
+				})
                 .Times(1);
         }
 
@@ -69,14 +71,25 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
                 new SlackAttachment { Text = "dummy text" },
                 new SlackAttachment { AuthorName = "dummy author" },
             };
+			const string slackKey = "something-that-looks-like-a-slack-key";
+			const string channel = "channel-name";
+			const string text = "some-text-for-you";
 
-            // when
-            await _chatClient.PostMessage(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), attachments);
+			// when
+			await _chatClient.PostMessage(slackKey, channel, text, attachments);
 
             // then
             _httpTest
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
-                .WithQueryParamValue("attachments", JsonConvert.SerializeObject(attachments))
+				.WithRequestUrlEncoded(new
+				{
+					token = slackKey,
+					channel = channel,
+					text = text,
+					as_user = "false",
+					link_names = "true",
+					attachments = JsonConvert.SerializeObject(attachments)
+				})
                 .Times(1);
         }
     }

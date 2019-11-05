@@ -4,6 +4,11 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
 {
     public class FileCommentReaction : IReactionItem
     {
+		public FileCommentReaction()
+		{
+			Type = "file_comment";
+		}
+
 		[JsonProperty("type")]
 		public string Type { get; set; }
 

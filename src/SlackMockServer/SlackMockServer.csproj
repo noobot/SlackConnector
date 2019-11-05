@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <PackageTags>Slack API SlackApi SlackConnector bot slackbot</PackageTags>
+    <Description>SlackMockServer allows you to mock slack server for application communicating with slack.</Description>
+    <Company>kYann</Company>
+    <RepositoryUrl>https://github.com/whyseco/slackconnector</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/whyseco/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright />
+    <Authors>Workshop2</Authors>
+    <PackageProjectUrl>https://github.com/whyseco/slackconnector</PackageProjectUrl>
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Polly" Version="7.1.1" />
+    <PackageReference Include="WireMock.Net" Version="1.0.36" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SlackConnector\SlackConnector.csproj" />
+  </ItemGroup>
+
+</Project>

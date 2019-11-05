@@ -4,7 +4,12 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound.ReactionItem
 {
 	public class MessageReaction : IReactionItem
     {
-        [JsonProperty("channel")]
+		public MessageReaction()
+		{
+			this.Type = "message";
+		}
+
+		[JsonProperty("channel")]
         public string Channel { get; set; }
 
 		[JsonProperty("ts")]

@@ -8,11 +8,11 @@
     <PackageTags>Slack API SlackApi MargieBot SlackConnector noobot bot slackbot</PackageTags>
     <Description>SlackConnector initiates an open connection between you and the Slack api servers. SlackConnector uses web-sockets to allow real-time messages to be received and handled within your application.</Description>
     <Company>kYann</Company>
-    <RepositoryUrl>https://github.com/kYann/slackconnector</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/kYann/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/whyseco/slackconnector</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/whyseco/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright />
     <Authors>Workshop2</Authors>
-    <PackageProjectUrl>https://github.com/kYann/slackconnector</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/whyseco/slackconnector</PackageProjectUrl>
     <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
