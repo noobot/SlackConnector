@@ -1,5 +1,5 @@
-﻿using SlackConnector.Connections.Clients.Team;
-using SlackConnector.Connections.Responses;
+﻿using SlackLibrary.Connections.Clients.Team;
+using SlackLibrary.Connections.Responses;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +10,7 @@ namespace SlackMockServer
 {
     public static partial class SlackServerHelpers
     {
-		public static SlackServer MockDefaultTeamInfo(this SlackServer server, SlackConnector.Connections.Models.Team team)
+		public static SlackServer MockDefaultTeamInfo(this SlackServer server, SlackLibrary.Connections.Models.Team team)
 		{
 			server.HttpServer.Given(Request.Create().WithPath(FlurlTeamClient.TEAM_INFO))
 			.RespondWith(Response.Create().WithCallback(request =>
@@ -33,7 +33,7 @@ namespace SlackMockServer
 			return server;
 		}
 
-		public static SlackServer MockTeamInfo(this SlackServer server, string token, SlackConnector.Connections.Models.Team team)
+		public static SlackServer MockTeamInfo(this SlackServer server, string token, SlackLibrary.Connections.Models.Team team)
 		{
 			var givenRequest = Request.Create().WithPath(FlurlTeamClient.TEAM_INFO)
 				.WithParam("token", token);

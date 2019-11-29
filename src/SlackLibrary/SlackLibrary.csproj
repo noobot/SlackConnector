@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <PackageTags>Slack SlackApi SlackConnector noobot bot slackbot slacklibrary</PackageTags>
+    <Description>Modern slack feature with websocket and classic api methods support</Description>
+    <Company>kYann</Company>
+    <RepositoryUrl>https://github.com/whyseco/slackconnector</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/whyseco/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright />
+    <Authors>Workshop2 kYann</Authors>
+    <PackageProjectUrl>https://github.com/whyseco/slackconnector</PackageProjectUrl>
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.5|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="2.4.2" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="WebsocketClientLite.PCL" Version="6.2.0" />
+  </ItemGroup>
+
+</Project>

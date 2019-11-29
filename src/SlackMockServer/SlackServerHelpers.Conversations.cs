@@ -1,6 +1,6 @@
-﻿using SlackConnector.Connections.Clients.Conversation;
-using SlackConnector.Connections.Models;
-using SlackConnector.Connections.Responses;
+﻿using SlackLibrary.Connections.Clients.Conversation;
+using SlackLibrary.Connections.Models;
+using SlackLibrary.Connections.Responses;
 using System;
 using System.Collections.Generic;
 using System.Text;

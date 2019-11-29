@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using DeepEqual.Syntax;
-using SlackConnector.Connections.Clients;
-using SlackConnector.Connections.Clients.Users;
+using SlackLibrary.Connections.Clients;
+using SlackLibrary.Connections.Clients.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +15,7 @@ namespace SlackMockServer.Tests.Unit
 		private int GetRandomPort => (new Random()).Next(3000, 4000);
 
 		[Theory, AutoData]
-		public async Task WhenAskingForUserInfoThenServerReceive(SlackConnector.Connections.Models.User wantedResponse)
+		public async Task WhenAskingForUserInfoThenServerReceive(SlackLibrary.Connections.Models.User wantedResponse)
 		{
 			var port = GetRandomPort;
 			using (var server = new SlackServer(port))

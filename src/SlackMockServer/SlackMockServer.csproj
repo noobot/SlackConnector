@@ -5,7 +5,7 @@
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <PackageTags>Slack API SlackApi SlackConnector bot slackbot</PackageTags>
+    <PackageTags>Slack API SlackApi SlackConnector bot slackbot SlackLibrary</PackageTags>
     <Description>SlackMockServer allows you to mock slack server for application communicating with slack.</Description>
     <Company>kYann</Company>
     <RepositoryUrl>https://github.com/whyseco/slackconnector</RepositoryUrl>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SlackConnector\SlackConnector.csproj" />
+    <ProjectReference Include="..\SlackLibrary\SlackLibrary.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
-using SlackConnector.Connections.Clients;
-using SlackConnector.Connections.Clients.Chat;
+using SlackLibrary.Connections.Clients;
+using SlackLibrary.Connections.Clients.Chat;
 using System;
 using System.Threading.Tasks;
 using Xunit;
