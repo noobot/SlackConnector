@@ -7,12 +7,13 @@
     <FileVersion>1.0.0</FileVersion>
     <PackageTags>Slack SlackApi SlackConnector noobot bot slackbot slacklibrary</PackageTags>
     <Description>Modern slack feature with websocket and classic api methods support</Description>
-    <Company>kYann</Company>
-    <RepositoryUrl>https://github.com/whyseco/slackconnector</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/whyseco/SlackConnector/blob/master/LICENSE</PackageLicenseUrl>
+    <Company>Whyse</Company>
+    <RepositoryUrl>https://github.com/whyseco/slacklibrary</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/whyseco/SlackLibrary/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright />
     <Authors>Workshop2 kYann</Authors>
-    <PackageProjectUrl>https://github.com/whyseco/slackconnector</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/whyseco/slacklibrary</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
