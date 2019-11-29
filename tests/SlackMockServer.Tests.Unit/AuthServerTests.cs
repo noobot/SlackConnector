@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using DeepEqual.Syntax;
-using SlackConnector.Connections.Clients;
-using SlackConnector.Connections.Clients.Auth;
+using SlackLibrary.Connections.Clients;
+using SlackLibrary.Connections.Clients.Auth;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +15,7 @@ namespace SlackMockServer.Tests.Unit
 		private int GetRandomPort => (new Random()).Next(3000, 4000);
 
 		[Theory, AutoData]
-		public async Task WhenCallingOAuthAccessThenServerReceive(SlackConnector.Connections.Responses.OAuthAccessResponse wantedResponse)
+		public async Task WhenCallingOAuthAccessThenServerReceive(SlackLibrary.Connections.Responses.OAuthAccessResponse wantedResponse)
 		{
 			var port = GetRandomPort;
 			using (var server = new SlackServer(port))
@@ -33,12 +33,12 @@ namespace SlackMockServer.Tests.Unit
 		}
 
 		[Theory, AutoData]
-		public async Task WhenCallingAuthTestThenServerReceive(SlackConnector.Connections.Models.AuthTest wantedResponse)
+		public async Task WhenCallingAuthTestThenServerReceive(SlackLibrary.Connections.Models.AuthTest wantedResponse)
 		{
 			var port = GetRandomPort;
 			using (var server = new SlackServer(port))
 			{
-				var mockedResponse = new SlackConnector.Connections.Responses.AuthTestResponse()
+				var mockedResponse = new SlackLibrary.Connections.Responses.AuthTestResponse()
 				{
 					Ok = true,
 					TeamId = wantedResponse.TeamId,

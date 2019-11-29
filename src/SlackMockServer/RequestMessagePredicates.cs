@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using SlackConnector.Models;
-using SlackConnector.Models.Blocks;
-using SlackConnector.Serialising;
+using SlackLibrary.Models;
+using SlackLibrary.Models.Blocks;
+using SlackLibrary.Serialising;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +87,7 @@ namespace SlackMockServer
 		{
 			var rawAttachments = requestMessage.GetParameterValueFromPostOrGet("attachments");
 
-			var attachments = JsonConvert.DeserializeObject<SlackConnector.Models.SlackAttachment[]>(rawAttachments);
+			var attachments = JsonConvert.DeserializeObject<SlackLibrary.Models.SlackAttachment[]>(rawAttachments);
 
 			return attachments;
 		}

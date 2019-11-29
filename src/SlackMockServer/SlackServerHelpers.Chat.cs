@@ -1,6 +1,6 @@
-﻿using SlackConnector.Connections.Clients.Chat;
-using SlackConnector.Connections.Responses;
-using SlackConnector.EventAPI;
+﻿using SlackLibrary.Connections.Clients.Chat;
+using SlackLibrary.Connections.Responses;
+using SlackLibrary.EventAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;

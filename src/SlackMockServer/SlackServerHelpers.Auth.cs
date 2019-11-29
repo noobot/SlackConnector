@@ -1,5 +1,5 @@
-﻿using SlackConnector.Connections.Clients.Auth;
-using SlackConnector.Connections.Responses;
+﻿using SlackLibrary.Connections.Clients.Auth;
+using SlackLibrary.Connections.Responses;
 using System;
 using System.Collections.Generic;
 using System.Text;
