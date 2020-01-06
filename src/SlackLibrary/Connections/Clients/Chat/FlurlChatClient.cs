@@ -68,25 +68,32 @@ namespace SlackLibrary.Connections.Clients.Chat
 		{
 			var request = ClientConstants
 					   .SlackApiHost
-					   .AppendPathSegment(UPDATE_MESSAGE_PATH)
-					   .SetQueryParam("token", slackKey)
-					   .SetQueryParam("channel", channel)
-					   .SetQueryParam("text", text)
-					   .SetQueryParam("as_user", asUser)
-					   .SetQueryParam("link_names", linkNames)
-					   .SetQueryParam("ts", messageTs);
+					   .AppendPathSegment(UPDATE_MESSAGE_PATH);
+
+			var args = new Dictionary<string, string>()
+			{
+				{ "token", slackKey },
+				{"channel", channel },
+				{"text", text },
+				{"as_user", asUser.ToString().ToLower() },
+				{"link_names", linkNames.ToString().ToLower() },
+				{"ts", messageTs },
+			};
 
 			if (attachments != null && attachments.Any())
 			{
-				request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
+				args.Add("attachments", JsonConvert.SerializeObject(attachments));
 			}
 
 			if (blocks != null && blocks.Any())
 			{
-				request.SetQueryParam("blocks", JsonConvert.SerializeObject(blocks));
+				var jsonBlocks = JsonConvert.SerializeObject(blocks);
+				args.Add("blocks", jsonBlocks);
 			}
 
-			var response = await request.GetJsonAsync<DefaultStandardResponse>();
+			var response = await request.PostUrlEncodedAsync(args)
+				.ReceiveJson<DefaultStandardResponse>();
+
 			_responseVerifier.VerifyResponse(response);
 		}
 
