@@ -50,5 +50,19 @@ namespace SlackLibrary.Tests.Integration.Connections.Clients
 			response.ShouldNotBeNull();
 			response.Ok.ShouldBeTrue();
 		}
+
+		[Fact]
+		public async Task should_update_message_with_flurl()
+		{
+			// given
+			var config = new ConfigReader().GetConfig();
+			var client = new FlurlChatClient(new ResponseVerifier());
+			var response = await client.PostMessage(config.Slack.ApiToken,
+				config.Slack.TestChannel, "Kikoo");
+
+			// when
+			await client.Update(config.Slack.ApiToken,
+				response.Timestamp, response.Channel, "Kikoo lol");
+		}
 	}
 }
