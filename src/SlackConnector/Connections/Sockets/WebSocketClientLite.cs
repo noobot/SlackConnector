@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using IWebsocketClientLite.PCL;
 using Newtonsoft.Json;
@@ -14,51 +13,64 @@ namespace SlackConnector.Connections.Sockets
     {
         private readonly IMessageInterpreter _interpreter;
         private readonly List<IDisposable> _subscriptions = new List<IDisposable>();
-        private IMessageWebSocketRx _webSocket;
+        private MessageWebSocketRx _webSocket;
         private int _currentMessageId;
 
-        public bool IsAlive => _webSocket.IsConnected;
+        public bool IsAlive { get; private set; }
 
         public WebSocketClientLite(IMessageInterpreter interpreter)
         {
             _interpreter = interpreter;
         }
 
-        public async Task Connect(string webSockerUrl)
+        public async Task Connect(string webSocketUrl)
         {
             if (_webSocket != null)
             {
                 await Close();
             }
 
-            _webSocket = new MessageWebSocketRx();
-            _subscriptions.Add(_webSocket.ObserveConnectionStatus.Subscribe(OnConnectionChange));
+            _webSocket = new MessageWebSocketRx
+            {
+                ExcludeZeroApplicationDataInPong = true
+            };
 
-            var uri = new Uri(webSockerUrl);
-            var messageObserver = await _webSocket.CreateObservableMessageReceiver(uri, excludeZeroApplicationDataInPong: true);
-            _subscriptions.Add(messageObserver.Subscribe(OnWebSocketOnMessage));
+            _subscriptions.Add(_webSocket.ConnectionStatusObservable.Subscribe(OnConnectionChange));
+            _subscriptions.Add(_webSocket.MessageReceiverObservable.Subscribe(OnWebSocketOnMessage));
+
+            var uri = new Uri(webSocketUrl);
+            await _webSocket.ConnectAsync(uri);
+
+            IsAlive = true;
         }
 
         public async Task SendMessage(BaseMessage message)
         {
             System.Threading.Interlocked.Increment(ref _currentMessageId);
             message.Id = _currentMessageId;
-            string json = JsonConvert.SerializeObject(message);
+            var json = JsonConvert.SerializeObject(message);
 
             await _webSocket.SendTextAsync(json);
         }
 
         public async Task Close()
         {
-            using (_webSocket)
+            try
             {
-                foreach (var subscription in _subscriptions)
+                using (_webSocket)
                 {
-                    subscription.Dispose();
-                }
-                _subscriptions.Clear();
+                    foreach (var subscription in _subscriptions)
+                    {
+                        subscription.Dispose();
+                    }
+                    _subscriptions.Clear();
 
-                await _webSocket.CloseAsync();
+                    await _webSocket.DisconnectAsync();
+                }
+            }
+            finally
+            {
+                IsAlive = false;
             }
         }
 

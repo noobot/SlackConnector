@@ -9,7 +9,7 @@ namespace SlackConnector.Connections.Sockets
     {
         bool IsAlive { get; }
 
-        Task Connect(string webSockerUrl);
+        Task Connect(string webSocketUrl);
         Task SendMessage(BaseMessage message);
         Task Close();
 

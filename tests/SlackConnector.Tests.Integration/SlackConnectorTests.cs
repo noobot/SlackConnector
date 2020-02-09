@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using SlackConnector.Models;
 using Xunit;
@@ -14,18 +13,8 @@ namespace SlackConnector.Tests.Integration
         [Fact]
         public async Task should_connect()
         {
-            // given
-
-            // when
-            SlackConnection.OnDisconnect += SlackConnector_OnDisconnect;
-            SlackConnection.OnMessageReceived += SlackConnectorOnMessageReceived;
-            SlackConnection.OnReaction += SlackConnectionOnOnReaction;
-
-            // then
             SlackConnection.IsConnected.ShouldBeTrue();
-            //Thread.Sleep(TimeSpan.FromMinutes(5));
 
-            // when
             await SlackConnection.Close();
 
             SlackConnection.IsConnected.ShouldBeFalse();
