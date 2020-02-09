@@ -42,7 +42,10 @@ namespace SlackConnector
         public ContactDetails Team { get; private set; }
         public ContactDetails Self { get; private set; }
 
-        public SlackConnection(IConnectionFactory connectionFactory, IMentionDetector mentionDetector, IMonitoringFactory monitoringFactory)
+        public SlackConnection(
+            IConnectionFactory connectionFactory,
+            IMentionDetector mentionDetector,
+            IMonitoringFactory monitoringFactory)
         {
             _connectionFactory = connectionFactory;
             _mentionDetector = mentionDetector;
