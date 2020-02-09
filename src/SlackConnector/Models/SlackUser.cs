@@ -11,7 +11,6 @@
         public string WhatIDo { get; set; }
         public bool Deleted { get; set; }
         public long TimeZoneOffset { get; set; }
-        public bool? Online { get; set; }
         public bool IsBot { get; set; }
         public bool IsGuest { get; set; }
         public string StatusText { get; set; }
