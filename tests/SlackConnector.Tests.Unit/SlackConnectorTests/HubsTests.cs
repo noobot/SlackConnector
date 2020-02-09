@@ -31,7 +31,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectorTests
                 .Returns(_handshakeClient.Object);
 
             connectionFactory
-                .Setup(x => x.CreateWebSocketClient(_webSocketUrl, null))
+                .Setup(x => x.CreateWebSocketClient(_webSocketUrl))
                 .ReturnsAsync(webSocketClient.Object);
         }
 
