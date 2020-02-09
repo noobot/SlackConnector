@@ -9,7 +9,7 @@ namespace SlackConnector.Connections
 {
     internal interface IConnectionFactory
     {
-        Task<IWebSocketClient> CreateWebSocketClient(string url, ProxySettings proxySettings);
+        Task<IWebSocketClient> CreateWebSocketClient(string url);
         IHandshakeClient CreateHandshakeClient();
         IChatClient CreateChatClient();
         IFileClient CreateFileClient();

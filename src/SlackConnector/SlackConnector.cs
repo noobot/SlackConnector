@@ -52,7 +52,7 @@ namespace SlackConnector
                 Team = new ContactDetails { Id = handshakeResponse.Team.Id, Name = handshakeResponse.Team.Name },
                 Users = users,
                 SlackChatHubs = GetChatHubs(handshakeResponse, users.Values.ToArray()),
-                WebSocket = await _connectionFactory.CreateWebSocketClient(handshakeResponse.WebSocketUrl, null)
+                WebSocket = await _connectionFactory.CreateWebSocketClient(handshakeResponse.WebSocketUrl)
             };
 
             var connection = await _slackConnectionFactory.Create(connectionInfo);
