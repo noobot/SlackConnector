@@ -20,7 +20,6 @@ namespace SlackConnector.Tests.Unit.Extensions
                 TimeZoneOffset = fixture.Create<long>(),
                 IsBot = fixture.Create<bool>(),
                 Deleted = fixture.Create<bool>(),
-                Presence = "active",
                 Profile = new Profile
                 {
                     Email = fixture.Create<string>(),
@@ -47,25 +46,9 @@ namespace SlackConnector.Tests.Unit.Extensions
             user.Profile.Image.ShouldBe(slackUser.Image);
             user.Profile.Title.ShouldBe(slackUser.WhatIDo);
             user.Deleted.ShouldBe(slackUser.Deleted);
-            slackUser.Online.HasValue.ShouldBeTrue();
-            slackUser.Online.Value.ShouldBeTrue();
             slackUser.IsGuest.ShouldBeFalse();
             slackUser.StatusText.ShouldBe(user.Profile.StatusText);
             slackUser.IsAdmin.ShouldBe(user.IsAdmin);
-        }
-
-        [Fact]
-        public void should_create_slack_user_from_incomplete_user()
-        {
-            // given
-            var user = new User { Presence = "Away" };
-
-            // when
-            var slackUser = user.ToSlackUser();
-
-            // then
-            slackUser.Online.HasValue.ShouldBeTrue();
-            slackUser.Online.Value.ShouldBeFalse();
         }
 
         [Fact]

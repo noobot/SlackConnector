@@ -24,11 +24,6 @@ namespace SlackConnector.Extensions
                 IsAdmin = user.IsAdmin
             };
 
-            if (!string.IsNullOrWhiteSpace(user.Presence))
-            {
-                slackUser.Online = user.Presence == "active";
-            }
-
             return slackUser;
         }
     }
