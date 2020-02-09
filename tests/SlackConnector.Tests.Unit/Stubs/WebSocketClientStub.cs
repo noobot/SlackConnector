@@ -23,7 +23,7 @@ namespace SlackConnector.Tests.Unit.Stubs
             OnClose.Invoke(this, null);
         }
 
-        public Task Connect(string webSockerUrl)
+        public Task Connect(string webSocketUrl)
         {
             return Task.CompletedTask;
         }

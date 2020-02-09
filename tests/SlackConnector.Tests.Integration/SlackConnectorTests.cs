@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using SlackConnector.Models;
 using Xunit;
 using Shouldly;
+using SlackConnector.Tests.Integration.Configuration;
 
 namespace SlackConnector.Tests.Integration
 {
     public class SlackConnectorTests : IntegrationTest
     {
         [Fact]
-        public async Task should_connect_and_stuff()
+        public async Task should_connect()
+        {
+            SlackConnection.IsConnected.ShouldBeTrue();
+
+            await SlackConnection.Close();
+
+            SlackConnection.IsConnected.ShouldBeFalse();
+        }
+
+        [RunnableInDebugOnly]
+        public async Task connect_and_wait_5_mins()
         {
             // given
 
@@ -22,7 +32,7 @@ namespace SlackConnector.Tests.Integration
 
             // then
             SlackConnection.IsConnected.ShouldBeTrue();
-            //Thread.Sleep(TimeSpan.FromMinutes(5));
+            await Task.Delay(TimeSpan.FromMinutes(5));
 
             // when
             await SlackConnection.Close();

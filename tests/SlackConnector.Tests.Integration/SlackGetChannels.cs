@@ -28,7 +28,7 @@ namespace SlackConnector.Tests.Integration
             var users = await SlackConnection.GetUsers();
 
             // then
-           users.Any(u => u.Online == true).ShouldBeTrue();
+           users.Any().ShouldBeTrue();
         }
     }
 }
