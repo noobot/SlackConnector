@@ -4,6 +4,7 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using SlackConnector.Connections.Responses;
+using SlackConnector.Models;
 
 namespace SlackConnector.Connections.Clients.File
 {
@@ -49,11 +50,11 @@ namespace SlackConnector.Connections.Clients.File
         public async Task DownloadFile(string slackKey, SlackFile file, string path)
         {
             System.Threading.ManualResetEvent signalEvent = new System.Threading.ManualResetEvent(false);
-            Action<object, System.ComponentModel.AsyncCompletedEventArgs> completedAction = (sender, e) => {
+            System.Action<object, System.ComponentModel.AsyncCompletedEventArgs> completedAction = (sender, e) => {
                 signalEvent.Set();
             };
 
-            using (var webClient = new WebClient())
+            using (var webClient = new System.Net.WebClient())
             {
                 webClient.Headers["Authorization"] = $"Bearer {slackKey}";
                 webClient.DownloadFileAsync(file.UrlPrivateDownload, path);

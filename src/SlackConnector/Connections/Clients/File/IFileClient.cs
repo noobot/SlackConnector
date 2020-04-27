@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
+using SlackConnector.Models;
+
 namespace SlackConnector.Connections.Clients.File
 {
     internal interface IFileClient
