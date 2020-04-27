@@ -311,6 +311,12 @@ namespace SlackConnector
             await client.PostFile(SlackKey, chatHub.Id, stream, fileName);
         }
 
+        public async Task Download(SlackFile file, String path)
+        {
+            var client = _connectionFactory.CreateFileClient();
+            await client.DownloadFile(SlackKey, file, path);
+        }
+
         public async Task<IEnumerable<SlackChatHub>> GetChannels()
         {
             IChannelClient client = _connectionFactory.CreateChannelClient();

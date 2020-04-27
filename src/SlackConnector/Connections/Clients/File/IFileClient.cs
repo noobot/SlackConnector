@@ -7,5 +7,6 @@ namespace SlackConnector.Connections.Clients.File
     {
         Task PostFile(string slackKey, string channel, string filePath);
         Task PostFile(string slackKey, string channel, Stream stream, string fileName);
+        Task DownloadFile(string slackKey, SlackFile file, string path);
     }
 }
