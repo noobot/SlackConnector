@@ -51,13 +51,7 @@ namespace SlackConnector.Connections.Clients.File
         {
             var httpResponse = await file.UrlPrivateDownload.ToString()
                 .WithOAuthBearerToken(slackKey)
-                .GetAsync();
-
-            var stream = await httpResponse.Content.ReadAsStreamAsync();
-            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Write))
-            {
-                await stream.CopyToAsync(fs);
-            }
+                .DownloadFileAsync(path, file.Name);
 
         }
     }
