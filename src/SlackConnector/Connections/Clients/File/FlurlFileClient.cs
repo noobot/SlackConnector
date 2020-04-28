@@ -49,18 +49,16 @@ namespace SlackConnector.Connections.Clients.File
 
         public async Task DownloadFile(string slackKey, SlackFile file, string path)
         {
-            System.Threading.ManualResetEvent signalEvent = new System.Threading.ManualResetEvent(false);
-            System.Action<object, System.ComponentModel.AsyncCompletedEventArgs> completedAction = (sender, e) => {
-                signalEvent.Set();
-            };
+            var httpResponse = await file.UrlPrivateDownload.ToString()
+                .WithOAuthBearerToken(slackKey)
+                .GetAsync();
 
-            using (var webClient = new System.Net.WebClient())
+            var stream = await httpResponse.Content.ReadAsStreamAsync();
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Write))
             {
-                webClient.Headers["Authorization"] = $"Bearer {slackKey}";
-                webClient.DownloadFileAsync(file.UrlPrivateDownload, path);
-                webClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(completedAction);
-                await new Task(() => signalEvent.WaitOne());
+                await stream.CopyToAsync(fs);
             }
+
         }
     }
 }
