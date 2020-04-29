@@ -89,5 +89,39 @@ namespace SlackMockServer
 
 			return server;
 		}
+
+		public static SlackServer MockDefaultSendEphemeralMessage(this SlackServer server)
+		{
+			server.HttpServer.Given(Request.Create().WithPath(FlurlChatClient.SEND_EPHEMERAL_PATH))
+				.RespondWith(Response.Create().WithCallback(request =>
+				{
+					var response = new MessageResponse()
+					{
+						Ok = true,
+						Timestamp = SlackServerHelpers.GenerateTimestamp(),
+						Channel = request.GetChannel(),
+						Message = new MessageEvent()
+						{
+							Timestamp = SlackServerHelpers.GenerateTimestamp(),
+							Text = request.GetText(),
+							ThreadTimestamp = request.GetParameterValuesFromPostOrGet("thread_ts")?.FirstOrDefault(),
+							Channel = request.GetChannel(),
+							User = request.GetParameterValuesFromPostOrGet("user")?.FirstOrDefault(),
+						}
+					};
+
+					return new WireMock.ResponseMessage()
+					{
+						StatusCode = 200,
+						BodyData = new WireMock.Util.BodyData()
+						{
+							DetectedBodyType = WireMock.Util.BodyType.Json,
+							BodyAsJson = response
+						}
+					};
+				}));
+
+			return server;
+		}
 	}
 }

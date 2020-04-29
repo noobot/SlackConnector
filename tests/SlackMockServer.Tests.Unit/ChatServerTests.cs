@@ -11,6 +11,29 @@ namespace SlackMockServer.Tests.Unit
 		private int GetRandomPort => (new Random()).Next(3000, 4000);
 
 		[Fact]
+		public async Task WhenSendingEphemeralMessageThenServerReceive()
+		{
+			var port = GetRandomPort;
+			using (var server = new SlackServer(port))
+			{
+				server.MockDefaultSendEphemeralMessage();
+
+				ClientConstants.SlackApiHost = $"http://localhost:{port}";
+
+				var client = new FlurlChatClient(new ResponseVerifier());
+
+				var channel = "fake-channel";
+				var text = "This is a message for a test";
+				var userId = "UID";
+				var response = await client.PostEphemeral("fake-key", channel, userId, text);
+
+				Assert.Equal(channel, response.Channel);
+				Assert.Equal(text, response.Message.Text);
+				Assert.Equal(userId, response.Message.User);
+			}
+		}
+
+		[Fact]
 		public async Task WhenSendingMessageThenServerReceive()
 		{
 			var port = GetRandomPort;
