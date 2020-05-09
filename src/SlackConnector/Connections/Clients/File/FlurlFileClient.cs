@@ -49,10 +49,10 @@ namespace SlackConnector.Connections.Clients.File
 
         public async Task DownloadFile(string slackKey, SlackFile file, string path)
         {
-            var httpResponse = await file.UrlPrivateDownload.ToString()
+            await file.UrlPrivateDownload
+                .AbsoluteUri
                 .WithOAuthBearerToken(slackKey)
                 .DownloadFileAsync(path, file.Name);
-
         }
     }
 }
