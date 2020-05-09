@@ -4,6 +4,7 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using SlackConnector.Connections.Responses;
+using SlackConnector.Models;
 
 namespace SlackConnector.Connections.Clients.File
 {
@@ -44,6 +45,14 @@ namespace SlackConnector.Connections.Clients.File
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
             var response = JsonConvert.DeserializeObject<StandardResponse>(responseContent);
             _responseVerifier.VerifyResponse(response);
+        }
+
+        public async Task DownloadFile(string slackKey, SlackFile file, string path)
+        {
+            await file.UrlPrivateDownload
+                .AbsoluteUri
+                .WithOAuthBearerToken(slackKey)
+                .DownloadFileAsync(path, file.Name);
         }
     }
 }

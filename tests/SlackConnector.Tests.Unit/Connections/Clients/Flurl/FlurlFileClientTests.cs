@@ -7,6 +7,7 @@ using Moq;
 using SlackConnector.Connections.Clients;
 using SlackConnector.Connections.Clients.File;
 using SlackConnector.Connections.Responses;
+using SlackConnector.Models;
 using SlackConnector.Tests.Unit.TestExtensions;
 using Xunit;
 
@@ -52,6 +53,24 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
                 .WithQueryParamValue("channels", channel)
                 .WithVerb(HttpMethod.Post)
                 .WithContentType("multipart/form-data")
+                .Times(1);
+        }
+        
+        [Theory, AutoMoqData]
+        public async Task should_download_file_with_given_slack_key(
+            string slackKey,
+            SlackFile slackFile,
+            string path)
+        {
+            // given
+
+            // when
+            await _fileClient.DownloadFile(slackKey, slackFile, path);
+
+            // then
+            _httpTest
+                .ShouldHaveCalled(slackFile.UrlPrivateDownload.AbsoluteUri)
+                .WithOAuthBearerToken(slackKey)
                 .Times(1);
         }
     }
