@@ -10,6 +10,7 @@
         Team_Join,
         Pong,
         Reaction_Added,
-        Channel_Created
+        Channel_Created,
+        Presence_Change
     }
 }
