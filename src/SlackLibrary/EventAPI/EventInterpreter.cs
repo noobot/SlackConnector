@@ -123,14 +123,9 @@ namespace SlackLibrary.EventAPI
 						break;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				throw;
-				if (SlackConnector.LoggingLevel > ConsoleLoggingLevel.None)
-				{
-					//_logger.LogError($"Unable to parse message: '{json}'");
-					//_logger.LogError(ex.ToString());
-				}
 			}
 
 			outerEvent.RawData = json;
