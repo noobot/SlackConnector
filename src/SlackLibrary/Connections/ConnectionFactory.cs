@@ -14,9 +14,9 @@ namespace SlackLibrary.Connections
 {
     public class ConnectionFactory : IConnectionFactory
     {
-        public async Task<IWebSocketClient> CreateWebSocketClient(string url, ProxySettings proxySettings)
+        public async Task<IWebSocketClient> CreateWebSocketClient(string url)
         {
-            var socket = new WebSocketClientLite(new MessageInterpreter(new Logger()));
+            var socket = new WebSocketClient(new MessageInterpreter(new Logger()));
             await socket.Connect(url);
             return socket;
         }
