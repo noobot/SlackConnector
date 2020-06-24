@@ -135,8 +135,9 @@ namespace SlackLibrary.Tests.Unit.Stubs
 
         public event PongEventHandler OnPong;
         public event ChannelCreatedHandler OnChannelCreated;
+		public event PresenceChangeHandler OnPresenceChange;
 
-        public void RaiseOnPong()
+		public void RaiseOnPong()
         {
             OnPong?.Invoke(DateTime.MinValue);
         }
@@ -155,5 +156,15 @@ namespace SlackLibrary.Tests.Unit.Stubs
         {
             throw new NotImplementedException();
         }
-    }
+
+		public Task SubscribeToPresence(IEnumerable<string> ids)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task QueryPresence(IEnumerable<string> ids)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

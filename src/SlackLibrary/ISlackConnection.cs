@@ -107,6 +107,18 @@ namespace SlackLibrary
         Task<SlackTopic> SetChannelTopic(string channelName, string topic);
 
         /// <summary>
+        /// Subscribe to user presence
+        /// </summary>
+        /// <param name="ids">List of user slack ids</param>
+        Task SubscribeToPresence(IEnumerable<string> ids);
+
+        /// <summary>
+        /// Query user presence
+        /// </summary>
+        /// <param name="ids">List of user slack ids</param>
+        Task QueryPresence(IEnumerable<string> ids);
+
+        /// <summary>
         /// Indicate to the users on the channel that the bot is 'typing' on the keyboard.
         /// </summary>
         Task IndicateTyping(SlackChatHub chatHub);
@@ -166,5 +178,11 @@ namespace SlackLibrary
         /// Raised when a new channel is created
         /// </summary>
         event ChannelCreatedHandler OnChannelCreated;
+
+        /// <summary>
+        /// Raised when a user presence change
+        /// You need first to subscribe to user presence
+        /// </summary>
+        event PresenceChangeHandler OnPresenceChange;
     }
 }

@@ -49,6 +49,9 @@ namespace SlackLibrary.Connections.Sockets.Messages.Inbound
                     case MessageType.Channel_Created:
                         message = JsonConvert.DeserializeObject<ChannelCreatedMessage>(json);
                         break;
+                    case MessageType.Presence_Change:
+                        message = JsonConvert.DeserializeObject<PresenceChangeMessage>(json);
+                        break;
                 }
             }
             catch (Exception ex)
