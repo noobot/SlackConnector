@@ -25,5 +25,7 @@ namespace SlackLibrary.Connections.Clients.Chat
 		Task Update(string responseUrl, string text, IEnumerable<SlackAttachment> attachments = null, IEnumerable<BlockBase> blocks = null);
 
 		Task Delete(string slackKey, string channel, string ts, bool asUser = false);
+
+        Task DeleteOriginalMessage(string responseUrl);
     }
 }

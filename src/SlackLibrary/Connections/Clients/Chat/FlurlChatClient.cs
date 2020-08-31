@@ -108,7 +108,16 @@ namespace SlackLibrary.Connections.Clients.Chat
 			_responseVerifier.VerifyResponse(response);
 		}
 
-		public async Task Delete(string slackKey, string channel, string ts, bool asUser = true)
+        public async Task DeleteOriginalMessage(string responseUrl)
+        {
+            var response = await responseUrl.PostJsonAsync(new
+            {
+                delete_original = true
+            }).ReceiveJson<DefaultStandardResponse>();
+            _responseVerifier.VerifyResponse(response);
+        }
+
+        public async Task Delete(string slackKey, string channel, string ts, bool asUser = true)
 		{
 			var request = ClientConstants
 					   .SlackApiHost
