@@ -50,9 +50,9 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)));
             _httpTest
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
+                .WithOAuthBearerToken(slackKey)
                 .WithRequestJson(new
                 {
-                    token = slackKey,
                     channel = channel,
                     text = text,
                     as_user = true,
@@ -65,6 +65,7 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
         [Fact]
         public async Task should_add_attachments_if_given()
         {
+            const string slackKey = "something-that-looks-like-a-slack-key";
             // given
             _httpTest.RespondWithJson(new StandardResponse());
             var attachments = new List<SlackAttachment>
@@ -74,14 +75,14 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             };
 
             // when
-            await _chatClient.PostMessage(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), attachments);
+            await _chatClient.PostMessage(slackKey, It.IsAny<string>(), It.IsAny<string>(), attachments);
 
             // then
             _httpTest
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
+                .WithOAuthBearerToken(slackKey)
                 .WithRequestJson(new
                 {
-                    token = (string)null,
                     channel = (string)null,
                     text = (string)null,
                     as_user = true,

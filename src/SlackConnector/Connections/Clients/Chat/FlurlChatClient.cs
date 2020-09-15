@@ -24,8 +24,8 @@ namespace SlackConnector.Connections.Clients.Chat
             var response = await ClientConstants
                        .SlackApiHost
                        .AppendPathSegment(SEND_MESSAGE_PATH)
+                       .WithOAuthBearerToken(slackKey)
                        .PostJsonAsync(new {
-                           token = slackKey,
                            channel = channel,
                            text = text,
                            as_user = true,
