@@ -8,7 +8,7 @@ namespace SlackConnector.Connections.Clients.Handshake
     internal class FlurlHandshakeClient : IHandshakeClient
     {
         private readonly IResponseVerifier _responseVerifier;
-        internal const string HANDSHAKE_PATH = "/api/rtm.start";
+        internal const string HANDSHAKE_PATH = "/api/rtm.connect";
 
         public FlurlHandshakeClient(IResponseVerifier responseVerifier)
         {
