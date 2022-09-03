@@ -50,18 +50,22 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             _responseVerifierMock.Verify(x => x.VerifyResponse(Looks.Like(expectedResponse)));
             _httpTest
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
-                .WithQueryParamValue("token", slackKey)
-                .WithQueryParamValue("channel", channel)
-                .WithQueryParamValue("text", text)
-                .WithQueryParamValue("as_user", "true")
-                .WithQueryParamValue("link_names", "true")
-                .WithoutQueryParam("attachments")
+                .WithOAuthBearerToken(slackKey)
+                .WithRequestJson(new
+                {
+                    channel = channel,
+                    text = text,
+                    as_user = true,
+                    link_names = true,
+                    attachments = (object)null
+                })
                 .Times(1);
         }
 
         [Fact]
         public async Task should_add_attachments_if_given()
         {
+            const string slackKey = "something-that-looks-like-a-slack-key";
             // given
             _httpTest.RespondWithJson(new StandardResponse());
             var attachments = new List<SlackAttachment>
@@ -71,12 +75,20 @@ namespace SlackConnector.Tests.Unit.Connections.Clients.Flurl
             };
 
             // when
-            await _chatClient.PostMessage(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), attachments);
+            await _chatClient.PostMessage(slackKey, It.IsAny<string>(), It.IsAny<string>(), attachments);
 
             // then
             _httpTest
                 .ShouldHaveCalled(ClientConstants.SlackApiHost.AppendPathSegment(FlurlChatClient.SEND_MESSAGE_PATH))
-                .WithQueryParamValue("attachments", JsonConvert.SerializeObject(attachments))
+                .WithOAuthBearerToken(slackKey)
+                .WithRequestJson(new
+                {
+                    channel = (string)null,
+                    text = (string)null,
+                    as_user = true,
+                    link_names = true,
+                    attachments = attachments
+                })
                 .Times(1);
         }
     }

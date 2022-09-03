@@ -21,21 +21,18 @@ namespace SlackConnector.Connections.Clients.Chat
 
         public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
         {
-            var request = ClientConstants
+            var response = await ClientConstants
                        .SlackApiHost
                        .AppendPathSegment(SEND_MESSAGE_PATH)
-                       .SetQueryParam("token", slackKey)
-                       .SetQueryParam("channel", channel)
-                       .SetQueryParam("text", text)
-                       .SetQueryParam("as_user", "true")
-                       .SetQueryParam("link_names", "true");
-            
-            if (attachments != null && attachments.Any())
-            {
-                request.SetQueryParam("attachments", JsonConvert.SerializeObject(attachments));
-            }
+                       .WithOAuthBearerToken(slackKey)
+                       .PostJsonAsync(new {
+                           channel = channel,
+                           text = text,
+                           as_user = true,
+                           link_names = true,
+                           attachments = attachments
+                       }).ReceiveJson<StandardResponse>();
 
-            var response = await request.GetJsonAsync<StandardResponse>();
             _responseVerifier.VerifyResponse(response);
         }
     }
